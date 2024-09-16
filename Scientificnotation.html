@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Notation Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .number {
+            width: 200px;
+            padding: 10px;
+            margin: 10px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .dropzone {
+            width: 200px;
+            height: 50px;
+            padding: 10px;
+            margin: 10px;
+            border: 2px dashed #333;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .dropzone.correct {
+            border-color: green;
+            color: green;
+            font-weight: bold;
+        }
+        .dropzone.wrong {
+            border-color: red;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scientific Notation Matching</h1>
+
+    <!-- Section 1: Match Scientific Notation to Ordinary Numbers -->
+    <h2>Match Scientific Notation to Ordinary Numbers</h2>
+    <div class="container" id="numbers-container">
+        <!-- Numbers will be inserted here -->
+    </div>
+    <div class="container" id="dropzones-container">
+        <!-- Dropzones will be inserted here -->
+    </div>
+
+    <!-- Section 2: Match Ordinary Numbers to Scientific Notation -->
+    <h2>Match Ordinary Numbers to Scientific Notation</h2>
+    <div class="container" id="ordinary-numbers-container">
+        <!-- Ordinary numbers will be inserted here -->
+    </div>
+    <div class="container" id="sci-notation-dropzones">
+        <!-- Scientific notation dropzones will be inserted here -->
+    </div>
+
+    <button onclick="resetGame()">Refresh Questions</button>
+
+    <script>
+        // Two separate sets of data for each section
+        const scientificToOrdinary = [
+            { sci: '5.0 × 10<sup>2</sup>', ordinary: '500' },
+            { sci: '1.0 × 10<sup>3</sup>', ordinary: '1000' },
+            { sci: '6.4 × 10<sup>6</sup>', ordinary: '6400000' },
+        ];
+
+        const ordinaryToScientific = [
+            { ordinary: '250', sci: '2.5 × 10<sup>2</sup>' },
+            { ordinary: '8000', sci: '8.0 × 10<sup>3</sup>' },
+            { ordinary: '0.005', sci: '5.0 × 10<sup>-3</sup>' },
+        ];
+
+        function initializeGame() {
+            // Shuffle the scientific notation sets for randomness
+            const shuffledSciToOrd = scientificToOrdinary.sort(() => 0.5 - Math.random());
+            const shuffledOrdToSci = ordinaryToScientific.sort(() => 0.5 - Math.random());
+
+            // Clear existing content
+            document.getElementById('numbers-container').innerHTML = '';
+            document.getElementById('dropzones-container').innerHTML = '';
+            document.getElementById('ordinary-numbers-container').innerHTML = '';
+            document.getElementById('sci-notation-dropzones').innerHTML = '';
+
+            // Section 1: Create draggable scientific notation numbers
+            shuffledSciToOrd.forEach((item, index) => {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'number';
+                numberDiv.draggable = true;
+                numberDiv.id = `num${index + 1}`;
+                numberDiv.innerHTML = item.sci;
+                numberDiv.setAttribute('data-value', item.ordinary);
+                numberDiv.addEventListener('dragstart', dragStart);
+                document.getElementById('numbers-container').appendChild(numberDiv);
+            });
+
+            // Section 1: Create dropzones for ordinary numbers
+            shuffledSciToOrd.forEach((item, index) => {
+                const dropzoneDiv = document.createElement('div');
+                dropzoneDiv.className = 'dropzone';
+                dropzoneDiv.setAttribute('data-value', item.ordinary);
+                dropzoneDiv.addEventListener('dragover', dragOver);
+                dropzoneDiv.addEventListener('drop', drop);
+                document.getElementById('dropzones-container').appendChild(dropzoneDiv);
+            });
+
+            // Section 2: Create draggable ordinary numbers
+            shuffledOrdToSci.forEach((item, index) => {
+                const ordinaryDiv = document.createElement('div');
+                ordinaryDiv.className = 'number';
+                ordinaryDiv.draggable = true;
+                ordinaryDiv.id = `ord${index + 1}`;
+                ordinaryDiv.textContent = item.ordinary;
+                ordinaryDiv.setAttribute('data-value', item.sci);
+                ordinaryDiv.addEventListener('dragstart', dragStart);
+                document.getElementById('ordinary-numbers-container').appendChild(ordinaryDiv);
+            });
+
+            // Section 2: Create dropzones for scientific notations
+            shuffledOrdToSci.forEach((item, index) => {
+                const sciDropzone = document.createElement('div');
+                sciDropzone.className = 'dropzone';
+                sciDropzone.setAttribute('data-value', item.sci);
+                sciDropzone.addEventListener('dragover', dragOver);
+                sciDropzone.addEventListener('drop', drop);
+                document.getElementById('sci-notation-dropzones').appendChild(sciDropzone);
+            });
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text', event.target.id);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const elementId = event.dataTransfer.getData('text');
+            const draggedElement = document.getElementById(elementId);
+            const draggedValue = draggedElement.getAttribute('data-value');
+            const dropzoneValue = event.target.getAttribute('data-value');
+
+            if (draggedValue === dropzoneValue) {
+                event.target.classList.add('correct');
+                event.target.innerHTML = draggedValue; // Show the correct value in the dropzone
+            } else {
+                event.target.classList.add('wrong');
+                setTimeout(() => {
+                    event.target.classList.remove('wrong');
+                }, 1000);
+            }
+        }
+
+        function resetGame() {
+            initializeGame(); // Reinitialize the game
+        }
+
+        // Initialize game on page load
+        window.onload = initializeGame;
+    </script>
+</body>
+</html>
