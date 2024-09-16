@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Expression Builder</title>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p.instructions {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .draggable {
+            padding: 10px;
+            margin: 5px;
+            display: inline-block;
+            background-color: #f2f2f2;
+            cursor: grab;
+            border: 2px solid #999;
+            border-radius: 5px;
+            user-select: none;
+            font-size: 18px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .draggable.used {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .droppable-container {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .droppable {
+            padding: 10px;
+            margin: 5px;
+            width: 60px;
+            height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0e0e0;
+            border: 2px dashed #999;
+            border-radius: 5px;
+            font-size: 18px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        #buttons {
+            margin-top: 20px;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .clear-button {
+            background-color: #f44336;
+        }
+
+        .clear-button:hover {
+            background-color: #da190b;
+        }
+
+        #expression, #output {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .droppable {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+
+            .draggable {
+                padding: 8px;
+                font-size: 16px;
+                min-width: 35px;
+            }
+
+            .button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            #expression, #output {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Math Expression Builder</h1>
+    <p class="instructions">Drag the numbers, operators, and brackets to form an expression. Then calculate the result!</p>
+
+    <!-- Draggable Numbers and Operations -->
+    <div id="draggables">
+        <!-- Numbers -->
+        <div id="number1" class="draggable">3</div>
+        <div id="number2" class="draggable">-2</div>
+        <div id="number3" class="draggable">0.5</div>
+        <div id="number4" class="draggable">4</div>
+        <div id="number5" class="draggable">1/3</div>
+        <!-- Operations -->
+        <div id="plus" class="draggable">+</div>
+        <div id="minus" class="draggable">−</div>
+        <div id="multiply" class="draggable">×</div>
+        <div id="divide" class="draggable">÷</div>
+        <!-- Brackets -->
+        <div id="leftBracket" class="draggable">(</div>
+        <div id="rightBracket" class="draggable">)</div>
+    </div>
+
+    <!-- Droppable Area -->
+    <div class="droppable-container">
+        <!-- Increased number of droppable boxes to 20 -->
+        <div id="drop1" class="droppable"></div>
+        <div id="drop2" class="droppable"></div>
+        <div id="drop3" class="droppable"></div>
+        <div id="drop4" class="droppable"></div>
+        <div id="drop5" class="droppable"></div>
+        <div id="drop6" class="droppable"></div>
+        <div id="drop7" class="droppable"></div>
+        <div id="drop8" class="droppable"></div>
+        <div id="drop9" class="droppable"></div>
+        <div id="drop10" class="droppable"></div>
+        <div id="drop11" class="droppable"></div>
+        <div id="drop12" class="droppable"></div>
+        <div id="drop13" class="droppable"></div>
+        <div id="drop14" class="droppable"></div>
+        <div id="drop15" class="droppable"></div>
+        <div id="drop16" class="droppable"></div>
+        <div id="drop17" class="droppable"></div>
+        <div id="drop18" class="droppable"></div>
+        <div id="drop19" class="droppable"></div>
+        <div id="drop20" class="droppable"></div>
+    </div>
+
+    <!-- Buttons to Calculate, Clear, and Generate New Numbers -->
+    <div id="buttons">
+        <button class="button" onclick="calculate()">Calculate Result</button>
+        <button class="button clear-button" onclick="clearDroppables()">Clear Expression</button>
+        <button class="button" onclick="generateRandomNumbers()">Generate New Numbers</button>
+    </div>
+
+    <!-- Display Expressions and Results -->
+    <p id="expression"></p>
+    <p id="output"></p>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script>
+        // Global variable to store current numbers
+        let currentNumbers = [];
+
+        $(function () {
+            // Make elements draggable
+            $(".draggable").draggable({
+                revert: "invalid",
+                helper: "clone",
+                cursor: "move",
+                start: function (event, ui) {
+                    // If the element is already used, prevent dragging
+                    if ($(this).hasClass('used')) {
+                        return false;
+                    }
+                }
+            });
+
+            // Make droppable areas accept draggable elements
+            $(".droppable").droppable({
+                accept: ".draggable:not(.used)",
+                drop: function (event, ui) {
+                    let dragged = ui.draggable;
+                    let draggedText = dragged.text();
+                    let isNumber = /^-?\d+(\.\d+)?(\/\d+)?$/.test(draggedText);
+
+                    // Append the dropped element's text
+                    let currentText = $(this).text();
+                    let newText = currentText ? currentText + " " + draggedText : draggedText;
+                    $(this).text(newText);
+
+                    // If it's a number, mark it as used
+                    if (isNumber) {
+                        dragged.addClass('used');
+                        dragged.draggable('disable');
+                    }
+                }
+            });
+
+            // Click event to remove element from droppable box
+            $(".droppable").on('click', function () {
+                let box = $(this);
+                let content = box.text().trim();
+                if (content === "") return;
+
+                // Remove the content
+                box.empty();
+
+                // If the removed content is a number, re-enable it
+                if (/^-?\d+(\.\d+)?(\/\d+)?$/.test(content)) {
+                    // Find the draggable element with the same text
+                    $(".draggable").each(function () {
+                        if ($(this).text() === content) {
+                            $(this).removeClass('used');
+                            $(this).draggable('enable');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Function to clear all droppable areas and outputs
+        function clearDroppables() {
+            $(".droppable").each(function () {
+                let box = $(this);
+                let content = box.text().trim();
+                if (content === "") return;
+
+                box.empty();
+
+                // If the removed content is a number, re-enable it
+                if (/^-?\d+(\.\d+)?(\/\d+)?$/.test(content)) {
+                    // Find the draggable element with the same text
+                    $(".draggable").each(function () {
+                        if ($(this).text() === content) {
+                            $(this).removeClass('used');
+                            $(this).draggable('enable');
+                        }
+                    });
+                }
+            });
+
+            // Clear displayed results
+            document.getElementById("expression").innerHTML = "";
+            document.getElementById("output").innerHTML = "";
+        }
+
+        // Function to calculate the user's expression
+        function calculate() {
+            // Collect expression from droppable areas in order
+            let expression = '';
+            $('.droppable').each(function () {
+                let text = $(this).text().trim();
+                if (text) {
+                    expression += text + ' ';
+                }
+            });
+
+            expression = expression.trim();
+
+            if (expression === "") {
+                document.getElementById("output").innerHTML = "Please build an expression first!";
+                document.getElementById("expression").innerHTML = "";
+                return;
+            }
+
+            // Replace symbols with proper JS operators
+            expression = expression.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+
+            // Display the expression
+            document.getElementById("expression").innerHTML = "Expression: " + expression;
+
+            // Try to evaluate the expression
+            try {
+                let result = eval(expression);
+                if (!isFinite(result)) {
+                    throw new Error("Result is not finite");
+                }
+                document.getElementById("output").innerHTML = "Result: " + result;
+            } catch (error) {
+                document.getElementById("output").innerHTML = "Invalid Expression!";
+            }
+        }
+
+        // Function to generate random numbers ensuring all five numbers change
+        function generateRandomNumbers() {
+            // Helper functions to generate random numbers
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function getRandomDecimal(min, max, decimalPlaces) {
+                const factor = Math.pow(10, decimalPlaces);
+                return Math.round((Math.random() * (max - min) + min) * factor) / factor;
+            }
+
+            function getRandomFraction() {
+                const numerator = getRandomInt(1, 10);
+                const denominator = getRandomInt(1, 10);
+                const isNegative = Math.random() < 0.5;
+                return isNegative ? `-${numerator}/${denominator}` : `${numerator}/${denominator}`;
+            }
+
+            // Initialize previousNumbers with currentNumbers
+            let previousNumbers = currentNumbers.slice();
+
+            let newNumbers = [];
+            let attempts = 0;
+            const maxAttempts = 10;
+
+            while (attempts < maxAttempts) {
+                let tempNumbers = [];
+
+                // Positive Integer
+                tempNumbers.push(getRandomInt(1, 10));
+
+                // Negative Integer
+                tempNumbers.push(-getRandomInt(1, 10));
+
+                // Positive Decimal
+                tempNumbers.push(getRandomDecimal(0.1, 10.0, 2));
+
+                // Negative Decimal
+                tempNumbers.push(-getRandomDecimal(0.1, 10.0, 2));
+
+                // Fraction (can be positive or negative)
+                tempNumbers.push(getRandomFraction());
+
+                // Convert all to string for comparison
+                let tempNumbersStr = tempNumbers.map(num => num.toString());
+
+                // Create a Set from previousNumbers
+                let prevSet = new Set(previousNumbers.map(num => num.toString()));
+
+                // Check if any new number is in the previousNumbers set
+                let hasDuplicate = tempNumbersStr.some(num => prevSet.has(num));
+
+                if (!hasDuplicate) {
+                    newNumbers = tempNumbers;
+                    break;
+                }
+
+                attempts++;
+            }
+
+            // If max attempts reached and no unique set found, accept the last generated numbers
+            if (attempts === maxAttempts && newNumbers.length === 0) {
+                newNumbers = tempNumbers;
+            }
+
+            // Assign to currentNumbers
+            currentNumbers = newNumbers;
+
+            // Shuffle the numbers array
+            newNumbers = shuffleArray(newNumbers);
+
+            // Update the draggable number elements
+            for (let i = 1; i <= 5; i++) {
+                const numberElement = document.getElementById(`number${i}`);
+                if (numberElement) {
+                    numberElement.textContent = newNumbers[i - 1];
+                    // Reset used status
+                    numberElement.classList.remove('used');
+                    $(numberElement).draggable('enable');
+                }
+            }
+
+            // Clear droppable areas and previous results
+            clearDroppables();
+        }
+
+        // Function to shuffle an array (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize with a set of numbers on page load
+        window.onload = function() {
+            generateRandomNumbers();
+        };
+    </script>
+
+</body>
+</html>
