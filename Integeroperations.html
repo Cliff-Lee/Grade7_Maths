@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math Operations Game with Hidden Headers</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  #operation-selector {
+    text-align: center;
+    margin: 20px 0;
+  }
+  #operation-selector button {
+    padding: 10px 20px;
+    margin: 0 5px;
+  }
+  table {
+    border-collapse: collapse;
+    margin: 20px auto;
+    width: 80%;
+  }
+  td, th {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: center;
+    width: 60px;
+    height: 40px;
+  }
+  .hidden-cell {
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+  .revealed-cell {
+    background-color: #d0f0d0;
+  }
+  #new-problem {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+  }
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Math Operations Game with Hidden Headers</h2>
+<p style="text-align:center;">Select an operation and compute the missing values mentally. Click on a cell to reveal the correct answer, including some hidden headers!</p>
+
+<div id="operation-selector">
+  <button data-operation="addition">Addition</button>
+  <button data-operation="subtraction">Subtraction</button>
+  <button data-operation="multiplication">Multiplication</button>
+  <button data-operation="division">Division</button>
+</div>
+
+<div id="game-container"></div>
+<button id="new-problem">Generate New Problem</button>
+
+<script>
+(function() {
+  const gameContainer = document.getElementById('game-container');
+  const newProblemButton = document.getElementById('new-problem');
+  const operationButtons = document.querySelectorAll('#operation-selector button');
+  let currentOperation = 'addition';
+
+  function generateRandomIntegers(count, min, max, excludeZero = false) {
+    const numbers = new Set();
+    while (numbers.size < count) {
+      const num = Math.floor(Math.random() * (max - min + 1)) + min;
+      if (excludeZero && num === 0) continue;
+      numbers.add(num);
+    }
+    return Array.from(numbers);
+  }
+
+  function gcd(a, b) {
+    return b === 0 ? a : gcd(b, a % b);
+  }
+
+  function simplifyFraction(numerator, denominator) {
+    const greatestCommonDivisor = gcd(Math.abs(numerator), Math.abs(denominator));
+    numerator /= greatestCommonDivisor;
+    denominator /= greatestCommonDivisor;
+
+    // Handle negative signs
+    if (denominator < 0) {
+      numerator *= -1;
+      denominator *= -1;
+    }
+
+    return { numerator, denominator };
+  }
+
+  function generateTableData(operation) {
+    const numRows = 10;
+    const numCols = 10;
+    let firstNumbers, secondNumbers;
+
+    firstNumbers = generateRandomIntegers(numRows, -20, 20, operation === 'division');
+    secondNumbers = generateRandomIntegers(numCols, -20, 20, operation === 'division');
+
+    if (operation === 'division') {
+      // Exclude zero for division
+      firstNumbers = firstNumbers.filter(num => num !== 0);
+      secondNumbers = secondNumbers.filter(num => num !== 0);
+    }
+
+    const tableData = firstNumbers.map(firstNum => {
+      return secondNumbers.map(secondNum => {
+        let result;
+        let fraction = null;
+        switch (operation) {
+          case 'addition':
+            result = firstNum + secondNum;
+            break;
+          case 'subtraction':
+            result = firstNum - secondNum;
+            break;
+          case 'multiplication':
+            result = firstNum * secondNum;
+            break;
+          case 'division':
+            result = firstNum / secondNum;
+            fraction = simplifyFraction(firstNum, secondNum);
+            break;
+        }
+        return {
+          firstNum,
+          secondNum,
+          result,
+          fraction
+        };
+      });
+    });
+
+    // Randomly hide some values in the table
+    const hiddenIndices = [];
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+        const hideValue = Math.random() < 0.5;
+        if (hideValue) {
+          hiddenIndices.push({ row: i, col: j });
+        }
+      }
+    }
+
+    // Randomly hide some row and column headers
+    const hiddenRowHeaders = [];
+    for (let i = 0; i < numRows; i++) {
+      if (Math.random() < 0.3) { // 30% chance to hide
+        hiddenRowHeaders.push(i);
+      }
+    }
+
+    const hiddenColumnHeaders = [];
+    for (let j = 0; j < numCols; j++) {
+      if (Math.random() < 0.3) { // 30% chance to hide
+        hiddenColumnHeaders.push(j);
+      }
+    }
+
+    return { firstNumbers, secondNumbers, tableData, hiddenIndices, hiddenRowHeaders, hiddenColumnHeaders };
+  }
+
+  function createTable(firstNumbers, secondNumbers, tableData, hiddenIndices, hiddenRowHeaders, hiddenColumnHeaders, operationSymbol) {
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+    const emptyHeaderCell = document.createElement('th');
+    emptyHeaderCell.textContent = operationSymbol;
+    headerRow.appendChild(emptyHeaderCell);
+
+    secondNumbers.forEach((num, j) => {
+      const th = document.createElement('th');
+      const isHidden = hiddenColumnHeaders.includes(j);
+      if (isHidden) {
+        th.classList.add('hidden-cell');
+        th.dataset.index = j;
+        th.dataset.value = num;
+        th.addEventListener('click', revealHeader);
+      } else {
+        th.textContent = num;
+      }
+      headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    tableData.forEach((rowData, i) => {
+      const tr = document.createElement('tr');
+      const rowHeader = document.createElement('th');
+      const isHidden = hiddenRowHeaders.includes(i);
+      if (isHidden) {
+        rowHeader.classList.add('hidden-cell');
+        rowHeader.dataset.index = i;
+        rowHeader.dataset.value = firstNumbers[i];
+        rowHeader.addEventListener('click', revealHeader);
+      } else {
+        rowHeader.textContent = firstNumbers[i];
+      }
+      tr.appendChild(rowHeader);
+
+      rowData.forEach((cellData, j) => {
+        const td = document.createElement('td');
+        const isHiddenCell = hiddenIndices.some(index => index.row === i && index.col === j);
+
+        if (isHiddenCell) {
+          td.classList.add('hidden-cell');
+          if (currentOperation === 'division') {
+            td.dataset.numerator = cellData.fraction.numerator;
+            td.dataset.denominator = cellData.fraction.denominator;
+          } else {
+            td.dataset.correctValue = cellData.result;
+          }
+          td.addEventListener('click', revealAnswer);
+        } else {
+          if (currentOperation === 'division') {
+            const { numerator, denominator } = cellData.fraction;
+            td.textContent = `${numerator}/${denominator}`;
+          } else {
+            td.textContent = cellData.result;
+          }
+        }
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+
+    return table;
+  }
+
+  function revealAnswer(event) {
+    const td = event.target;
+    if (currentOperation === 'division') {
+      const numerator = td.dataset.numerator;
+      const denominator = td.dataset.denominator;
+      td.textContent = `${numerator}/${denominator}`;
+    } else {
+      td.textContent = td.dataset.correctValue;
+    }
+    td.classList.add('revealed-cell');
+    td.removeEventListener('click', revealAnswer);
+  }
+
+  function revealHeader(event) {
+    const th = event.target;
+    th.textContent = th.dataset.value;
+    th.classList.add('revealed-cell');
+    th.removeEventListener('click', revealHeader);
+  }
+
+  function generateGame() {
+    gameContainer.innerHTML = '';
+    let operationSymbol;
+    switch (currentOperation) {
+      case 'addition':
+        operationSymbol = '+';
+        break;
+      case 'subtraction':
+        operationSymbol = '−';
+        break;
+      case 'multiplication':
+        operationSymbol = '×';
+        break;
+      case 'division':
+        operationSymbol = '÷';
+        break;
+    }
+
+    const { firstNumbers, secondNumbers, tableData, hiddenIndices, hiddenRowHeaders, hiddenColumnHeaders } = generateTableData(currentOperation);
+    const table = createTable(firstNumbers, secondNumbers, tableData, hiddenIndices, hiddenRowHeaders, hiddenColumnHeaders, operationSymbol);
+    gameContainer.appendChild(table);
+  }
+
+  // Event listeners for operation buttons
+  operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      currentOperation = button.dataset.operation;
+      generateGame();
+    });
+  });
+
+  newProblemButton.addEventListener('click', generateGame);
+
+  // Generate the initial game
+  generateGame();
+})();
+</script>
+
+</body>
+</html>
