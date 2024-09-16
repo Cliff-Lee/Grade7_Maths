@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skip-Array Pattern Generator</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Skip-Array Pattern Generator</h1>
+<p>Instructions: Look for patterns in the rows, in the columns, and even in the diagonals. Use the pen tool to highlight the patterns you find. You can change the number of columns and skip patterns to see how it affects the grid. The numbers will remain visible when you highlight patterns. When you're done, you can clear your highlights without erasing the numbers.</p>
+
+<div id="controls">
+    <label for="skip">Choose skip pattern (e.g., 3): </label>
+    <input type="number" id="skip" value="3" min="1" max="10">
+    <label for="columns">Number of columns: </label>
+    <input type="number" id="columns" value="8" min="1" max="12">
+    <button id="generate">Generate Pattern</button>
+    <button id="clear">Clear Canvas</button>
+</div>
+
+<canvas id="patternCanvas" width="800" height="800"></canvas>
+
+<script>
+    const canvas = document.getElementById('patternCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = 100;  // Size of each square in the array
+    const rows = 8;    // Number of rows
+    let penLayer = [];
+
+    // Initialize canvas to listen for pen tool (mouse)
+    let isDrawing = false;
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mousemove', drawPenTool);
+
+    // Function to generate a skip pattern array with dynamic columns
+    function generatePattern(skip, cols) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas before drawing
+        let count = -12; // Starting number
+        penLayer = []; // Clear pen layer history
+
+        // Dynamically set the canvas width based on the number of columns
+        canvas.width = cols * size;
+
+        for (let row = 0; row < rows; row++) {
+            for (let col = 0; col < cols; col++) {
+                // Draw the grid
+                ctx.strokeStyle = '#000000';
+                ctx.strokeRect(col * size, row * size, size, size);
+
+                // Save the number's position and value for later re-drawing
+                penLayer.push({ x: col * size, y: row * size, value: count });
+
+                count += skip; // Increment the number by the skip value
+            }
+        }
+
+        // Redraw the numbers after shading
+        redrawPenLayer();
+    }
+
+    // Pen tool for students to highlight patterns
+    function drawPenTool(event) {
+        if (!isDrawing) return;
+
+        const x = Math.floor(event.offsetX / size) * size;
+        const y = Math.floor(event.offsetY / size) * size;
+
+        // Save the pen strokes to a separate layer so it can be cleared later
+        penLayer.push({ x, y, value: null });  // We push null for value since it's just for shading
+
+        // Draw semi-transparent red color for highlighting
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+        ctx.fillRect(x, y, size, size);
+
+        // Redraw numbers after shading to ensure they remain visible
+        redrawPenLayer();
+    }
+
+    // Function to redraw pen layer (used when clearing pen without clearing numbers)
+    function redrawPenLayer() {
+        penLayer.forEach(stroke => {
+            // Only draw numbers for valid positions that have a value (ignore the shading-only entries)
+            if (stroke.value !== null) {
+                ctx.font = '20px Arial';
+                ctx.fillStyle = '#000000';
+                ctx.fillText(stroke.value, stroke.x + size / 2 - 10, stroke.y + size / 2 + 10);
+            }
+        });
+    }
+
+    // Event listeners for the buttons
+    document.getElementById('generate').addEventListener('click', () => {
+        const skip = parseInt(document.getElementById('skip').value);
+        const cols = parseInt(document.getElementById('columns').value);
+        generatePattern(skip, cols);
+    });
+
+    document.getElementById('clear').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear everything
+        generatePattern(parseInt(document.getElementById('skip').value), parseInt(document.getElementById('columns').value)); // Redraw numbers
+        penLayer = []; // Clear pen strokes history
+    });
+
+    // Initial pattern generation
+    generatePattern(3, 8);
+
+</script>
+
+</body>
+</html>
