@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multiplication Tic-Tac-Toe Game</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border: 1px solid black;
+            font-size: 18px;
+            cursor: default;
+        }
+
+        .marked {
+            background-color: lightgreen;
+        }
+
+        .player1 {
+            background-color: red;
+        }
+
+        .player2 {
+            background-color: blue;
+        }
+
+        .highlight {
+            background-color: yellow;
+            cursor: pointer;
+        }
+
+        .number-select {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .number-select div {
+            margin: 5px;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid black;
+            width: 50px;
+            text-align: center;
+            cursor: grab;
+            background-color: lightgray;
+        }
+
+        #current-numbers {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #rules {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .droppable {
+            border: 1px dashed black;
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            text-align: center;
+            line-height: 50px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">Multiplication Tic-Tac-Toe</h1>
+
+    <div id="rules">
+        <h2>Rules of the Game</h2>
+        <p>
+            1. Two integers are randomly selected at the start of the game and displayed at the bottom of the board.
+        </p>
+        <p>
+            2. Players take turns to drag one of the numbers from the number line and drop it onto one of the current numbers to replace it.
+        </p>
+        <p>
+            3. The product of the two integers is calculated. If multiple squares match the product, the player chooses which square to mark.
+        </p>
+        <p>
+            4. The goal is to get four squares marked in a row: horizontally, vertically, or diagonally.
+        </p>
+        <p>
+            5. The first player to get four in a row wins the game!
+        </p>
+        <p>
+            6. Both players must agree on the correct product before marking the board. If there's a mistake, players should work together to correct it.
+        </p>
+    </div>
+
+    <div id="current-numbers">
+        <p>Drag a number from the number line below and drop it onto one of the current numbers to replace it.</p>
+        <p>Current Numbers:
+            <div id="num1" ondrop="drop(event, 'num1')" ondragover="allowDrop(event)" class="droppable">-</div>
+            and
+            <div id="num2" ondrop="drop(event, 'num2')" ondragover="allowDrop(event)" class="droppable">-</div>
+        </p>
+        <p>Player <span id="currentPlayer">1</span>'s Turn</p>
+    </div>
+
+    <div class="number-select">
+        <div draggable="true" ondragstart="drag(event)">-5</div>
+        <div draggable="true" ondragstart="drag(event)">-4</div>
+        <div draggable="true" ondragstart="drag(event)">-3</div>
+        <div draggable="true" ondragstart="drag(event)">-2</div>
+        <div draggable="true" ondragstart="drag(event)">-1</div>
+        <div draggable="true" ondragstart="drag(event)">0</div>
+        <div draggable="true" ondragstart="drag(event)">1</div>
+        <div draggable="true" ondragstart="drag(event)">2</div>
+        <div draggable="true" ondragstart="drag(event)">3</div>
+        <div draggable="true" ondragstart="drag(event)">4</div>
+        <div draggable="true" ondragstart="drag(event)">5</div>
+    </div>
+
+    <table>
+        <tbody id="gameBoard">
+            <tr>
+                <td>-25</td><td>0</td><td>-20</td><td>0</td><td>0</td><td>-15</td><td>25</td><td>20</td>
+            </tr>
+            <tr>
+                <td>4</td><td>6</td><td>-4</td><td>8</td><td>2</td><td>-20</td><td>12</td><td>-8</td>
+            </tr>
+            <tr>
+                <td>10</td><td>-8</td><td>15</td><td>9</td><td>0</td><td>-6</td><td>5</td><td>-9</td>
+            </tr>
+            <tr>
+                <td>-10</td><td>0</td><td>-6</td><td>12</td><td>-3</td><td>20</td><td>-12</td><td>0</td>
+            </tr>
+            <tr>
+                <td>-15</td><td>8</td><td>-9</td><td>18</td><td>-2</td><td>0</td><td>-4</td><td>16</td>
+            </tr>
+            <tr>
+                <td>0</td><td>-5</td><td>14</td><td>-16</td><td>6</td><td>-25</td><td>0</td><td>10</td>
+            </tr>
+            <tr>
+                <td>-18</td><td>0</td><td>-2</td><td>15</td><td>-10</td><td>3</td><td>0</td><td>-6</td>
+            </tr>
+            <tr>
+                <td>5</td><td>-12</td><td>0</td><td>-15</td><td>0</td><td>24</td><td>-20</td><td>0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        let currentPlayer = 1;
+        let num1 = Math.floor(Math.random() * 11) - 5;
+        let num2 = Math.floor(Math.random() * 11) - 5;
+
+        const board = document.getElementById('gameBoard');
+        const numbers = Array.from(board.getElementsByTagName('td'));
+
+        // Initial display of the random numbers
+        document.getElementById('num1').textContent = num1;
+        document.getElementById('num2').textContent = num2;
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData('text/plain', event.target.textContent);
+        }
+
+        function drop(event, targetId) {
+            event.preventDefault();
+            let draggedNumber = parseInt(event.dataTransfer.getData('text/plain'));
+            if (targetId === 'num1') {
+                num1 = draggedNumber;
+                document.getElementById('num1').textContent = num1;
+            } else if (targetId === 'num2') {
+                num2 = draggedNumber;
+                document.getElementById('num2').textContent = num2;
+            }
+
+            let product = num1 * num2;
+            highlightMatchingCells(product);
+        }
+
+        function highlightMatchingCells(product) {
+            let matchingCells = [];
+            for (let cell of numbers) {
+                if (parseInt(cell.textContent) === product && !cell.classList.contains('marked')) {
+                    matchingCells.push(cell);
+                    cell.classList.add('highlight');
+                    cell.addEventListener('click', cellClickHandler);
+                }
+            }
+
+            if (matchingCells.length === 0) {
+                alert(`No available square for the product: ${product}. Choose different numbers.`);
+                // Switch to next player
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.getElementById('currentPlayer').textContent = currentPlayer;
+            } else if (matchingCells.length === 1) {
+                // If only one matching cell, mark it automatically
+                markCell(matchingCells[0]);
+            } else {
+                // Wait for player to select a cell
+                alert(`Multiple squares match the product: ${product}. Please select one.`);
+            }
+        }
+
+        function cellClickHandler(event) {
+            markCell(event.target);
+        }
+
+        function markCell(cell) {
+            cell.classList.add('marked', currentPlayer === 1 ? 'player1' : 'player2');
+            removeHighlightsAndListeners();
+            checkWinner();
+            // Switch to next player
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            document.getElementById('currentPlayer').textContent = currentPlayer;
+        }
+
+        function removeHighlightsAndListeners() {
+            for (let cell of numbers) {
+                if (cell.classList.contains('highlight')) {
+                    cell.classList.remove('highlight');
+                    cell.removeEventListener('click', cellClickHandler);
+                }
+            }
+        }
+
+        function checkWinner() {
+            const winningCombinations = [
+                // All possible winning combinations for a 4-in-a-row on an 8x8 grid
+                // Horizontal combinations
+                ...[0,8,16,24,32,40,48,56].flatMap(rowStart => 
+                    [0,1,2,3,4].map(offset => 
+                        [rowStart + offset, rowStart + offset +1, rowStart + offset +2, rowStart + offset +3]
+                    )
+                ),
+                // Vertical combinations
+                ...[0,1,2,3,4,5,6,7].flatMap(colStart => 
+                    [0,8,16,24,32].map(offset => 
+                        [colStart + offset, colStart + offset +8, colStart + offset +16, colStart + offset +24]
+                    )
+                ),
+                // Diagonal combinations (top-left to bottom-right)
+                ...[0,1,2,3,8,9,10,11,16,17,18,19].map(start => 
+                    [start, start+9, start+18, start+27]
+                ),
+                // Diagonal combinations (bottom-left to top-right)
+                ...[24,25,26,27,32,33,34,35,40,41,42,43].map(start => 
+                    [start, start-7, start-14, start-21]
+                ),
+            ];
+
+            for (let combo of winningCombinations) {
+                const [a, b, c, d] = combo;
+                if (
+                    numbers[a] && numbers[b] && numbers[c] && numbers[d] &&
+                    numbers[a].classList.contains('marked') &&
+                    numbers[b].classList.contains('marked') &&
+                    numbers[c].classList.contains('marked') &&
+                    numbers[d].classList.contains('marked')
+                ) {
+                    if (
+                        numbers[a].classList.contains('player' + currentPlayer) &&
+                        numbers[b].classList.contains('player' + currentPlayer) &&
+                        numbers[c].classList.contains('player' + currentPlayer) &&
+                        numbers[d].classList.contains('player' + currentPlayer)
+                    ) {
+                        alert(`Player ${currentPlayer} wins!`);
+                        resetGame();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function resetGame() {
+            for (let cell of numbers) {
+                cell.classList.remove('marked', 'player1', 'player2');
+                cell.classList.remove('highlight');
+                cell.removeEventListener('click', cellClickHandler);
+            }
+            // Reset numbers and current player
+            num1 = Math.floor(Math.random() * 11) - 5;
+            num2 = Math.floor(Math.random() * 11) - 5;
+            document.getElementById('num1').textContent = num1;
+            document.getElementById('num2').textContent = num2;
+            currentPlayer = 1;
+            document.getElementById('currentPlayer').textContent = currentPlayer;
+        }
+    </script>
+</body>
+</html>
