@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Exercise: A Question of Scale (China)</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .list {
+            width: 45%;
+            margin: 20px;
+        }
+        .list h3 {
+            text-align: center;
+        }
+        .list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .list li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+        .draggable {
+            background-color: #d9edf7;
+        }
+        .correct {
+            background-color: lightgreen !important;
+            border: 1px solid green;
+        }
+        .incorrect {
+            background-color: lightcoral !important;
+            border: 1px solid red;
+        }
+        .empty {
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Matching Exercise: A Question of Scale (China)</h1>
+    <p>Drag the correct magnitude onto the corresponding object or distance.</p>
+    
+    <div class="container">
+        <div class="list">
+            <h3>Magnitudes</h3>
+            <ul id="magnitudes">
+                <li id="4" class="draggable" draggable="true">\( 10^5 - 10^6 \) metres</li>
+                <li id="2" class="draggable" draggable="true">\( 10^7 - 10^8 \) metres</li>
+                <li id="7" class="draggable" draggable="true">\( 10^2 - 10^3 \) metres</li>
+                <li id="9" class="draggable" draggable="true">\( 1 - 10 \) metres</li>
+                <li id="1" class="draggable" draggable="true">\( 10^8 - 10^9 \) metres</li>
+                <li id="6" class="draggable" draggable="true">\( 10^3 - 10^4 \) metres</li>
+                <li id="5" class="draggable" draggable="true">\( 10^4 - 10^5 \) metres</li>
+                <li id="3" class="draggable" draggable="true">\( 10^6 - 10^7 \) metres</li>
+                <li id="8" class="draggable" draggable="true">\( 10^1 - 10^2 \) metres</li>
+            </ul>
+        </div>
+
+        <div class="list">
+            <h3>Object/Distance</h3>
+            <ul id="distances">
+                <li id="target6" data-answer="6" class="empty">Length of the Yangtze River</li>
+                <li id="target4" data-answer="4" class="empty">Depth of the Mariana Trench</li>
+                <li id="target2" data-answer="2" class="empty">Length of the Great Wall of China</li>
+                <li id="target8" data-answer="8" class="empty">Length of a football field</li>
+                <li id="target3" data-answer="3" class="empty">Distance from Beijing to Shanghai</li>
+                <li id="target1" data-answer="1" class="empty">Distance of the Earth from the Sun</li>
+                <li id="target7" data-answer="7" class="empty">Height of the Shanghai Tower</li>
+                <li id="target9" data-answer="9" class="empty">Height of a typical bamboo plant</li>
+                <li id="target5" data-answer="5" class="empty">Height of Mount Everest</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable');
+        const targets = document.querySelectorAll('#distances li');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', dragStart);
+        });
+
+        targets.forEach(target => {
+            target.addEventListener('dragover', dragOver);
+            target.addEventListener('drop', drop);
+        });
+
+        function dragStart(e) {
+            e.dataTransfer.setData('text', e.target.id);
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const draggableId = e.dataTransfer.getData('text');
+            const draggableElement = document.getElementById(draggableId);
+            
+            // Check if the target already has an element, if not append it
+            if (!e.target.querySelector('.draggable')) {
+                e.target.appendChild(draggableElement);
+            }
+
+            const answer = draggableElement.id;
+            const correctAnswer = e.target.getAttribute('data-answer');
+            
+            // Immediate feedback - green for correct, red for incorrect
+            if (answer === correctAnswer) {
+                e.target.classList.add('correct');
+                e.target.classList.remove('incorrect');
+            } else {
+                e.target.classList.add('incorrect');
+                e.target.classList.remove('correct');
+            }
+        }
+    </script>
+
+</body>
+</html>
