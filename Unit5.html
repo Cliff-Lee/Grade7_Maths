@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Topic Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .question {
+            background-color: #e0e0e0;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question div {
+            cursor: pointer;
+            padding: 5px;
+        }
+        .answer {
+            display: none;
+            padding-top: 10px;
+            color: green;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit 5 - A Partnership with Science Review</h1>
+<img src="Unit5.png" alt="Unitposter" width="300">
+    <div class="container" id="questions-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <button onclick="generateQuestions()">Refresh Questions</button>
+
+    <script>
+        const topicsWithQuestions = [
+            {
+                topic: "Use models such as bar diagrams to depict unit rates when one or both quantities are fractions",
+                questions: [
+                    { question: "How would you represent 1/2 mile per 1/4 hour using a bar diagram?", answer: "Show a fraction of a bar for each part (1/2 mile and 1/4 hour), then divide for the unit rate." },
+                    { question: "Depict 3/4 cup of sugar per 1/3 recipe using a bar diagram.", answer: "Split the bar to show the ratio between the sugar and recipe fractions." },
+                    { question: "How can you represent 2/5 of a gallon per 1/2 hour using a bar model?", answer: "Use separate bars for gallons and hours and represent the division." }
+                ]
+            },
+            {
+                topic: "Find unit rates when one or both quantities are fractions",
+                questions: [
+                    { question: "Find the unit rate of 1/2 mile in 1/4 hour.", answer: "2 miles per hour" },
+                    { question: "What is the unit rate for 3/4 cup of sugar for 1/3 recipe?", answer: "9/4 cups per recipe or 2.25 cups per recipe" },
+                    { question: "Find the unit rate for 2/5 gallon in 1/2 hour.", answer: "4/5 gallons per hour" }
+                ]
+            },
+            {
+                topic: "Solve problems involving unit rates",
+                questions: [
+                    { question: "If a car travels 150 miles in 3 hours, what is the unit rate?", answer: "50 miles per hour" },
+                    { question: "Solve: You can buy 6 apples for $3. How much is each apple?", answer: "$0.50 per apple" },
+                    { question: "What is the unit rate if you drive 240 miles in 4 hours?", answer: "60 miles per hour" }
+                ]
+            },
+            {
+                topic: "Recognise and define a proportional relationship between two quantities",
+                questions: [
+                    { question: "Define a proportional relationship between distance and time when traveling at a constant speed.", answer: "A proportional relationship is when the ratio between distance and time remains constant." },
+                    { question: "What is a proportional relationship between price and number of items?", answer: "The price per item remains constant as the number of items changes." },
+                    { question: "Recognize if doubling the number of oranges and doubling the price forms a proportional relationship.", answer: "Yes, the price per orange remains constant." }
+                ]
+            },
+            {
+                topic: "Identify a proportional relationship from a table",
+                questions: [
+                    { question: "How can you tell if a table shows a proportional relationship?", answer: "If the ratio between corresponding values is constant, the table shows a proportional relationship." },
+                    { question: "Identify whether a table showing x = 2, 4, 6 and y = 3, 6, 9 is proportional.", answer: "Yes, the ratio between y and x is constant at 3/2." },
+                    { question: "Does a table showing x = 1, 2, 3 and y = 2, 5, 8 show a proportional relationship?", answer: "No, the ratios are not constant." }
+                ]
+            },
+            {
+                topic: "Identify a non-proportional relationship from a table",
+                questions: [
+                    { question: "How can you recognize a non-proportional relationship in a table?", answer: "If the ratios between corresponding values are not constant, the relationship is non-proportional." },
+                    { question: "Identify whether a table with x = 1, 2, 3 and y = 2, 5, 8 is non-proportional.", answer: "Yes, the ratios are not constant." },
+                    { question: "Does a table showing x = 2, 4, 6 and y = 3, 7, 11 indicate a non-proportional relationship?", answer: "Yes, because the ratios are different." }
+                ]
+            },
+            {
+                topic: "Find the constant of proportionality from a table",
+                questions: [
+                    { question: "What is the constant of proportionality for x = 2, 4, 6 and y = 4, 8, 12?", answer: "2" },
+                    { question: "Find the constant of proportionality for x = 5, 10, 15 and y = 20, 40, 60.", answer: "4" },
+                    { question: "How do you find the constant of proportionality from a table?", answer: "Divide y by x for each pair of values. The ratio should remain constant." }
+                ]
+            },
+            {
+                topic: "Identify a proportional relationship from a graph",
+                questions: [
+                    { question: "How can you tell if a graph shows a proportional relationship?", answer: "If the graph is a straight line through the origin (0,0), it represents a proportional relationship." },
+                    { question: "Does a graph showing a line through (0,0) represent a proportional relationship?", answer: "Yes" },
+                    { question: "Identify if a line that passes through (1,2) but not (0,0) is proportional.", answer: "No, it must pass through the origin." }
+                ]
+            },
+            {
+                topic: "Graph a proportional relationship on the coordinate plane",
+                questions: [
+                    { question: "Graph a proportional relationship with a constant of proportionality of 2.", answer: "The line will pass through (0,0), (1,2), (2,4), etc." },
+                    { question: "How do you graph a proportional relationship with a constant of 3?", answer: "Plot points like (0,0), (1,3), (2,6), and connect the points with a straight line." },
+                    { question: "Graph a proportional relationship where y = 5x.", answer: "Plot points like (0,0), (1,5), (2,10), and connect them." }
+                ]
+            },
+            {
+                topic: "Graph a non-proportional relationship on the coordinate plane",
+                questions: [
+                    { question: "Graph a non-proportional relationship like y = 2x + 3.", answer: "The line will not pass through (0,0) but instead through (0,3)." },
+                    { question: "How do you graph y = 4x + 2?", answer: "Plot points like (0,2), (1,6), and draw a straight line through them." },
+                    { question: "Graph a non-proportional relationship y = 5x - 3.", answer: "Plot points like (0,-3), (1,2), and draw a line through them." }
+                ]
+            },
+            {
+                topic: "Find the constant of proportionality from a graph",
+                questions: [
+                    { question: "What is the constant of proportionality for a graph where the line passes through (0,0) and (1,3)?", answer: "3" },
+                    { question: "Find the constant of proportionality for a line passing through (0,0) and (2,6).", answer: "3" },
+                    { question: "How do you determine the constant of proportionality from a graph?", answer: "Find the ratio of y to x for any point on the line." }
+                ]
+            },
+            {
+                topic: "Interpret and understand the significance of (0,0) and (1,r) on a graph of a proportional relationship",
+                questions: [
+                    { question: "What does the point (0,0) represent in a proportional relationship?", answer: "It shows that when one quantity is zero, the other is also zero." },
+                    { question: "What is the significance of the point (1,r) in a proportional relationship?", answer: "It shows the constant of proportionality, r." },
+                    { question: "How is (1,r) useful in identifying the constant of proportionality?", answer: "r represents the constant rate of change (y/x) when x is 1." }
+                ]
+            },
+            {
+                topic: "Write equations to represent proportional relationships",
+                questions: [
+                    { question: "Write the equation for a proportional relationship with a constant of 5.", answer: "y = 5x" },
+                    { question: "What is the equation for a proportional relationship with a constant of 3?", answer: "y = 3x" },
+                    { question: "Write an equation where y is proportional to x with a constant of 7.", answer: "y = 7x" }
+                ]
+            },
+            {
+                topic: "Use equations for proportional relationships to find missing values",
+                questions: [
+                    { question: "Use y = 2x to find y when x = 5.", answer: "y = 10" },
+                    { question: "In the equation y = 4x, what is y when x = 3?", answer: "y = 12" },
+                    { question: "Find the missing value in the equation y = 6x when x = 8.", answer: "y = 48" }
+                ]
+            },
+            {
+                topic: "Find and understand a percent of increase and its change to the original amount",
+                questions: [
+                    { question: "What is the percent increase from 50 to 75?", answer: "50%" },
+                    { question: "Find the percent increase from 40 to 60.", answer: "50%" },
+                    { question: "If a price increases from $100 to $125, what is the percent increase?", answer: "25%" }
+                ]
+            },
+            {
+                topic: "Find and understand a percent of decrease and its change to the original amount",
+                questions: [
+                    { question: "What is the percent decrease from 80 to 60?", answer: "25%" },
+                    { question: "Find the percent decrease from 100 to 75.", answer: "25%" },
+                    { question: "If a price drops from $200 to $150, what is the percent decrease?", answer: "25%" }
+                ]
+            },
+            {
+                topic: "Solve multi-step ratios and percent problems in different applications",
+                questions: [
+                    { question: "If a $50 shirt is marked up by 20%, what is the final price?", answer: "$60" },
+                    { question: "A meal costs $40 and you leave a 15% tip. How much is the tip?", answer: "$6" },
+                    { question: "Solve: A $100 item is discounted by 30%. What is the final price?", answer: "$70" }
+                ]
+            },
+            {
+                topic: "Find the percent error given the estimated value and the actual amount",
+                questions: [
+                    { question: "Find the percent error if the estimated value is 50 and the actual value is 45.", answer: "11.11%" },
+                    { question: "If the estimated value is 80 and the actual value is 100, what is the percent error?", answer: "20%" },
+                    { question: "What is the percent error if the estimated value is 120 and the actual value is 150?", answer: "20%" }
+                ]
+            },
+            {
+                topic: "Compare percent errors to identify accuracy of an estimate",
+                questions: [
+                    { question: "Which estimate is more accurate: 10% error or 5% error?", answer: "The estimate with 5% error is more accurate." },
+                    { question: "If one estimate has a 15% error and another has a 12% error, which is more accurate?", answer: "The estimate with 12% error is more accurate." },
+                    { question: "Compare the accuracy of a 7% error versus a 3% error.", answer: "The estimate with 3% error is more accurate." }
+                ]
+            }
+        ];
+
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            // Shuffle topics and pick three random ones
+            const shuffledTopics = topicsWithQuestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            // Add selected topics and questions to the page
+            shuffledTopics.forEach((topicObj) => {
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'question';
+                topicDiv.innerHTML = `<strong>Topic:</strong> ${topicObj.topic}<br><br>`;
+                
+                // Display questions under each topic
+                const shuffledQuestions = topicObj.questions.sort(() => 0.5 - Math.random());
+                shuffledQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `<div class="question-text" onclick="toggleAnswer('answer-${topicObj.topic}-${index}')">${q.question}</div>
+                                             <div class="answer" id="answer-${topicObj.topic}-${index}">${q.answer}</div>`;
+                    topicDiv.appendChild(questionDiv);
+                });
+                
+                container.appendChild(topicDiv);
+            });
+        }
+
+        function toggleAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        }
+
+        // Generate initial set of questions when the page loads
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

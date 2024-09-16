@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Topic Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .question {
+            background-color: #e0e0e0;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question div {
+            cursor: pointer;
+            padding: 5px;
+        }
+        .answer {
+            display: none;
+            padding-top: 10px;
+            color: green;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit 2 - The Power of Zero</h1>
+ <img src="Unit2.png" alt="Unitposter" width="300">
+    <div class="container" id="questions-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <button onclick="generateQuestions()">Refresh Questions</button>
+
+    <script>
+        const topicsWithQuestions = [
+            {
+                topic: "Write numerical repeated multiplication expressions as powers",
+                questions: [
+                    { question: "Express 3 × 3 × 3 × 3 as a power.", answer: "3^4" },
+                    { question: "Write 2 × 2 × 2 × 2 × 2 as a power.", answer: "2^5" },
+                    { question: "Convert 5 × 5 × 5 into a power.", answer: "5^3" }
+                ]
+            },
+            {
+                topic: "Write algebraic repeated multiplication expressions as powers",
+                questions: [
+                    { question: "Express x × x × x × x as a power.", answer: "x^4" },
+                    { question: "Write y × y × y × y × y as a power.", answer: "y^5" },
+                    { question: "Convert a × a × a into a power.", answer: "a^3" }
+                ]
+            },
+            {
+                topic: "Evaluate a numerical expression that contains a power",
+                questions: [
+                    { question: "Evaluate 2^3.", answer: "8" },
+                    { question: "What is the value of 5^2?", answer: "25" },
+                    { question: "Solve 4^3.", answer: "64" }
+                ]
+            },
+            {
+                topic: "Evaluate an algebraic expression that contains a power",
+                questions: [
+                    { question: "Evaluate x^2 when x = 3.", answer: "9" },
+                    { question: "What is the value of y^3 when y = 2?", answer: "8" },
+                    { question: "Solve 2a^3 when a = 2.", answer: "16" }
+                ]
+            },
+            {
+                topic: "Understand and identify what a monomial is",
+                questions: [
+                    { question: "Is 3x^2 a monomial?", answer: "Yes" },
+                    { question: "Is 4 + 2x a monomial?", answer: "No" },
+                    { question: "Identify whether 5xy is a monomial.", answer: "Yes" }
+                ]
+            },
+            {
+                topic: "Use the Product of Powers Property to multiply numerical bases, algebraic bases and monomials",
+                questions: [
+                    { question: "Simplify 2^3 × 2^4.", answer: "2^7" },
+                    { question: "What is the result of x^2 × x^5?", answer: "x^7" },
+                    { question: "Multiply a^3 × a^2.", answer: "a^5" }
+                ]
+            },
+            {
+                topic: "Use the Quotient of Powers Property to divide numerical bases, algebraic bases and monomials",
+                questions: [
+                    { question: "Simplify 6^5 ÷ 6^2.", answer: "6^3" },
+                    { question: "Divide y^7 ÷ y^3.", answer: "y^4" },
+                    { question: "Simplify x^6 ÷ x^2.", answer: "x^4" }
+                ]
+            },
+            {
+                topic: "Use the Power of a Power Property to simplify monomials",
+                questions: [
+                    { question: "Simplify (2^3)^2.", answer: "2^6" },
+                    { question: "What is the result of (x^2)^3?", answer: "x^6" },
+                    { question: "Simplify (y^4)^2.", answer: "y^8" }
+                ]
+            },
+            {
+                topic: "Simplify expressions that have zero exponents",
+                questions: [
+                    { question: "Simplify 5^0.", answer: "1" },
+                    { question: "What is x^0?", answer: "1" },
+                    { question: "Simplify (a^2)^0.", answer: "1" }
+                ]
+            },
+            {
+                topic: "Simplify expressions that have negative exponents",
+                questions: [
+                    { question: "Simplify 2^-3.", answer: "1/2^3 or 1/8" },
+                    { question: "What is x^-4?", answer: "1/x^4" },
+                    { question: "Simplify y^-2.", answer: "1/y^2" }
+                ]
+            },
+            {
+                topic: "Understand how scientific notation can be used to write very large or very small numbers in a compact way",
+                questions: [
+                    { question: "Write 500000 in scientific notation.", answer: "5 × 10^5" },
+                    { question: "Express 0.0003 in scientific notation.", answer: "3 × 10^-4" },
+                    { question: "How can we express 1.2 million in scientific notation?", answer: "1.2 × 10^6" }
+                ]
+            },
+            {
+                topic: "Write large and small numbers in standard form",
+                questions: [
+                    { question: "Convert 6 × 10^3 to standard form.", answer: "6000" },
+                    { question: "What is the standard form of 4 × 10^-2?", answer: "0.04" },
+                    { question: "Write 1.5 × 10^4 in standard form.", answer: "15000" }
+                ]
+            },
+            {
+                topic: "Solve equations of the form x^2 = p",
+                questions: [
+                    { question: "Solve x^2 = 25.", answer: "x = 5 or x = -5" },
+                    { question: "What is the solution of x^2 = 49?", answer: "x = 7 or x = -7" },
+                    { question: "Solve x^2 = 16.", answer: "x = 4 or x = -4" }
+                ]
+            },
+            {
+                topic: "Understand what it means for a number to be a perfect square",
+                questions: [
+                    { question: "Is 36 a perfect square?", answer: "Yes, 6 × 6 = 36" },
+                    { question: "Is 45 a perfect square?", answer: "No" },
+                    { question: "Explain why 81 is a perfect square.", answer: "9 × 9 = 81" }
+                ]
+            },
+            {
+                topic: "Estimate square roots to the nearest integer and nearest tenth",
+                questions: [
+                    { question: "Estimate √50 to the nearest integer.", answer: "7" },
+                    { question: "What is √30 to the nearest tenth?", answer: "5.5" },
+                    { question: "Estimate √75 to the nearest integer.", answer: "9" }
+                ]
+            },
+            {
+                topic: "Classify real numbers by their properties to form sets of real numbers",
+                questions: [
+                    { question: "Is √2 rational or irrational?", answer: "Irrational" },
+                    { question: "Classify -3 as rational or irrational.", answer: "Rational" },
+                    { question: "Is 7/2 a rational number?", answer: "Yes" }
+                ]
+            },
+            {
+                topic: "Determine whether a number is rational or irrational",
+                questions: [
+                    { question: "Is 0.333... a rational or irrational number?", answer: "Rational" },
+                    { question: "Classify √7 as rational or irrational.", answer: "Irrational" },
+                    { question: "Is 0.25 a rational number?", answer: "Yes, because it can be written as 1/4" }
+                ]
+            }
+            // Add more topics/questions as needed
+        ];
+
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            // Shuffle topics and pick three random ones
+            const shuffledTopics = topicsWithQuestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            // Add selected topics and questions to the page
+            shuffledTopics.forEach((topicObj) => {
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'question';
+                topicDiv.innerHTML = `<strong>Topic:</strong> ${topicObj.topic}<br><br>`;
+                
+                // Display questions under each topic
+                const shuffledQuestions = topicObj.questions.sort(() => 0.5 - Math.random());
+                shuffledQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `<div class="question-text" onclick="toggleAnswer('answer-${topicObj.topic}-${index}')">${q.question}</div>
+                                             <div class="answer" id="answer-${topicObj.topic}-${index}">${q.answer}</div>`;
+                    topicDiv.appendChild(questionDiv);
+                });
+                
+                container.appendChild(topicDiv);
+            });
+        }
+
+        function toggleAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        }
+
+        // Generate initial set of questions when the page loads
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

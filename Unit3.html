@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Topic Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .question {
+            background-color: #e0e0e0;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question div {
+            cursor: pointer;
+            padding: 5px;
+        }
+        .answer {
+            display: none;
+            padding-top: 10px;
+            color: green;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit 3 - Is it just luck Review</h1>
+<img src="Unit3.png" alt="Unitposter" width="300">
+    <div class="container" id="questions-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <button onclick="generateQuestions()">Refresh Questions</button>
+
+    <script>
+        const topicsWithQuestions = [
+            {
+                topic: "Classify the likelihood of simple events",
+                questions: [
+                    { question: "How likely is it to flip a coin and get heads?", answer: "50% or 1/2" },
+                    { question: "What is the likelihood of rolling a 6 on a standard die?", answer: "1/6" },
+                    { question: "What is the probability of drawing a red card from a standard deck of cards?", answer: "26/52 or 1/2" }
+                ]
+            },
+            {
+                topic: "Find relative frequencies from data in frequency tables and bar graphs",
+                questions: [
+                    { question: "If 15 out of 100 students like math, what is the relative frequency of students liking math?", answer: "0.15 or 15%" },
+                    { question: "From a frequency table, calculate the relative frequency if 20 people out of 80 prefer chocolate ice cream.", answer: "0.25 or 25%" },
+                    { question: "What is the relative frequency of cars if 30 out of 100 vehicles are cars?", answer: "0.30 or 30%" }
+                ]
+            },
+            {
+                topic: "Create relative frequency tables and bar graphs from a set of data",
+                questions: [
+                    { question: "Create a relative frequency table for data showing 10 blue, 20 red, and 5 green marbles.", answer: "Blue: 10/35, Red: 20/35, Green: 5/35" },
+                    { question: "How do you create a relative frequency bar graph for survey data with 40 responses: 15 yes, 25 no?", answer: "Yes: 15/40 = 0.375, No: 25/40 = 0.625" },
+                    { question: "What is the process to create a relative frequency table for a survey with 50 participants?", answer: "Divide each frequency by the total number of participants (50)." }
+                ]
+            },
+            {
+                topic: "Find the experimental probability of an event from a relative frequency bar graph",
+                questions: [
+                    { question: "What is the experimental probability of selecting a red marble if the bar graph shows red appears 20% of the time?", answer: "0.20 or 20%" },
+                    { question: "From the bar graph, if 40% of the students like pizza, what is the experimental probability of selecting a student who likes pizza?", answer: "0.40 or 40%" },
+                    { question: "How do you calculate experimental probability from a bar graph showing that 25% of the time a coin lands on heads?", answer: "0.25 or 25%" }
+                ]
+            },
+            {
+                topic: "Make predictions using relative frequency and proportional reasoning",
+                questions: [
+                    { question: "If 30 out of 100 people prefer chocolate, how many would prefer chocolate in a group of 200?", answer: "60" },
+                    { question: "What is the predicted number of people who prefer cats in a population of 500 if the relative frequency is 0.2?", answer: "100 people" },
+                    { question: "If the relative frequency of voters for candidate A is 40%, how many people will vote for candidate A out of 1000?", answer: "400 people" }
+                ]
+            },
+            {
+                topic: "Find the sample space of simple events",
+                questions: [
+                    { question: "What is the sample space of flipping a coin?", answer: "Heads, Tails" },
+                    { question: "What is the sample space for rolling a standard die?", answer: "1, 2, 3, 4, 5, 6" },
+                    { question: "What is the sample space for drawing a card from a standard deck?", answer: "52 cards: 13 hearts, 13 diamonds, 13 spades, 13 clubs" }
+                ]
+            },
+            {
+                topic: "Find the theoretical probability of simple events",
+                questions: [
+                    { question: "What is the theoretical probability of rolling a 3 on a standard die?", answer: "1/6" },
+                    { question: "Find the probability of getting heads on a coin toss.", answer: "1/2" },
+                    { question: "What is the theoretical probability of drawing an ace from a deck of cards?", answer: "4/52 or 1/13" }
+                ]
+            },
+            {
+                topic: "Find the complements of simple events",
+                questions: [
+                    { question: "What is the complement of getting tails on a coin flip?", answer: "Heads" },
+                    { question: "Find the complement of rolling a 5 on a die.", answer: "Rolling any other number (1, 2, 3, 4, or 6)" },
+                    { question: "What is the complement of drawing a black card from a deck of cards?", answer: "Drawing a red card (hearts or diamonds)" }
+                ]
+            },
+            {
+                topic: "Compare relative frequency to the theoretical probability of a simple event",
+                questions: [
+                    { question: "Compare the theoretical probability of rolling a 3 (1/6) with a relative frequency of rolling a 3 (0.2).", answer: "Theoretical: 1/6 = 0.167, Relative Frequency: 0.2" },
+                    { question: "If the theoretical probability of flipping heads is 1/2, how does this compare to an experimental result of 55% heads?", answer: "Theoretical: 50%, Experimental: 55%" },
+                    { question: "Compare the theoretical probability of drawing a heart (1/4) to the relative frequency of 0.30.", answer: "Theoretical: 0.25, Relative Frequency: 0.30" }
+                ]
+            },
+            {
+                topic: "Find the sample space of compound events using a table or a tree diagram",
+                questions: [
+                    { question: "What is the sample space of flipping two coins?", answer: "HH, HT, TH, TT" },
+                    { question: "Find the sample space for rolling two dice.", answer: "36 outcomes: (1,1), (1,2), ..., (6,6)" },
+                    { question: "Use a tree diagram to find the sample space of flipping a coin and rolling a die.", answer: "2 × 6 = 12 outcomes" }
+                ]
+            },
+            {
+                topic: "Find the theoretical probability of compound events using a table or list",
+                questions: [
+                    { question: "Find the probability of rolling two 6's on two dice.", answer: "1/36" },
+                    { question: "What is the probability of flipping heads twice in a row?", answer: "1/4 or 0.25" },
+                    { question: "Calculate the probability of drawing two aces from a deck of cards.", answer: "4/52 × 3/51 = 1/221" }
+                ]
+            },
+            {
+                topic: "Design a simulation of a compound event and analyze the results",
+                questions: [
+                    { question: "Design a simulation to determine the probability of getting two heads in 100 coin flips.", answer: "Flip two coins 100 times and count the number of HH outcomes." },
+                    { question: "Simulate rolling two dice 50 times and finding the probability of getting a sum of 7.", answer: "Record the sum of each roll and count how many times 7 occurs." },
+                    { question: "Create a simulation to analyze the probability of drawing two hearts from a deck of cards.", answer: "Shuffle and draw two cards repeatedly to estimate the probability." }
+                ]
+            },
+            {
+                topic: "Identify valid sampling methods that best represent survey descriptions",
+                questions: [
+                    { question: "Which sampling method is best for surveying students about school lunch preferences?", answer: "Random sampling of students from different grades" },
+                    { question: "What is a valid sampling method to survey citizens about a local issue?", answer: "Random sampling across different neighborhoods" },
+                    { question: "Which sampling method should be used to survey 100 people about a city park?", answer: "A random sample of people from all areas of the city" }
+                ]
+            },
+            {
+                topic: "Classify biased samples",
+                questions: [
+                    { question: "Is a survey of only high school seniors about the effectiveness of the entire school curriculum biased?", answer: "Yes, it doesn't include younger students' perspectives." },
+                    { question: "If only people at a soccer match are asked whether soccer is their favorite sport, is the sample biased?", answer: "Yes, this is a biased sample." },
+                    { question: "Is a sample of 50 people surveyed only from one neighborhood representative of a city's opinion on a park?", answer: "No, this sample is biased." }
+                ]
+            },
+            {
+                topic: "Identify the sampling method used to determine that a valid inference was made",
+                questions: [
+                    { question: "What sampling method was used if a school surveyed 100 randomly selected students?", answer: "Random sampling" },
+                    { question: "What type of sampling is being used if a teacher surveys only their own students?", answer: "Convenience sampling (possibly biased)" },
+                    { question: "If a survey samples randomly from different neighborhoods, what type of sampling is this?", answer: "Stratified random sampling" }
+                ]
+            },
+            {
+                topic: "Use proportional reasoning to make a prediction about a population from a valid sample",
+                questions: [
+                    { question: "If 20 out of 50 people surveyed prefer action movies, how many out of 500 would you predict prefer action movies?", answer: "200 people" },
+                    { question: "If 25% of a sample of 80 students prefer basketball, how many out of 400 students would you predict prefer basketball?", answer: "100 students" },
+                    { question: "If 12 out of 60 people prefer chocolate, how many out of 300 people would you predict prefer chocolate?", answer: "60 people" }
+                ]
+            },
+            {
+                topic: "Make comparative inferences about two populations by comparing their centers and variations",
+                questions: [
+                    { question: "What can you infer if the mean height of basketball players is higher than the mean height of soccer players?", answer: "Basketball players tend to be taller than soccer players." },
+                    { question: "Compare the mean test scores of two classes. One class has a mean of 80, and the other has a mean of 90.", answer: "The second class performed better on average." },
+                    { question: "If two populations have the same mean but different variations, what can you infer?", answer: "The population with more variation has more diverse data points." }
+                ]
+            }
+            // Add more topics/questions as needed
+        ];
+
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            // Shuffle topics and pick three random ones
+            const shuffledTopics = topicsWithQuestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            // Add selected topics and questions to the page
+            shuffledTopics.forEach((topicObj) => {
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'question';
+                topicDiv.innerHTML = `<strong>Topic:</strong> ${topicObj.topic}<br><br>`;
+                
+                // Display questions under each topic
+                const shuffledQuestions = topicObj.questions.sort(() => 0.5 - Math.random());
+                shuffledQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `<div class="question-text" onclick="toggleAnswer('answer-${topicObj.topic}-${index}')">${q.question}</div>
+                                             <div class="answer" id="answer-${topicObj.topic}-${index}">${q.answer}</div>`;
+                    topicDiv.appendChild(questionDiv);
+                });
+                
+                container.appendChild(topicDiv);
+            });
+        }
+
+        function toggleAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        }
+
+        // Generate initial set of questions when the page loads
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

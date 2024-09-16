@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Magic Square Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 300px;
+            height: 300px;
+        }
+        td {
+            border: 1px solid #000;
+            width: 33%;
+            height: 33%;
+            font-size: 2em;
+            cursor: pointer;
+            vertical-align: middle;
+            text-align: center;
+        }
+        td.hidden {
+            background-color: #ccc;
+        }
+        #controls {
+            margin: 20px;
+        }
+        #message {
+            margin: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Magic Square Generator</h1>
+    <div id="controls">
+        <label for="magicType">Select Magic Square Type:</label>
+        <select id="magicType">
+            <option value="1">Magic Square 1 (Positive Integers)</option>
+            <option value="2">Magic Square 2 (Positive and Negative Integers)</option>
+            <option value="3">Magic Square 3 (Decimals, Fractions, Integers)</option>
+        </select>
+        <button id="newProblem">New Problem</button>
+    </div>
+    <table id="magicSquare">
+        <tr>
+            <td data-index="0" class="hidden">?</td>
+            <td data-index="1" class="hidden">?</td>
+            <td data-index="2" class="hidden">?</td>
+        </tr>
+        <tr>
+            <td data-index="3" class="hidden">?</td>
+            <td data-index="4" class="hidden">?</td>
+            <td data-index="5" class="hidden">?</td>
+        </tr>
+        <tr>
+            <td data-index="6" class="hidden">?</td>
+            <td data-index="7" class="hidden">?</td>
+            <td data-index="8" class="hidden">?</td>
+        </tr>
+    </table>
+    <div id="message"></div>
+    <script>
+        const magicTypeSelect = document.getElementById('magicType');
+        const newProblemButton = document.getElementById('newProblem');
+        const magicSquareTable = document.getElementById('magicSquare');
+        const messageDiv = document.getElementById('message');
+        const baseMagicSquare = [8, 1, 6, 3, 5, 7, 4, 9, 2];
+        let currentMagicSquare = [];
+
+        newProblemButton.addEventListener('click', function() {
+            generateMagicSquare(parseInt(magicTypeSelect.value));
+        });
+
+        const cells = magicSquareTable.getElementsByTagName('td');
+
+        for (let i = 0; i < cells.length; i++) {
+            cells[i].addEventListener('click', function() {
+                revealCell(this);
+            });
+        }
+
+        function generateMagicSquare(type) {
+            let scale, translate;
+            currentMagicSquare = [];
+
+            if (type === 1) {
+                // Positive integers
+                scale = Math.floor(Math.random() * 5) + 1; // Random integer from 1 to 5
+                translate = Math.floor(Math.random() * 10); // Random integer from 0 to 10
+
+                for (let i = 0; i < baseMagicSquare.length; i++) {
+                    let val = baseMagicSquare[i] * scale + translate;
+                    currentMagicSquare.push(val);
+                }
+            }
+            else if (type === 2) {
+                // Positive and negative integers
+                scale = Math.floor(Math.random() * 11) - 5; // Random integer from -5 to 5, excluding 0
+                if (scale === 0) scale = 1;
+                translate = Math.floor(Math.random() * 21) - 10; // Random integer from -10 to 10
+
+                for (let i = 0; i < baseMagicSquare.length; i++) {
+                    let val = baseMagicSquare[i] * scale + translate;
+                    currentMagicSquare.push(val);
+                }
+            }
+            else if (type === 3) {
+                // Decimals (1 decimal place), fractions, integers
+                scale = (Math.random() * 5).toFixed(1); // Random decimal from 0.1 to 5.0
+                if (scale == 0) scale = 0.1;
+                translate = (Math.random() * 10).toFixed(1); // Random decimal from 0.0 to 10.0
+
+                for (let i = 0; i < baseMagicSquare.length; i++) {
+                    let val = (baseMagicSquare[i] * scale + parseFloat(translate)).toFixed(1);
+                    currentMagicSquare.push(val);
+                }
+
+                // Randomly convert some numbers to fractions
+                for (let i = 0; i < currentMagicSquare.length; i++) {
+                    if (Math.random() < 0.3) { // 30% chance to convert to fraction
+                        currentMagicSquare[i] = decimalToFraction(currentMagicSquare[i]);
+                    }
+                }
+            }
+
+            displayMagicSquare();
+        }
+
+        function displayMagicSquare() {
+            const cells = magicSquareTable.getElementsByTagName('td');
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.add('hidden');
+                cells[i].textContent = '?';
+            }
+            messageDiv.textContent = '';
+        }
+
+        function revealCell(cell) {
+            const index = parseInt(cell.getAttribute('data-index'));
+            cell.textContent = currentMagicSquare[index];
+            cell.classList.remove('hidden');
+
+            // Check if all cells are revealed
+            if (allCellsRevealed()) {
+                if (checkMagicSquare()) {
+                    messageDiv.textContent = 'Congratulations! The magic square works.';
+                } else {
+                    messageDiv.textContent = 'The magic square does not work.';
+                }
+            }
+        }
+
+        function allCellsRevealed() {
+            const cells = magicSquareTable.getElementsByTagName('td');
+            for (let i = 0; i < cells.length; i++) {
+                if (cells[i].classList.contains('hidden')) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function evaluateNumber(str) {
+            if (str.includes('/')) {
+                let parts = str.split('/');
+                return parseFloat(parts[0]) / parseFloat(parts[1]);
+            } else {
+                return parseFloat(str);
+            }
+        }
+
+        function checkMagicSquare() {
+            const cells = magicSquareTable.getElementsByTagName('td');
+            let magicSum = null;
+
+            // Rows
+            for (let i = 0; i < 3; i++) {
+                let sum = 0;
+                for (let j = 0; j < 3; j++) {
+                    let val = evaluateNumber(cells[i * 3 + j].textContent);
+                    sum += val;
+                }
+                if (magicSum === null) magicSum = sum;
+                else if (Math.abs(sum - magicSum) > 0.0001) return false;
+            }
+
+            // Columns
+            for (let j = 0; j < 3; j++) {
+                let sum = 0;
+                for (let i = 0; i < 3; i++) {
+                    let val = evaluateNumber(cells[i * 3 + j].textContent);
+                    sum += val;
+                }
+                if (Math.abs(sum - magicSum) > 0.0001) return false;
+            }
+
+            // Diagonals
+            let sum = 0;
+            for (let i = 0; i < 3; i++) {
+                let val = evaluateNumber(cells[i * 3 + i].textContent);
+                sum += val;
+            }
+            if (Math.abs(sum - magicSum) > 0.0001) return false;
+
+            sum = 0;
+            for (let i = 0; i < 3; i++) {
+                let val = evaluateNumber(cells[i * 3 + (2 - i)].textContent);
+                sum += val;
+            }
+            if (Math.abs(sum - magicSum) > 0.0001) return false;
+
+            return true;
+        }
+
+        function decimalToFraction(decimal) {
+            let num = parseFloat(decimal);
+            let decimalPlaces = decimal.toString().split('.')[1].length || 0;
+            let denominator = Math.pow(10, decimalPlaces);
+            let numerator = num * denominator;
+            let gcd = greatestCommonDivisor(numerator, denominator);
+            numerator = numerator / gcd;
+            denominator = denominator / gcd;
+            if (denominator === 1) return numerator.toString();
+            else return numerator + "/" + denominator;
+        }
+
+        function greatestCommonDivisor(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            if (!b) return a;
+            return greatestCommonDivisor(b, a % b);
+        }
+    </script>
+</body>
+</html>

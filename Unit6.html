@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Topic Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .question {
+            background-color: #e0e0e0;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question div {
+            cursor: pointer;
+            padding: 5px;
+        }
+        .answer {
+            display: none;
+            padding-top: 10px;
+            color: green;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit 6 - Blueprints</h1>
+<img src="Unit6.png" alt="Unitposter" width="300">
+    <div class="container" id="questions-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <button onclick="generateQuestions()">Refresh Questions</button>
+
+    <script>
+        const topicsWithQuestions = [
+            {
+                topic: "Name angles using various notations",
+                questions: [
+                    { question: "How do you name an angle using three points?", answer: "Use the vertex as the middle point, e.g., ∠ABC." },
+                    { question: "Name the angle at point D in the triangle.", answer: "It can be named ∠D or using three points like ∠ADB." },
+                    { question: "Name an angle using only its vertex.", answer: "If no ambiguity exists, use the vertex, like ∠A." }
+                ]
+            },
+            {
+                topic: "Understand the relationship between vertical angles",
+                questions: [
+                    { question: "What is the relationship between vertical angles?", answer: "Vertical angles are congruent (equal in measure)." },
+                    { question: "If two vertical angles measure 50°, what is the measure of the other angle?", answer: "50° (because vertical angles are congruent)." },
+                    { question: "Explain why vertical angles are equal.", answer: "Vertical angles are formed by two intersecting lines, and their opposite pairs are equal." }
+                ]
+            },
+            {
+                topic: "Use the properties of vertical angles to find missing values",
+                questions: [
+                    { question: "If one vertical angle measures 120°, what is the measure of its vertical angle?", answer: "120°" },
+                    { question: "Find the missing angle if one vertical angle measures 75°.", answer: "75°" },
+                    { question: "How do you use vertical angles to find unknown angles in an intersecting pair of lines?", answer: "Vertical angles are congruent, so use this property to set their measures equal." }
+                ]
+            },
+            {
+                topic: "Understand the relationship between adjacent angles",
+                questions: [
+                    { question: "What is the relationship between adjacent angles?", answer: "Adjacent angles share a common side and vertex but do not overlap." },
+                    { question: "Can adjacent angles be supplementary?", answer: "Yes, if their sum is 180°." },
+                    { question: "What are adjacent angles?", answer: "They are angles that share a common side and a vertex." }
+                ]
+            },
+            {
+                topic: "Use the properties of adjacent angles to find missing values",
+                questions: [
+                    { question: "If two adjacent angles add up to 90°, what are these angles called?", answer: "Complementary angles" },
+                    { question: "If adjacent angles are supplementary, what is their sum?", answer: "180°" },
+                    { question: "How do you find the missing value of one adjacent angle if the other is 70° and they are complementary?", answer: "20°" }
+                ]
+            },
+            {
+                topic: "Understand the properties of complementary angles",
+                questions: [
+                    { question: "What is the sum of complementary angles?", answer: "90°" },
+                    { question: "If one angle is 40°, what is its complement?", answer: "50°" },
+                    { question: "Can two obtuse angles be complementary?", answer: "No, because the sum of two obtuse angles is more than 90°." }
+                ]
+            },
+            {
+                topic: "Use the properties of complementary angles to find missing values",
+                questions: [
+                    { question: "Find the missing angle if the complementary angle is 65°.", answer: "25°" },
+                    { question: "If two angles are complementary and one is 30°, what is the other angle?", answer: "60°" },
+                    { question: "What is the missing angle if its complement is 45°?", answer: "45°" }
+                ]
+            },
+            {
+                topic: "Understand the properties of supplementary angles",
+                questions: [
+                    { question: "What is the sum of supplementary angles?", answer: "180°" },
+                    { question: "If one angle is 110°, what is its supplement?", answer: "70°" },
+                    { question: "Can two acute angles be supplementary?", answer: "No, because the sum of two acute angles is less than 180°." }
+                ]
+            },
+            {
+                topic: "Use the properties of supplementary angles to find missing values",
+                questions: [
+                    { question: "Find the missing angle if the supplementary angle is 120°.", answer: "60°" },
+                    { question: "If two angles are supplementary and one is 130°, what is the other angle?", answer: "50°" },
+                    { question: "What is the missing angle if its supplement is 85°?", answer: "95°" }
+                ]
+            },
+            {
+                topic: "Identify properties of perpendicular lines and parallel lines",
+                questions: [
+                    { question: "What is the relationship between perpendicular lines?", answer: "They intersect at a 90° angle." },
+                    { question: "What is true about parallel lines?", answer: "They never intersect and remain the same distance apart." },
+                    { question: "How do you know if two lines are perpendicular?", answer: "They intersect to form right angles." }
+                ]
+            },
+            {
+                topic: "Classify angle pairs created when parallel lines are cut by a transversal",
+                questions: [
+                    { question: "What are corresponding angles?", answer: "Corresponding angles are equal when parallel lines are cut by a transversal." },
+                    { question: "Classify the angles that lie between two parallel lines and on opposite sides of the transversal.", answer: "Alternate interior angles" },
+                    { question: "What are alternate exterior angles?", answer: "They are equal angles formed outside the parallel lines on opposite sides of the transversal." }
+                ]
+            },
+            {
+                topic: "Find missing angle measures when two parallel lines are cut by a transversal",
+                questions: [
+                    { question: "If one angle is 60° and it is a corresponding angle, what is the measure of its corresponding angle?", answer: "60°" },
+                    { question: "If alternate interior angles are 75°, what is the measure of the other alternate interior angle?", answer: "75°" },
+                    { question: "What is the missing angle if the corresponding angle is 120°?", answer: "120°" }
+                ]
+            },
+            {
+                topic: "Draw triangles with and without tools",
+                questions: [
+                    { question: "How do you draw a triangle using only a pencil?", answer: "Draw three straight lines that connect to form three angles." },
+                    { question: "Can you draw an equilateral triangle without a ruler?", answer: "Yes, by estimating equal sides and angles." },
+                    { question: "How do you draw a triangle with a ruler?", answer: "Measure and draw three straight sides." }
+                ]
+            },
+            {
+                topic: "Understand that the sum of the three interior angle measures of a triangle is 180 degrees",
+                questions: [
+                    { question: "What is the sum of the interior angles of any triangle?", answer: "180°" },
+                    { question: "If two angles of a triangle are 60° and 50°, what is the third angle?", answer: "70°" },
+                    { question: "Why do the interior angles of a triangle always add up to 180°?", answer: "This is a property of triangles in Euclidean geometry." }
+                ]
+            },
+            {
+                topic: "Find missing angle measures in triangles",
+                questions: [
+                    { question: "If two angles of a triangle are 45° and 60°, what is the third angle?", answer: "75°" },
+                    { question: "Find the missing angle in a triangle with angles 90° and 30°.", answer: "60°" },
+                    { question: "What is the third angle if a triangle has angles 100° and 40°?", answer: "40°" }
+                ]
+            },
+            {
+                topic: "Use the scale of a scale drawing to find actual length",
+                questions: [
+                    { question: "If a scale drawing has a scale of 1:100, what is the actual length of a 5 cm line?", answer: "500 cm" },
+                    { question: "How do you find the actual length from a 2-inch line in a drawing with a 1:50 scale?", answer: "Multiply 2 inches by 50 to get 100 inches." },
+                    { question: "If a room is 3 cm long on a scale drawing with a scale of 1:20, what is the actual length?", answer: "60 cm" }
+                ]
+            },
+            {
+                topic: "Find the circumference of a circle given the diameter or radius, and vice versa",
+                questions: [
+                    { question: "What is the circumference of a circle with a diameter of 10 cm?", answer: "31.4 cm (C = πd)" },
+                    { question: "Find the circumference of a circle with a radius of 7 cm.", answer: "43.96 cm (C = 2πr)" },
+                    { question: "If the circumference of a circle is 31.4 cm, what is the diameter?", answer: "10 cm (d = C/π)" }
+                ]
+            },
+            {
+                topic: "Find the area of a circle given the diameter and circumference",
+                questions: [
+                    { question: "Find the area of a circle with a diameter of 8 cm.", answer: "50.27 cm² (A = πr²; r = 4 cm)" },
+                    { question: "What is the area of a circle with a circumference of 31.4 cm?", answer: "78.54 cm² (C = 2πr; solve for r and use A = πr²)" },
+                    { question: "Find the area of a circle with a diameter of 12 cm.", answer: "113.1 cm² (A = πr²; r = 6 cm)" }
+                ]
+            },
+            {
+                topic: "Find the area of composite figures",
+                questions: [
+                    { question: "How do you find the area of a composite figure made up of a rectangle and a semicircle?", answer: "Find the area of the rectangle and the semicircle separately, then add them together." },
+                    { question: "Find the area of a composite figure made of a triangle and a square.", answer: "Find the areas of both the triangle and square, and then add them together." },
+                    { question: "What is the process to find the area of a composite figure made of a rectangle and a triangle?", answer: "Find the areas of both the rectangle and triangle, and sum them." }
+                ]
+            }
+        ];
+
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            // Shuffle topics and pick three random ones
+            const shuffledTopics = topicsWithQuestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            // Add selected topics and questions to the page
+            shuffledTopics.forEach((topicObj) => {
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'question';
+                topicDiv.innerHTML = `<strong>Topic:</strong> ${topicObj.topic}<br><br>`;
+                
+                // Display questions under each topic
+                const shuffledQuestions = topicObj.questions.sort(() => 0.5 - Math.random());
+                shuffledQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `<div class="question-text" onclick="toggleAnswer('answer-${topicObj.topic}-${index}')">${q.question}</div>
+                                             <div class="answer" id="answer-${topicObj.topic}-${index}">${q.answer}</div>`;
+                    topicDiv.appendChild(questionDiv);
+                });
+                
+                container.appendChild(topicDiv);
+            });
+        }
+
+        function toggleAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        }
+
+        // Generate initial set of questions when the page loads
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

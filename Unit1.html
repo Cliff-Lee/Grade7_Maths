@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1 - Number technicians Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .question {
+            background-color: #e0e0e0;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .question div {
+            cursor: pointer;
+            padding: 5px;
+        }
+        .answer {
+            display: none;
+            padding-top: 10px;
+            color: green;
+            font-style: italic;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit 1 - Number Technicians Review</h1>
+ <img src="Unit1.png" alt="Unitposter" width="300">
+    <div class="container" id="questions-container">
+        <!-- Questions will be dynamically inserted here -->
+    </div>
+
+    <button onclick="generateQuestions()">Refresh Questions</button>
+
+    <script>
+        const topicsWithQuestions = [
+            {
+                topic: "Recognise negative integers are additive inverses to their positive counterparts, and vice versa",
+                questions: [
+                    { question: "What is the additive inverse of -5?", answer: "+5" },
+                    { question: "If x is a negative integer, what is its additive inverse?", answer: "Its positive counterpart (e.g., -x becomes +x)." },
+                    { question: "What is the sum of a number and its additive inverse?", answer: "0" }
+                ]
+            },
+            {
+                topic: "Add integers with same and different signs using a number line",
+                questions: [
+                    { question: "Add -3 and 7 using a number line.", answer: "Result: +4" },
+                    { question: "Add 5 and -2 using a number line.", answer: "Result: +3" },
+                    { question: "What is the result of adding -4 and -6 using a number line?", answer: "Result: -10" }
+                ]
+            },
+            {
+                topic: "Add three or more integers with same and different signs using a number line",
+                questions: [
+                    { question: "Use a number line to add -2, 3, and -5.", answer: "Result: -4" },
+                    { question: "What is the result of adding 1, -1, and 5 using a number line?", answer: "Result: 5" },
+                    { question: "How do you add -6, 2, and 4 using a number line?", answer: "Result: 0" }
+                ]
+            },
+            {
+                topic: "Subtract negative integers from a positive integer using a number line",
+                questions: [
+                    { question: "What is the result of subtracting -4 from 10 using a number line?", answer: "Result: 14" },
+                    { question: "How do you subtract -3 from 7 using a number line?", answer: "Result: 10" },
+                    { question: "Subtract -8 from 12 using a number line.", answer: "Result: 20" }
+                ]
+            },
+            {
+                topic: "Subtract negative integers from a negative integer using a number line",
+                questions: [
+                    { question: "What is the result of subtracting -5 from -10 using a number line?", answer: "Result: -5" },
+                    { question: "Subtract -6 from -4 using a number line.", answer: "Result: 2" },
+                    { question: "How do you subtract -7 from -3 using a number line?", answer: "Result: 4" }
+                ]
+            },
+            {
+                topic: "Understand that the difference between integers is connected to their distance on a number line",
+                questions: [
+                    { question: "Explain how the difference between 5 and -3 is connected to their distance on a number line.", answer: "The difference is 8, representing the distance between the two numbers." },
+                    { question: "How is the distance between -4 and 2 related to their difference?", answer: "The difference is 6, showing the distance on the number line." },
+                    { question: "What does the distance between 7 and -2 represent in terms of their difference?", answer: "The difference is 9, indicating the distance." }
+                ]
+            },
+            {
+                topic: "Multiply integers with different signs",
+                questions: [
+                    { question: "What is the product of -3 and 4?", answer: "-12" },
+                    { question: "Multiply -6 and 5.", answer: "-30" },
+                    { question: "What is the result of multiplying -7 and 8?", answer: "-56" }
+                ]
+            },
+            {
+                topic: "Understand that the product of two integers with the same sign is positive",
+                questions: [
+                    { question: "Multiply -4 and -5. What is the result?", answer: "+20" },
+                    { question: "What is the product of 6 and 7?", answer: "+42" },
+                    { question: "Explain why the product of -3 and -8 is positive.", answer: "Multiplying two negatives results in a positive." }
+                ]
+            },
+            {
+                topic: "Understand that the product of two integers with different signs is negative",
+                questions: [
+                    { question: "What is the result of multiplying -5 and 6?", answer: "-30" },
+                    { question: "Why is the product of -7 and 3 negative?", answer: "Multiplying a positive and a negative results in a negative." },
+                    { question: "Explain why the product of -2 and 8 is negative.", answer: "The signs are different, so the result is negative." }
+                ]
+            },
+            {
+                topic: "Divide integers with different signs",
+                questions: [
+                    { question: "What is the result of dividing -12 by 4?", answer: "-3" },
+                    { question: "Divide -20 by 5.", answer: "-4" },
+                    { question: "Why is the quotient of -30 and 6 negative?", answer: "Dividing a negative by a positive results in a negative." }
+                ]
+            },
+            {
+                topic: "Understand that the quotient of two integers with the same sign is positive",
+                questions: [
+                    { question: "What is the result of dividing -16 by -4?", answer: "+4" },
+                    { question: "Explain why the quotient of 20 and 5 is positive.", answer: "Dividing two positive numbers gives a positive result." },
+                    { question: "Divide -12 by -3.", answer: "+4" }
+                ]
+            },
+            {
+                topic: "Understand that the quotient of two integers with different signs is negative",
+                questions: [
+                    { question: "What is the result of dividing -18 by 6?", answer: "-3" },
+                    { question: "Divide 15 by -3.", answer: "-5" },
+                    { question: "Why is the quotient of -21 and 7 negative?", answer: "The signs are different, so the result is negative." }
+                ]
+            },
+            {
+                topic: "Evaluate an algebraic expression involving the four operations with integers by applying the orders of operations",
+                questions: [
+                    { question: "Evaluate the expression: 5 - 3 * 2.", answer: "-1" },
+                    { question: "What is the value of (6 + 4) * 3?", answer: "30" },
+                    { question: "Evaluate 10 - (3 + 5) / 2.", answer: "6" }
+                ]
+            },
+            {
+                topic: "Recognise that the decimal form of a rational number either terminates in 0s or eventually repeats",
+                questions: [
+                    { question: "Does the decimal form of 1/3 terminate or repeat?", answer: "Repeats (0.333...)" },
+                    { question: "What is the decimal form of 2/5?", answer: "0.4 (terminating)" },
+                    { question: "Does the decimal form of 7/8 terminate or repeat?", answer: "Terminates (0.875)" }
+                ]
+            },
+            {
+                topic: "Use long division to convert a fraction to a decimal and determine if the decimal is terminating",
+                questions: [
+                    { question: "Use long division to convert 3/4 to a decimal.", answer: "0.75" },
+                    { question: "Convert 7/9 to a decimal using long division.", answer: "0.777..." },
+                    { question: "Determine if 5/6 is a terminating decimal.", answer: "It is not; 5/6 = 0.833..." }
+                ]
+            },
+            {
+                topic: "Convert repeating, non-terminating decimals into fractions",
+                questions: [
+                    { question: "Convert 0.333... into a fraction.", answer: "1/3" },
+                    { question: "What is the fractional form of 0.666...?", answer: "2/3" },
+                    { question: "Convert 0.4545... into a fraction.", answer: "45/99 or simplified to 5/11" }
+                ]
+            },
+            {
+                topic: "Convert repeating, non-terminating decimals into mixed numbers in simplest form",
+                questions: [
+                    { question: "Convert 1.666... into a mixed number.", answer: "1 2/3" },
+                    { question: "What is the simplest form of 2.333... as a mixed number?", answer: "2 1/3" },
+                    { question: "Convert 4.555... into a mixed number.", answer: "4 5/9" }
+                ]
+            },
+            {
+                topic: "Find the additive inverse of a rational number",
+                questions: [
+                    { question: "What is the additive inverse of 1/2?", answer: "-1/2" },
+                    { question: "Find the additive inverse of -3/4.", answer: "+3/4" },
+                    { question: "What is the additive inverse of 2/3?", answer: "-2/3" }
+                ]
+            },
+            {
+                topic: "Add and subtract with different forms of rational numbers",
+                questions: [
+                    { question: "What is the result of 1/2 + 1/3?", answer: "5/6" },
+                    { question: "Subtract 3/4 - 2/5.", answer: "7/20" },
+                    { question: "Add 7/8 and 5/6.", answer: "41/24 or 1 17/24" }
+                ]
+            },
+            {
+                topic: "Evaluate algebraic expressions involving adding and subtracting different forms of rational numbers",
+                questions: [
+                    { question: "Evaluate the expression: 1/2 + 3/4 - 1/3.", answer: "23/12 or 1 11/12" },
+                    { question: "What is the value of 2/3 - 5/8 + 1/4?", answer: "7/24" },
+                    { question: "Simplify the expression: 4/5 + 2/3 - 1/6.", answer: "53/30 or 1 23/30" }
+                ]
+            },
+            {
+                topic: "Multiply and divide with different forms of rational numbers",
+                questions: [
+                    { question: "What is the product of 2/3 and 3/4?", answer: "1/2" },
+                    { question: "Divide 5/6 by 2/5.", answer: "25/12 or 2 1/12" },
+                    { question: "Multiply 7/8 by 4/9.", answer: "7/18" }
+                ]
+            },
+            {
+                topic: "Evaluate algebraic expressions involving multiplying and dividing different forms of rational numbers",
+                questions: [
+                    { question: "Evaluate the expression: (1/2 * 3/4) ÷ (2/3).", answer: "9/16" },
+                    { question: "Simplify the expression: (5/6 ÷ 2/5) * 3/4.", answer: "25/16" },
+                    { question: "What is the value of (4/7 * 1/3) ÷ (5/8)?", answer: "32/105" }
+                ]
+            },
+            {
+                topic: "Apply understanding of the four operations with rational numbers to evaluate mathematical expressions",
+                questions: [
+                    { question: "Evaluate: 1/2 + 3/4 * 2/3.", answer: "19/24" },
+                    { question: "What is the value of: (5/6 - 2/3) ÷ 1/4?", answer: "2/3 ÷ 1/4 = 8/3" },
+                    { question: "Simplify the expression: (3/8 * 4/5) - (1/2 ÷ 3/4).", answer: "-7/40" }
+                ]
+            }
+        ];
+
+        function generateQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = ''; // Clear previous questions
+
+            // Shuffle topics and pick three random ones
+            const shuffledTopics = topicsWithQuestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            // Add selected topics and questions to the page
+            shuffledTopics.forEach((topicObj) => {
+                const topicDiv = document.createElement('div');
+                topicDiv.className = 'question';
+                topicDiv.innerHTML = `<strong>Topic:</strong> ${topicObj.topic}<br><br>`;
+                
+                // Display questions under each topic
+                const shuffledQuestions = topicObj.questions.sort(() => 0.5 - Math.random());
+                shuffledQuestions.forEach((q, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.innerHTML = `<div class="question-text" onclick="toggleAnswer('answer-${topicObj.topic}-${index}')">${q.question}</div>
+                                             <div class="answer" id="answer-${topicObj.topic}-${index}">${q.answer}</div>`;
+                    topicDiv.appendChild(questionDiv);
+                });
+                
+                container.appendChild(topicDiv);
+            });
+        }
+
+        function toggleAnswer(answerId) {
+            const answerDiv = document.getElementById(answerId);
+            if (answerDiv.style.display === 'none' || answerDiv.style.display === '') {
+                answerDiv.style.display = 'block';
+            } else {
+                answerDiv.style.display = 'none';
+            }
+        }
+
+        // Generate initial set of questions when the page loads
+        window.onload = generateQuestions;
+    </script>
+</body>
+</html>

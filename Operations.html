@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATL Activity: Transfer - Operations with Integers and Rational Numbers</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #003366;
+        }
+        .question-section {
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 10px;
+        }
+        .math-container {
+            display: flex;
+            align-items: center;
+        }
+        .math-container input {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        .feedback {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+    <script>
+        // Store the correct answers for validation
+        const answers = {
+            q1: -4,
+            q2: 17,
+            q3: -48,
+            q4: -5,
+            q5: -13,
+            q6: "1/8",
+            q7: "-23/6",
+            q8: "-5/4",
+            q9: "-3/4",
+            q10: "-7/15",
+            q11: -1.8,
+            q12: 9.6,
+            q13: -11.7,
+            q14: -2,
+            q15: -13.4,
+            q16: "3/10",
+            q17: "-8.125",
+            q18: -8.1,
+            q19: "-3/8",
+            q20: -2.8
+        };
+
+        function validateAnswer(id) {
+            const userAnswer = document.getElementById(id).value.trim();
+            const correctAnswer = answers[id];
+
+            const feedbackElement = document.getElementById(id + "-feedback");
+            if (userAnswer == correctAnswer) {
+                feedbackElement.textContent = "✓";
+                feedbackElement.className = "feedback correct";
+            } else {
+                feedbackElement.textContent = "✗";
+                feedbackElement.className = "feedback incorrect";
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <h1>ATL Activity: Transfer</h1>
+    <p>Students will combine their knowledge, understanding, and skills to create solutions that show their understanding of how to work with these numbers.</p>
+
+    <h2>Part 1: Integer Operations Review</h2>
+    <p>Solve the following integer problems. Show all your steps.</p>
+    <div class="question-section">
+        <div class="question">
+            -7 + 3 = 
+            <input type="text" id="q1" size="10" oninput="validateAnswer('q1')">
+            <span id="q1-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            12 - (-5) = 
+            <input type="text" id="q2" size="10" oninput="validateAnswer('q2')">
+            <span id="q2-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            -8 × 6 = 
+            <input type="text" id="q3" size="10" oninput="validateAnswer('q3')">
+            <span id="q3-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            15 ÷ (-3) = 
+            <input type="text" id="q4" size="10" oninput="validateAnswer('q4')">
+            <span id="q4-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            (-9) + (-4) = 
+            <input type="text" id="q5" size="10" oninput="validateAnswer('q5')">
+            <span id="q5-feedback" class="feedback"></span>
+        </div>
+    </div>
+
+    <h2>Part 2: Rational Numbers - Fractions</h2>
+    <p>Now apply the same rules to fractions. Simplify your answers.</p>
+    <div class="question-section">
+        <div class="math-container">
+            \( \frac{3}{4} + \left( - \frac{5}{8} \right) = \) 
+            <input type="text" id="q6" size="10" oninput="validateAnswer('q6')">
+            <span id="q6-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            \( \left( - \frac{7}{2} \right) - \frac{1}{3} = \) 
+            <input type="text" id="q7" size="10" oninput="validateAnswer('q7')">
+            <span id="q7-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            \( \frac{5}{6} \times \left( - \frac{3}{2} \right) = \) 
+            <input type="text" id="q8" size="10" oninput="validateAnswer('q8')">
+            <span id="q8-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            \( - \left( \frac{9}{4} \right) \div 3 = \) 
+            <input type="text" id="q9" size="10" oninput="validateAnswer('q9')">
+            <span id="q9-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            \( - \left( \frac{5}{3} \right) + \frac{4}{5} = \) 
+            <input type="text" id="q10" size="10" oninput="validateAnswer('q10')">
+            <span id="q10-feedback" class="feedback"></span>
+        </div>
+    </div>
+
+    <h2>Part 3: Rational Numbers - Decimals</h2>
+    <p>Solve the following problems using the rules for integers and decimals.</p>
+    <div class="question-section">
+        <div class="question">
+            -4.5 + 2.7 = 
+            <input type="text" id="q11" size="10" oninput="validateAnswer('q11')">
+            <span id="q11-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            6.2 - (-3.4) = 
+            <input type="text" id="q12" size="10" oninput="validateAnswer('q12')">
+            <span id="q12-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            -7.8 × 1.5 = 
+            <input type="text" id="q13" size="10" oninput="validateAnswer('q13')">
+            <span id="q13-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            9.6 ÷ (-4.8) = 
+            <input type="text" id="q14" size="10" oninput="validateAnswer('q14')">
+            <span id="q14-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            -5.3 - 8.1 = 
+            <input type="text" id="q15" size="10" oninput="validateAnswer('q15')">
+            <span id="q15-feedback" class="feedback"></span>
+        </div>
+    </div>
+
+    <h2>Part 4: Mixed Operations</h2>
+    <p>Solve the following problems. These problems mix integers and rational numbers. Simplify your answers as much as possible.</p>
+    <div class="question-section">
+        <div class="math-container">
+            \( - \frac{2}{5} + 1.4 = \) 
+            <input type="text" id="q16" size="10" oninput="validateAnswer('q16')">
+            <span id="q16-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            (-7.5) - \( \frac{5}{8} = \) 
+            <input type="text" id="q17" size="10" oninput="validateAnswer('q17')">
+            <span id="q17-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            2.7 × (-3) = 
+            <input type="text" id="q18" size="10" oninput="validateAnswer('q18')">
+            <span id="q18-feedback" class="feedback"></span>
+        </div>
+        <div class="math-container">
+            \( \frac{3}{4} \div (-2) = \) 
+            <input type="text" id="q19" size="10" oninput="validateAnswer('q19')">
+            <span id="q19-feedback" class="feedback"></span>
+        </div>
+        <div class="question">
+            (-6) + 3.2 = 
+            <input type="text" id="q20" size="10" oninput="validateAnswer('q20')">
+            <span id="q20-feedback" class="feedback"></span>
+        </div>
+    </div>
+
+    <h2>Reflection Question</h2>
+    <p>How do the rules for adding and subtracting integers compare to adding and subtracting rational numbers? Write 2-3 sentences explaining what you noticed during the practice.</p>
+    <textarea id="reflection" rows="4" cols="50"></textarea>
+
+</body>
+</html>
