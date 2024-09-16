@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Notation Matching Exercise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: navy;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .left, .right {
+            width: 40%;
+        }
+        .item {
+            background-color: #D6E4F0;
+            border: 2px solid #003F7F;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .correct {
+            background-color: lightgreen;
+        }
+        .item:hover {
+            background-color: #A7D0FF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Match the Scientific Notation to the Ordinary Numbers</h1>
+    <div class="container">
+        <div class="left">
+            <div class="item" draggable="true" id="notation1">7.34 × 10<sup>7</sup></div>
+            <div class="item" draggable="true" id="notation2">7.34 × 10<sup>10</sup></div>
+            <div class="item" draggable="true" id="notation3">7.34 × 10<sup>2</sup></div>
+            <div class="item" draggable="true" id="notation4">7.34 × 10<sup>5</sup></div>
+        </div>
+        <div class="right">
+            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target1">73,400,000</div>
+            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target2">73,400,000,000</div>
+            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target3">734</div>
+            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target4">734,000</div>
+        </div>
+    </div>
+
+    <script>
+        const correctMatches = {
+            notation1: 'target1',
+            notation2: 'target2',
+            notation3: 'target3',
+            notation4: 'target4'
+        };
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+
+            // Check if the match is correct
+            if (correctMatches[draggedElement.id] === event.target.id) {
+                event.target.appendChild(draggedElement);
+                event.target.style.backgroundColor = "lightgreen"; // Change to green if correct
+            } else {
+                alert("Incorrect match. Try again!");
+            }
+        }
+
+        const items = document.querySelectorAll('.left .item');
+        items.forEach(item => {
+            item.addEventListener('dragstart', drag);
+        });
+    </script>
+</body>
+</html>
