@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Indices Laws Matching Exercise</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px;
+        }
+        .problem-container, .answer-container {
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+        .problem, .answer {
+            width: 220px;
+            min-height: 60px;
+            background-color: #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            border-radius: 8px;
+            border: 1px solid #b2bec3;
+            font-size: 18px;
+            padding: 10px;
+        }
+        .answer {
+            cursor: grab;
+        }
+        .answer:active {
+            cursor: grabbing;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Indices Laws Matching Exercise</h1>
+
+<div class="container">
+    <div class="problem-container">
+        <h2>Expressions</h2>
+        <!-- Problems will be inserted here -->
+        <div class="problem" id="problem1"></div>
+        <div class="problem" id="problem2"></div>
+        <div class="problem" id="problem3"></div>
+        <div class="problem" id="problem4"></div>
+        <div class="problem" id="problem5"></div>
+        <div class="problem" id="problem6"></div>
+        <div class="problem" id="problem7"></div>
+    </div>
+
+    <div class="answer-container">
+        <h2>Simplified Forms</h2>
+        <!-- Answers will be inserted here -->
+        <div class="answer" id="answer1" draggable="true"></div>
+        <div class="answer" id="answer2" draggable="true"></div>
+        <div class="answer" id="answer3" draggable="true"></div>
+        <div class="answer" id="answer4" draggable="true"></div>
+        <div class="answer" id="answer5" draggable="true"></div>
+        <div class="answer" id="answer6" draggable="true"></div>
+        <div class="answer" id="answer7" draggable="true"></div>
+    </div>
+</div>
+
+<button onclick="generateNewProblems()">Generate New Exercise</button>
+
+<script>
+    // Problems and their corresponding simplified forms with unique IDs
+    const problemsList = [
+        {
+            id: '1',
+            problem: '\\( a^m \\times a^n \\)',
+            answer: '\\( a^{m+n} \\)',
+        },
+        {
+            id: '2',
+            problem: '\\( \\frac{a^m}{a^n} \\)',
+            answer: '\\( a^{m-n} \\)',
+        },
+        {
+            id: '3',
+            problem: '\\( (a^m)^n \\)',
+            answer: '\\( a^{mn} \\)',
+        },
+        {
+            id: '4',
+            problem: '\\( a^0 \\)',
+            answer: '\\( 1 \\)',
+        },
+        {
+            id: '5',
+            problem: '\\( a^{-n} \\)',
+            answer: '\\( \\frac{1}{a^n} \\)',
+        },
+        {
+            id: '6',
+            problem: '\\( (ab)^n \\)',
+            answer: '\\( a^n b^n \\)',
+        },
+        {
+            id: '7',
+            problem: '\\( \\left( \\frac{a}{b} \\right)^n \\)',
+            answer: '\\( \\frac{a^n}{b^n} \\)',
+        }
+    ];
+
+    // Initialize the exercise
+    window.onload = function() {
+        generateNewProblems();
+    };
+
+    const answers = document.querySelectorAll('.answer');
+    const problems = document.querySelectorAll('.problem');
+
+    function addDragAndDropListeners() {
+        answers.forEach(answer => {
+            answer.addEventListener('dragstart', dragStart);
+        });
+
+        problems.forEach(problem => {
+            problem.addEventListener('dragover', dragOver);
+            problem.addEventListener('drop', drop);
+        });
+    }
+
+    function dragStart(e) {
+        e.dataTransfer.setData("text/plain", e.target.id);
+    }
+
+    function dragOver(e) {
+        e.preventDefault(); // Necessary to allow dropping
+    }
+
+    function drop(e) {
+        e.preventDefault();
+        const answerId = e.dataTransfer.getData("text/plain");
+        const problemId = e.target.id;
+        checkMatch(problemId, answerId);
+    }
+
+    function checkMatch(problemId, answerId) {
+        const problemElement = document.getElementById(problemId);
+        const answerElement = document.getElementById(answerId);
+        const problemIdValue = problemElement.dataset.id;
+        const answerIdValue = answerElement.dataset.id;
+        if (problemIdValue === answerIdValue) {
+            alert('Correct Match!');
+            // Disable dragging and dropping for the matched pair
+            answerElement.draggable = false;
+            problemElement.removeEventListener('dragover', dragOver);
+            problemElement.removeEventListener('drop', drop);
+            problemElement.style.backgroundColor = '#55efc4'; // Indicate correct match
+            answerElement.style.backgroundColor = '#55efc4';
+        } else {
+            alert('Incorrect Match. Try again.');
+        }
+    }
+
+    function generateNewProblems() {
+        // Randomly shuffle problemsList
+        const shuffledProblems = [...problemsList].sort(() => Math.random() - 0.5);
+        const shuffledAnswers = [...problemsList].sort(() => Math.random() - 0.5);
+
+        // Assign problems to the DOM
+        shuffledProblems.forEach((item, index) => {
+            const problemElement = document.getElementById('problem' + (index + 1));
+            problemElement.innerHTML = item.problem;
+            problemElement.dataset.id = item.id; // Store the problem's unique ID
+            // Reset problem styles and re-enable events
+            problemElement.style.backgroundColor = '#dfe6e9';
+            problemElement.addEventListener('dragover', dragOver);
+            problemElement.addEventListener('drop', drop);
+        });
+
+        // Assign answers to the DOM
+        shuffledAnswers.forEach((item, index) => {
+            const answerElement = document.getElementById('answer' + (index + 1));
+            answerElement.innerHTML = item.answer;
+            answerElement.dataset.id = item.id; // Store the answer's unique ID
+            // Reset answer styles and re-enable dragging
+            answerElement.style.backgroundColor = '#dfe6e9';
+            answerElement.draggable = true;
+        });
+
+        // Re-render MathJax to display the updated math formulas
+        MathJax.typesetPromise();
+
+        // Add event listeners for drag and drop
+        addDragAndDropListeners();
+    }
+</script>
+
+</body>
+</html>
