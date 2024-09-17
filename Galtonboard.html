@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galton Board with Stacks of Five Balls</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #f0f0f0;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="galtonCanvas" width="600" height="800"></canvas>
+<button id="restartBtn">Restart Simulation</button>
+
+<script>
+    const canvas = document.getElementById('galtonCanvas');
+    const ctx = canvas.getContext('2d');
+    const restartBtn = document.getElementById('restartBtn');
+
+    const numRows = 10;
+    const ballRadius = 5;
+    const pegRadius = 3;
+    const numBalls = 1000; // More balls
+    const ballStackHeight = 5; // Stacks of 5 balls
+    let balls = [];
+    let pegs = [];
+    let bins = [];
+    const gravity = 0.2; // Simulated gravity
+    const binWidth = 60; // Width of each bin at the bottom
+    let animationFrameId;
+
+    // Peg positions
+    function initPegs() {
+        pegs = [];
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col <= row; col++) {
+                const x = (canvas.width / 2) - (row * 40 / 2) + col * 40;
+                const y = 100 + row * 40;
+                pegs.push({ x, y });
+            }
+        }
+    }
+
+    // Ball object
+    function Ball() {
+        this.x = canvas.width / 2;
+        this.y = 50;
+        this.dx = (Math.random() - 0.5) * 2; // Small random x-velocity
+        this.dy = 1; // Initial downward velocity
+        this.isStopped = false; // Flag to indicate if the ball has stopped
+    }
+
+    Ball.prototype.update = function () {
+        if (!this.isStopped) {
+            this.dy += gravity; // Apply gravity
+            this.y += this.dy;
+            this.x += this.dx;
+
+            // Bounce off the side walls (left and right boundaries)
+            if (this.x < ballRadius) {
+                this.x = ballRadius; // Keep it inside the left boundary
+                this.dx = -this.dx; // Bounce horizontally
+            } else if (this.x > canvas.width - ballRadius) {
+                this.x = canvas.width - ballRadius; // Keep it inside the right boundary
+                this.dx = -this.dx; // Bounce horizontally
+            }
+
+            // Check for collisions with pegs
+            for (let peg of pegs) {
+                const dist = Math.hypot(peg.x - this.x, peg.y - this.y);
+                if (dist < ballRadius + pegRadius) {
+                    this.dy = -this.dy / 1.5; // Invert velocity and reduce speed after hitting peg
+                    this.dx = (Math.random() - 0.5) * 2; // Small random x-velocity after hitting peg
+                }
+            }
+
+            // Stop ball at the bottom (bins)
+            if (this.y > canvas.height - 100) {
+                this.isStopped = true;
+                const binIndex = Math.floor(this.x / binWidth);
+                bins[binIndex].push(this); // Store in bins based on x-position
+
+                // Align ball in neat stacks of 5
+                const stackHeight = Math.floor(bins[binIndex].length / ballStackHeight);
+                const columnOffset = bins[binIndex].length % ballStackHeight;
+                this.x = binIndex * binWidth + (ballRadius * 2 * columnOffset) + ballRadius; // Offset to stack in columns of five
+                this.y = canvas.height - 100 - stackHeight * 2 * ballRadius; // Stack balls vertically in neat columns
+            }
+        }
+    };
+
+    Ball.prototype.draw = function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.closePath();
+    };
+
+    function initBalls() {
+        balls = [];
+        for (let i = 0; i < numBalls; i++) {
+            balls.push(new Ball());
+        }
+    }
+
+    // Draw the pegs
+    function drawPegs() {
+        for (let peg of pegs) {
+            ctx.beginPath();
+            ctx.arc(peg.x, peg.y, pegRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "grey";
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
+    // Draw bins at the bottom
+    function drawBins() {
+        for (let i = 0; i < canvas.width / binWidth; i++) {
+            ctx.strokeRect(i * binWidth, canvas.height - 100, binWidth, 100); // Draw bins
+        }
+    }
+
+    // Draw balls in bins
+    function drawBallsInBins() {
+        bins.forEach((bin, i) => {
+            bin.forEach((ball, j) => {
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+                ctx.fillStyle = "blue";
+                ctx.fill();
+                ctx.closePath();
+            });
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPegs();
+        drawBins();
+        drawBallsInBins();
+        balls.forEach(ball => {
+            ball.update();
+            ball.draw();
+        });
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    function initBins() {
+        bins = [];
+        const numBins = canvas.width / binWidth;
+        for (let i = 0; i < numBins; i++) {
+            bins.push([]);
+        }
+    }
+
+    function restartSimulation() {
+        cancelAnimationFrame(animationFrameId); // Stop the previous animation
+        initPegs(); // Reinitialize pegs
+        initBalls(); // Reinitialize balls
+        initBins(); // Reinitialize bins
+        animate(); // Start the animation
+    }
+
+    // Add event listener to the restart button
+    restartBtn.addEventListener('click', restartSimulation);
+
+    // Initialize and start the simulation on page load
+    restartSimulation();
+
+</script>
+
+</body>
+</html>
