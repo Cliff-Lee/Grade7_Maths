@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tiling the Floor - Square Roots</title>
+    <style>
+        #grid {
+            display: grid;
+            grid-gap: 1px;
+            margin-bottom: 20px;
+            background-color: black;
+            border: 2px solid black;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 30px;
+            font-size: 14px;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        .box {
+            display: inline-block;
+            padding: 10px;
+            background-color: lightgray;
+            cursor: pointer;
+            margin-right: 10px;
+            user-select: none;
+        }
+        .hidden {
+            background-color: gray;
+            color: gray;
+        }
+        #equations {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+            margin-bottom: -1px;
+        }
+        #gridWrapper {
+            display: flex;
+        }
+        #rowLabels {
+            display: flex;
+            flex-direction: column;
+            margin-right: -1px;
+        }
+        /* Styles for tiling examples */
+        .tilingGrid {
+            display: grid;
+            grid-gap: 1px;
+            margin: 20px 0;
+            background-color: black;
+            border: 2px solid black;
+        }
+        .tilingCell {
+            background-color: lightblue;
+            border: 1px solid black;
+        }
+        .tilingTitle {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        #explanation {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        #question {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Tiling the Floor - Square Roots</h1>
+
+<div id="controls">
+    <div id="lengthBox" class="box hidden">Length</div>
+    <div id="widthBox" class="box hidden">Width</div>
+    <div id="areaBox" class="box hidden">Area</div>
+    <button id="newExample">Generate New Example</button>
+</div>
+
+<div id="gridWrapper">
+    <div id="rowLabels"></div>
+    <div>
+        <div id="columnLabels" style="display: flex;"></div>
+        <div id="grid"></div>
+    </div>
+</div>
+
+<div id="equations"></div>
+
+<!-- Explanation Section -->
+<div id="explanation">
+    <p>
+        Sometimes, a square can be tiled with smaller squares of equal size.
+        For example:
+    </p>
+    <div class="tilingTitle">6×6 Square Tiled with 9 2×2 Squares</div>
+    <div id="tilingGrid2x2" class="tilingGrid"></div>
+
+    <div class="tilingTitle">6×6 Square Tiled with 4 3×3 Squares</div>
+    <div id="tilingGrid3x3" class="tilingGrid"></div>
+
+    <div id="question">
+        How can we know when we can tile a floor with smaller squares?
+    </div>
+
+    <!-- Section on Calculating Square Roots -->
+    <p>
+        Understanding how the area of a square relates to its side length can help us calculate square roots of perfect squares. Since the area of a square is equal to the side length squared, we can find the side length by taking the square root of the area.
+    </p>
+    <p>
+        Consider these examples:
+    </p>
+    <ul>
+        <li>Area = 225. What is the side length? .</li>
+        <li>Area = 900. What is the side length? .</li>
+        <li>Area = 2916. What is the side length? .</li>
+	<li>Can these tiled with smaller squares?.</li>
+        <li>Is it possible to find an area that can be tiled in more than two different ways with square tiles?.</li>
+    </ul>
+    <p>
+        By understanding that the square root of the area gives us the side length, we can calculate the square roots of perfect squares. This concept is visualized in our applet with smaller squares, and the same principle applies to larger squares.
+    </p>
+    <div id="question">
+        Can this understanding help us calculate the square roots of perfect squares like 225, 900, and 2916?
+    </div>
+</div>
+
+<script>
+    let length, area;
+    let lengthRevealed = false;
+    let widthRevealed = false;
+    let areaRevealed = false;
+
+    function generateExample() {
+        length = Math.floor(Math.random() * 9) + 2; // Random integer between 2 and 10
+        area = length * length;
+        lengthRevealed = false;
+        widthRevealed = false;
+        areaRevealed = false;
+        document.getElementById('lengthBox').classList.add('hidden');
+        document.getElementById('lengthBox').innerText = 'Length';
+        document.getElementById('widthBox').classList.add('hidden');
+        document.getElementById('widthBox').innerText = 'Width';
+        document.getElementById('areaBox').classList.add('hidden');
+        document.getElementById('areaBox').innerText = 'Area';
+        document.getElementById('equations').innerHTML = '';
+        document.getElementById('columnLabels').innerHTML = '';
+        document.getElementById('rowLabels').innerHTML = '';
+        drawGrid();
+    }
+
+    function drawGrid() {
+        const gridContainer = document.getElementById('grid');
+        gridContainer.innerHTML = '';
+        gridContainer.style.gridTemplateColumns = `repeat(${length}, 30px)`;
+        gridContainer.style.gridTemplateRows = `repeat(${length}, 30px)`;
+
+        let count = 1;
+        for (let i = 0; i < length * length; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            if (areaRevealed) {
+                cell.innerText = count++;
+            }
+            gridContainer.appendChild(cell);
+        }
+    }
+
+    function drawLabels() {
+        const columnLabels = document.getElementById('columnLabels');
+        const rowLabels = document.getElementById('rowLabels');
+        columnLabels.innerHTML = '';
+        rowLabels.innerHTML = '';
+
+        if (widthRevealed) {
+            for (let i = 1; i <= length; i++) {
+                const label = document.createElement('div');
+                label.classList.add('label');
+                label.innerText = i;
+                columnLabels.appendChild(label);
+            }
+        }
+
+        if (lengthRevealed) {
+            for (let i = 1; i <= length; i++) {
+                const label = document.createElement('div');
+                label.classList.add('label');
+                label.innerText = i;
+                rowLabels.appendChild(label);
+            }
+        }
+    }
+
+    document.getElementById('lengthBox').addEventListener('click', function() {
+        lengthRevealed = !lengthRevealed;
+        if (lengthRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Length: ${length}`;
+            drawLabels();
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Length';
+            drawLabels();
+        }
+    });
+
+    document.getElementById('widthBox').addEventListener('click', function() {
+        widthRevealed = !widthRevealed;
+        if (widthRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Width: ${length}`;
+            drawLabels();
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Width';
+            drawLabels();
+        }
+    });
+
+    document.getElementById('areaBox').addEventListener('click', function() {
+        areaRevealed = !areaRevealed;
+        if (areaRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Area: ${area}`;
+            drawGrid();
+            document.getElementById('equations').innerHTML = `${length} × ${length} = ${area}<br>√${area} = ${length}`;
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Area';
+            drawGrid();
+            document.getElementById('equations').innerHTML = '';
+        }
+    });
+
+    document.getElementById('newExample').addEventListener('click', generateExample);
+
+    // Initialize the first example
+    generateExample();
+
+    // Functions for Tiling Examples
+    function createTilingGrid(gridId, gridSize, tileSize) {
+        const gridContainer = document.getElementById(gridId);
+        gridContainer.innerHTML = '';
+        gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 20px)`;
+
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('tilingCell');
+            cell.style.width = '20px';
+            cell.style.height = '20px';
+            gridContainer.appendChild(cell);
+        }
+
+        // Overlay tiles
+        const tileColors = ['#FFB6C1', '#87CEFA', '#98FB98', '#FFD700', '#FFA07A', '#DA70D6'];
+        let colorIndex = 0;
+
+        for (let row = 0; row < gridSize; row += tileSize) {
+            for (let col = 0; col < gridSize; col += tileSize) {
+                for (let i = 0; i < tileSize; i++) {
+                    for (let j = 0; j < tileSize; j++) {
+                        const cellRow = row + i;
+                        const cellCol = col + j;
+                        if (cellRow < gridSize && cellCol < gridSize) {
+                            const cellIndex = cellRow * gridSize + cellCol;
+                            const cell = gridContainer.children[cellIndex];
+                            cell.style.backgroundColor = tileColors[colorIndex % tileColors.length];
+                        }
+                    }
+                }
+                colorIndex++;
+            }
+        }
+    }
+
+    // Create Tiling Grids
+    createTilingGrid('tilingGrid2x2', 6, 2);
+    createTilingGrid('tilingGrid3x3', 6, 3);
+
+</script>
+
+</body>
+</html>
