@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+ <title>Filling boxes - Cube Roots</title>
+
+<head>
+   
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #controls {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .box {
+            display: inline-block;
+            padding: 10px;
+            background-color: lightgray;
+            cursor: pointer;
+            margin: 5px;
+            user-select: none;
+        }
+        .hidden {
+            background-color: gray;
+            color: gray;
+        }
+        #equations {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+        /* Styles for 3D cube */
+        #cubeWrapper {
+            perspective: 800px;
+            margin: 0 auto 40px;
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        #cubeContainer {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(-30deg);
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) rotateX(-30deg) rotateY(-30deg);
+        }
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            margin: 0 auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .cubeFace {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #87CEFA;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            opacity: 0.9;
+        }
+        .cubeFace.front  { transform: rotateY(  0deg) translateZ(100px); }
+        .cubeFace.back   { transform: rotateY(180deg) translateZ(100px); }
+        .cubeFace.right  { transform: rotateY( 90deg) translateZ(100px); }
+        .cubeFace.left   { transform: rotateY(-90deg) translateZ(100px); }
+        .cubeFace.top    { transform: rotateX( 90deg) translateZ(100px); }
+        .cubeFace.bottom { transform: rotateX(-90deg) translateZ(100px); }
+        /* Grid lines on cube faces */
+        .cubeFace::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, black 1px, transparent 1px),
+                              linear-gradient(to bottom, black 1px, transparent 1px);
+            background-size: calc(100% / var(--divisions)) calc(100% / var(--divisions));
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            box-sizing: border-box;
+        }
+        /* Style for footer */
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            text-align: center;
+            color: gray;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #cubeWrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .cube {
+                width: 150px;
+                height: 150px;
+            }
+            .cubeFace {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        /* Ensure text flows around cubes */
+        #explanation {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        .tilingTitle {
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .tilingImage {
+            margin: 20px auto;
+            width: 200px;
+            height: 200px;
+            position: relative;
+            perspective: 800px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+        .tilingCube {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) rotateX(-30deg) rotateY(-30deg);
+        }
+        .tilingCubeFace {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: #87CEFA;
+            border: 1px solid #000;
+            box-sizing: border-box;
+            opacity: 0.9;
+        }
+        .tilingCubeFace.front  { transform: rotateY(  0deg) translateZ(75px); }
+        .tilingCubeFace.back   { transform: rotateY(180deg) translateZ(75px); }
+        .tilingCubeFace.right  { transform: rotateY( 90deg) translateZ(75px); }
+        .tilingCubeFace.left   { transform: rotateY(-90deg) translateZ(75px); }
+        .tilingCubeFace.top    { transform: rotateX( 90deg) translateZ(75px); }
+        .tilingCubeFace.bottom { transform: rotateX(-90deg) translateZ(75px); }
+        /* Grid lines on tiling cube faces */
+        .tilingCubeFace::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to right, black 1px, transparent 1px),
+                              linear-gradient(to bottom, black 1px, transparent 1px);
+            background-size: calc(100% / var(--divisions)) calc(100% / var(--divisions));
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Filling the Cube - Cube Roots</h1>
+
+<div id="controls">
+    <div id="lengthBox" class="box hidden">Length</div>
+    <div id="widthBox" class="box hidden">Width</div>
+    <div id="heightBox" class="box hidden">Height</div>
+    <div id="volumeBox" class="box hidden">Volume</div>
+    <button id="newExample">Generate New Example</button>
+</div>
+
+<!-- Cube Visualization -->
+<div id="cubeWrapper">
+    <div id="cubeContainer"></div>
+</div>
+
+<div id="equations"></div>
+
+<!-- Explanation Section -->
+<div id="explanation">
+    <p>
+        Just like squares can be tiled with smaller squares, cubes can be filled with smaller cubes of equal size.
+        For example:
+    </p>
+    <div class="tilingTitle">6×6×6 Cube Filled with 27 2×2×2 Cubes</div>
+    <div class="tilingImage" id="tiling2x2"></div>
+
+    <div class="tilingTitle">6×6×6 Cube Filled with 8 3×3×3 Cubes</div>
+    <div class="tilingImage" id="tiling3x3"></div>
+
+    <div id="question">
+        How can we determine when a cube can be filled with smaller cubes?
+    </div>
+
+    <!-- Section on Calculating Cube Roots -->
+    <p>
+        Understanding how the volume of a cube relates to its side length can help us calculate cube roots of perfect cubes. Since the volume of a cube is equal to the side length cubed, we can find the side length by taking the cube root of the volume.
+    </p>
+    <p>
+        Consider this example:
+    </p>
+    <ul>
+        <li>Volume = 216. What is the side length?</li>
+        <li>Can this cube be filled with smaller cubes?</li>
+        <li>It can be filled with 27 2×2×2 cubes or 8 3×3×3 cubes.</li>
+        <li>Is it possible to find a volume that can be filled in more than two different ways with cube tiles?</li>
+    </ul>
+    <p>
+        By understanding that the cube root of the volume gives us the side length, we can calculate the cube roots of perfect cubes. This concept is visualized in our applet with smaller cubes, and the same principle applies to larger cubes.
+    </p>
+    <div id="question">
+        Can this understanding help us calculate the cube roots of perfect cubes like 216?
+    </div>
+</div>
+
+<script>
+    let length, volume;
+    let lengthRevealed = false;
+    let widthRevealed = false;
+    let heightRevealed = false;
+    let volumeRevealed = false;
+
+    function generateExample() {
+        length = Math.floor(Math.random() * 4) + 3; // Random integer between 3 and 6
+        volume = length * length * length;
+        lengthRevealed = false;
+        widthRevealed = false;
+        heightRevealed = false;
+        volumeRevealed = false;
+        document.getElementById('lengthBox').classList.add('hidden');
+        document.getElementById('lengthBox').innerText = 'Length';
+        document.getElementById('widthBox').classList.add('hidden');
+        document.getElementById('widthBox').innerText = 'Width';
+        document.getElementById('heightBox').classList.add('hidden');
+        document.getElementById('heightBox').innerText = 'Height';
+        document.getElementById('volumeBox').classList.add('hidden');
+        document.getElementById('volumeBox').innerText = 'Volume';
+        document.getElementById('equations').innerHTML = '';
+        document.getElementById('cubeContainer').innerHTML = '';
+        drawCube();
+    }
+
+    function drawCube() {
+        const cubeContainer = document.getElementById('cubeContainer');
+        cubeContainer.innerHTML = '';
+
+        const cube = document.createElement('div');
+        cube.classList.add('cube');
+
+        // Create cube faces
+        const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+        faces.forEach(face => {
+            const cubeFace = document.createElement('div');
+            cubeFace.classList.add('cubeFace', face);
+            cubeFace.style.setProperty('--divisions', length);
+            cube.appendChild(cubeFace);
+        });
+
+        cubeContainer.appendChild(cube);
+    }
+
+    document.getElementById('lengthBox').addEventListener('click', function() {
+        lengthRevealed = !lengthRevealed;
+        if (lengthRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Length: ${length}`;
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Length';
+        }
+    });
+
+    document.getElementById('widthBox').addEventListener('click', function() {
+        widthRevealed = !widthRevealed;
+        if (widthRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Width: ${length}`;
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Width';
+        }
+    });
+
+    document.getElementById('heightBox').addEventListener('click', function() {
+        heightRevealed = !heightRevealed;
+        if (heightRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Height: ${length}`;
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Height';
+        }
+    });
+
+    document.getElementById('volumeBox').addEventListener('click', function() {
+        volumeRevealed = !volumeRevealed;
+        if (volumeRevealed) {
+            this.classList.remove('hidden');
+            this.innerText = `Volume: ${volume}`;
+            drawCube();
+            document.getElementById('equations').innerHTML = `${length} × ${length} × ${length} = ${volume}<br>∛${volume} = ${length}`;
+        } else {
+            this.classList.add('hidden');
+            this.innerText = 'Volume';
+            drawCube();
+            document.getElementById('equations').innerHTML = '';
+        }
+    });
+
+    document.getElementById('newExample').addEventListener('click', generateExample);
+
+    // Initialize the example
+    generateExample();
+
+    // Functions for Cube Tiling Examples
+    function createTilingCube(containerId, cubeSize, tileSize) {
+        const tilingContainer = document.getElementById(containerId);
+        tilingContainer.innerHTML = '';
+
+        const cube = document.createElement('div');
+        cube.classList.add('tilingCube');
+
+        // Create cube faces
+        const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+        faces.forEach(face => {
+            const cubeFace = document.createElement('div');
+            cubeFace.classList.add('tilingCubeFace', face);
+            cubeFace.style.setProperty('--divisions', cubeSize / tileSize);
+            cube.appendChild(cubeFace);
+        });
+
+        tilingContainer.appendChild(cube);
+    }
+
+    // Create Cube Tiling Examples for 6x6x6 cube
+    createTilingCube('tiling2x2', 6, 2);
+    createTilingCube('tiling3x3', 6, 3);
+
+</script>
+
+</body>
+<footer>
+    <p>Created by cliffpackman@gmail.com 17/9/2024</p>
+</footer>
+</html>
