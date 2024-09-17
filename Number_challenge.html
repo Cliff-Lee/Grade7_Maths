@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Puzzle Game</title>
+    <style>
+        .equation { font-size: 24px; margin: 20px; }
+        .operator, .paren { 
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid black;
+            cursor: grab;
+        }
+        #equationDisplay {
+            margin-top: 30px;
+            font-size: 30px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .number, .droppable {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            min-width: 40px;
+        }
+        .droppable {
+            border: 2px dashed #aaa;
+            min-height: 50px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .correct {
+            background-color: lightgreen;
+        }
+        .operator-container {
+            margin-top: 20px;
+        }
+        .puzzle {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .correct-row {
+            background-color: lightgreen;
+        }
+        .submit-btn {
+            margin-top: 20px;
+        }
+        .completed {
+            color: green;
+            font-weight: bold;
+        }
+        .target-number {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            font-size: 24px;
+            border: 1px solid #000;
+        }
+        .target-number.correct {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>Math Puzzle Game</h1>
+    <label for="puzzleSelector">Select Puzzle:</label>
+    <select id="puzzleSelector" onchange="selectPuzzle()">
+        <option value="2">Puzzle 2</option>
+        <option value="3">Puzzle 3</option>
+        <option value="4">Puzzle 4</option>
+        <option value="5">Puzzle 5</option>
+        <option value="6">Puzzle 6</option>
+        <option value="7">Puzzle 7</option>
+        <option value="8">Puzzle 8</option>
+        <option value="9">Puzzle 9</option>
+    </select>
+
+    <div id="targetNumbers"></div>
+    <div id="equationDisplay"></div>
+
+    <div class="operator-container">
+        <div class="operator" draggable="true" data-value="+">+</div>
+        <div class="operator" draggable="true" data-value="-">-</div>
+        <div class="operator" draggable="true" data-value="*">*</div>
+        <div class="operator" draggable="true" data-value="/">/</div>
+        <div class="paren" draggable="true" data-value="(">(</div>
+        <div class="paren" draggable="true" data-value=")">)</div>
+    </div>
+
+    <button id="submitBtn" class="submit-btn">Submit</button>
+
+    <script>
+        const puzzles = {
+            2: { equation: "2 2 2 2", solutions: [0, 1, 2, 3, 4, 5, 6, 10, 12], foundSolutions: [] },
+            3: { equation: "3 3 3 3", solutions: [3, 4, 5, 6, 7, 8, 9, 10], foundSolutions: [] },
+            4: { equation: "4 4 4 4", solutions: [3, 6, 7, 8, 24, 28, 32, 48], foundSolutions: [] },
+            5: { equation: "5 5 5 5", solutions: [3, 5, 6, 26, 30, 50, 55, 120], foundSolutions: [] },
+            6: { equation: "6 6 6 6", solutions: [5, 6, 8, 24, 30, 48, 66, 180], foundSolutions: [] },
+            7: { equation: "7 7 7 7", solutions: [3, 8, 13, 15, 48, 49, 56, 105], foundSolutions: [] },
+            8: { equation: "8 8 8 8", solutions: [10, 15, 56, 65, 80, 120, 192, 520], foundSolutions: [] },
+            9: { equation: "9 9 9 9", solutions: [7, 9, 10, 19, 80, 81, 90, 720], foundSolutions: [] }
+        };
+
+        let currentPuzzle = puzzles[2];
+        let draggedOperator = null;
+
+        function selectPuzzle() {
+            const selectedValue = document.getElementById('puzzleSelector').value;
+            currentPuzzle = puzzles[selectedValue];
+            resetEquationDisplay();
+            displayTargetNumbers();
+        }
+
+        function displayTargetNumbers() {
+            const targetNumbersDisplay = document.getElementById('targetNumbers');
+            targetNumbersDisplay.innerHTML = '';
+            currentPuzzle.solutions.forEach(solution => {
+                const solutionDiv = document.createElement('div');
+                solutionDiv.classList.add('target-number');
+                solutionDiv.textContent = solution;
+                targetNumbersDisplay.appendChild(solutionDiv);
+            });
+        }
+
+        function updateTargetNumbers() {
+            currentPuzzle.solutions.forEach((solution, index) => {
+                if (currentPuzzle.foundSolutions.includes(solution)) {
+                    const targetDivs = document.querySelectorAll('.target-number');
+                    targetDivs[index].classList.add('correct');
+                }
+            });
+        }
+
+        function resetEquationDisplay() {
+            const equationDisplay = document.getElementById('equationDisplay');
+            equationDisplay.innerHTML = '<span class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)"></span>'; // Initial droppable for opening parentheses
+            currentPuzzle.equation.split(' ').forEach((num, i) => {
+                equationDisplay.innerHTML += `<span class="number">${num}</span>`;
+                equationDisplay.innerHTML += '<span class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)"></span>';
+            });
+            document.querySelectorAll('.operator, .paren').forEach(element => {
+                element.addEventListener('dragstart', handleDragStart);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            resetEquationDisplay();
+            displayTargetNumbers();
+            document.querySelectorAll('.operator, .paren').forEach(element => {
+                element.addEventListener('dragstart', handleDragStart);
+            });
+            document.getElementById('submitBtn').addEventListener('click', evaluateExpression);
+        });
+
+        function handleDragStart(event) {
+            draggedOperator = event.target.getAttribute('data-value');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const operatorSpan = document.createElement('span');
+            operatorSpan.textContent = draggedOperator;
+            event.target.appendChild(operatorSpan);
+        }
+
+        function evaluateExpression() {
+            const equationText = Array.from(document.querySelectorAll('#equationDisplay .number, #equationDisplay .droppable'))
+                .map(span => span.textContent.trim())
+                .join('');
+            
+            try {
+                const result = eval(equationText);
+                if (!currentPuzzle.solutions.includes(result)) {
+                    alert("That is not a target number, try again.");
+                    return;
+                }
+                if (currentPuzzle.foundSolutions.includes(result)) {
+                    alert("You have already found this solution!");
+                    return;
+                }
+                currentPuzzle.foundSolutions.push(result);
+                alert(`Correct! Solution ${result} found.`);
+                updateTargetNumbers(); // Highlight the correct target number
+                resetEquationDisplay(); // Reset the display for the next solution attempt
+                if (currentPuzzle.foundSolutions.length === currentPuzzle.solutions.length) {
+                    alert("You have found all the solutions for this puzzle! Puzzle complete.");
+                    document.getElementById('submitBtn').disabled = true; // Disable further submissions
+                }
+            } catch (e) {
+                alert("Invalid equation! Please try again.");
+            }
+        }
+function setupDeletion() {
+    document.querySelectorAll('#equationDisplay .operator, #equationDisplay .paren').forEach(elem => {
+        elem.onclick = () => elem.remove(); // Adds click to remove functionality
+    });
+}
+
+function drop(event) {
+    event.preventDefault();
+    const operatorSpan = document.createElement('span');
+    operatorSpan.className = draggedOperator.includes('(') ? 'paren' : 'operator';
+    operatorSpan.textContent = draggedOperator;
+    event.target.appendChild(operatorSpan);
+    setupDeletion(); // Setup deletion every time a new operator or paren is added
+}
+    </script>
+</body>
+</html>
