@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributive Property with Dots</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .expression {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px;
+        }
+        .dots-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .dots {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        .dot-b {
+            background-color: #ff6347; /* Orange for 'b' */
+        }
+        .dot-c {
+            background-color: #4682b4; /* Blue for 'c' */
+        }
+        .dot-d {
+            background-color: #9acd32; /* Light green for 'd' */
+        }
+        .equation {
+            font-size: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .equation span {
+            font-weight: bold;
+        }
+        .a {
+            color: #28a745; /* Green for 'a' */
+        }
+        .b {
+            color: #ff6347; /* Red for 'b' */
+        }
+        .c {
+            color: #4682b4; /* Blue for 'c' */
+        }
+        .d {
+            color: #9acd32; /* Light green for 'd' */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Distributive Property Visualized</h1>
+
+<div class="expression" id="expression">a(b + c)</div>
+
+<!-- Explanation and first diagram -->
+<div class="equation" id="equation1">
+    <p>
+        The distributive property states that <span class="a">a</span>(<span class="b">b</span> + <span class="c">c</span>) is the same as <span class="a">a</span> × <span class="b">b</span> + <span class="a">a</span> × <span class="c">c</span>.
+    </p>
+</div>
+
+<div class="dots-container" id="dots-container1">
+    <!-- Visual representation of a(b+c) = ab + ac will go here -->
+</div>
+
+<!-- Explanation and second diagram -->
+<div class="equation" id="equation2">
+    <p>
+        Alternatively, we can see that <span class="a">a</span>(<span class="b">b</span> + <span class="c">c</span>) can be written as <span class="a">a</span> × (<span class="b">b</span> + <span class="c">c</span>), which is <span class="a">a</span> × <span class="d">d</span> where <span class="d">d</span> = <span class="b">b</span> + <span class="c">c</span>.
+    </p>
+</div>
+
+<div class="dots-container" id="dots-container2">
+    <!-- Visual representation of a(b+c) = a(d) where d=b+c will go here -->
+</div>
+
+<button onclick="generateNewProblem()">Generate New Question</button>
+
+<script>
+    function generateNewProblem() {
+        // Generate random positive integers for a, b, and c
+        const a = Math.floor(Math.random() * 5) + 2;  // a = 2 to 6
+        const b = Math.floor(Math.random() * 5) + 1;  // b = 1 to 5
+        const c = Math.floor(Math.random() * 5) + 1;  // c = 1 to 5
+        const d = b + c;  // d = b + c
+
+        // Update the expression
+        document.getElementById("expression").textContent = `${a}(${b} + ${c}) = ${a} × ${b} + ${a} × ${c}`;
+
+        // Clear the existing dots
+        document.getElementById("dots-container1").innerHTML = '';
+        document.getElementById("dots-container2").innerHTML = '';
+
+        // 1st Diagram: Showing a(b + c) = ab + ac
+        const groupABC = document.createElement('div');
+        groupABC.className = 'dots-group';
+        const labelABC = document.createElement('div');
+        labelABC.innerHTML = `<span class="a">${a}</span> × (<span class="b">${b}</span> + <span class="c">${c}</span>) = <span class="a">${a}</span> × <span class="b">${b}</span> + <span class="a">${a}</span> × <span class="c">${c}</span>`;
+        groupABC.appendChild(labelABC);
+
+        // Create the dots for ab and ac with a plus sign between
+        for (let i = 0; i < a; i++) {
+            const row = document.createElement('div');
+            row.className = 'dots';
+
+            // b dots (red)
+            for (let j = 0; j < b; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot dot-b';
+                row.appendChild(dot);
+            }
+
+            // Plus sign between b and c dots
+            const plusSign = document.createElement('span');
+            plusSign.style.margin = '0 10px';
+            plusSign.textContent = '+';
+            row.appendChild(plusSign);
+
+            // c dots (blue)
+            for (let j = 0; j < c; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot dot-c';
+                row.appendChild(dot);
+            }
+
+            groupABC.appendChild(row);
+        }
+
+        document.getElementById("dots-container1").appendChild(groupABC);
+
+        // 2nd Diagram: Showing a(b + c) = a(d) where d = b + c
+        const groupAD = document.createElement('div');
+        groupAD.className = 'dots-group';
+        const labelAD = document.createElement('div');
+        labelAD.innerHTML = `<span class="a">${a}</span> × (<span class="b">${b}</span> + <span class="c">${c}</span>) = <span class="a">${a}</span> × <span class="d">${d}</span>`;
+        groupAD.appendChild(labelAD);
+
+        // Create the dots for ad (where d = b + c, color them as d)
+        for (let i = 0; i < a; i++) {
+            const row = document.createElement('div');
+            row.className = 'dots';
+
+            // d dots (combined b + c as new color)
+            for (let j = 0; j < d; j++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot dot-d';  // All dots are now the new color representing d
+                row.appendChild(dot);
+            }
+
+            groupAD.appendChild(row);
+        }
+
+        document.getElementById("dots-container2").appendChild(groupAD);
+    }
+
+    // Initialize the first problem on page load
+    window.onload = generateNewProblem;
+</script>
+
+</body>
+</html>

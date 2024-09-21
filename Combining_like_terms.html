@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combine Like Terms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .game-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .terms-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .term {
+            padding: 20px;
+            border: 1px solid #000;
+            border-radius: 10px;
+            background-color: #e9ecef;
+            cursor: grab;
+            display: inline-block;
+        }
+        .dropzone {
+            width: 200px;
+            height: 200px;
+            margin-top: 30px;
+            border: 2px dashed #007bff;
+            display: inline-block;
+            border-radius: 10px;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Combine Like Terms</h1>
+    <p>Drag and drop like terms into the correct dropzones to combine them.</p>
+    
+    <!-- Terms to Drag -->
+    <div class="terms-container" id="terms-container">
+        <!-- Random terms will be generated here -->
+    </div>
+
+    <!-- Drop Zones -->
+    <div class="terms-container">
+        <div class="dropzone" id="dropzone-x">Drop terms with "x" here</div>
+        <div class="dropzone" id="dropzone-y">Drop terms with "y" here</div>
+        <div class="dropzone" id="dropzone-constant">Drop constants here</div>
+    </div>
+
+    <div id="feedback" style="margin-top: 20px;"></div>
+
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button onclick="resetGame()">New Game</button>
+</div>
+
+<script>
+    let draggedElement = null;
+    let terms = [];
+
+    // Function to get the greatest common divisor (GCD)
+    function gcd(a, b) {
+        if (!b) return a;
+        return gcd(b, a % b);
+    }
+
+    // Function to reduce a fraction to its simplest form
+    function simplifyFraction(numerator, denominator) {
+        const divisor = gcd(numerator, denominator);
+        numerator = numerator / divisor;
+        denominator = denominator / divisor;
+
+        // If the denominator is 1, return the numerator only (no fraction)
+        if (denominator === 1) {
+            return numerator.toString();
+        }
+
+        return `${numerator}/${denominator}`;
+    }
+
+    // Function to generate random coefficients in simplest form
+    function randomCoefficient() {
+        // Decide randomly whether to use an integer or fraction
+        const isFraction = Math.random() > 0.5;
+
+        if (isFraction) {
+            let numerator = Math.floor(Math.random() * 9) + 1; // 1 to 9
+            let denominator = Math.floor(Math.random() * 9) + 2; // 2 to 9 (no denominator of 1)
+            let sign = Math.random() < 0.5 ? -1 : 1;
+
+            // Simplify the fraction
+            const fraction = simplifyFraction(numerator * sign, denominator);
+            return fraction;
+        } else {
+            let integer = Math.floor(Math.random() * 9) + 1; // 1 to 9
+            let sign = Math.random() < 0.5 ? -1 : 1;
+            return (integer * sign).toString();
+        }
+    }
+
+    // Generate random terms for the game
+    function generateRandomTerms() {
+        const variables = ["x", "y", "constant"];
+        
+        terms = [
+            { value: randomCoefficient() + "x", type: "x" },
+            { value: randomCoefficient() + "y", type: "y" },
+            { value: randomCoefficient() + "x", type: "x" },
+            { value: randomCoefficient() + "y", type: "y" },
+            { value: randomCoefficient(), type: "constant" },
+            { value: randomCoefficient(), type: "constant" }
+        ];
+        
+        // Clear the terms container before generating new ones
+        const termsContainer = document.getElementById("terms-container");
+        termsContainer.innerHTML = "";
+
+        // Add draggable terms
+        terms.forEach((term, index) => {
+            const termDiv = document.createElement('div');
+            termDiv.classList.add('term');
+            termDiv.setAttribute('draggable', 'true');
+            termDiv.setAttribute('id', 'term' + index);
+            termDiv.setAttribute('data-variable', term.type);
+            termDiv.textContent = term.value;
+            termDiv.addEventListener('dragstart', function(e) {
+                draggedElement = e.target;
+            });
+            termsContainer.appendChild(termDiv);
+        });
+    }
+
+    // Add drag and drop functionality to dropzones
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+        });
+        zone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            if (zone.id === `dropzone-${draggedElement.dataset.variable}`) {
+                zone.appendChild(draggedElement);
+            } else {
+                document.getElementById('feedback').textContent = 'Incorrect zone for that term!';
+                document.getElementById('feedback').className = 'incorrect';
+            }
+        });
+    });
+
+    function checkAnswer() {
+        let xZone = document.getElementById('dropzone-x');
+        let yZone = document.getElementById('dropzone-y');
+        let constantZone = document.getElementById('dropzone-constant');
+
+        let xSum = 0, ySum = 0, constantSum = 0;
+
+        // Function to handle rational coefficients
+        function evaluateTerm(term) {
+            if (term.includes("/")) {
+                const [numerator, denominator] = term.split("/").map(Number);
+                return numerator / denominator;
+            }
+            return parseFloat(term);
+        }
+
+        // Sum terms in the "x" dropzone
+        [...xZone.children].forEach(term => {
+            xSum += evaluateTerm(term.textContent.replace('x', ''));
+        });
+
+        // Sum terms in the "y" dropzone
+        [...yZone.children].forEach(term => {
+            ySum += evaluateTerm(term.textContent.replace('y', ''));
+        });
+
+        // Sum constant terms
+        [...constantZone.children].forEach(term => {
+            constantSum += evaluateTerm(term.textContent);
+        });
+
+        // Display feedback
+        let feedbackMessage = `Your combined terms are: ${xSum}x, ${ySum}y, ${constantSum}`;
+        document.getElementById('feedback').textContent = feedbackMessage;
+        document.getElementById('feedback').className = 'correct';
+    }
+
+    function resetGame() {
+        // Reset dropzones and feedback
+        let zones = document.querySelectorAll('.dropzone');
+        zones.forEach(zone => zone.innerHTML = '');
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = '';
+
+        // Generate new random terms
+        generateRandomTerms();
+    }
+
+    // Initialize the game with random terms
+    window.onload = resetGame;
+
+</script>
+
+</body>
+</html>

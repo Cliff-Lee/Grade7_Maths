@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expand Expressions - Distributive Property</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .expression {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            margin: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .hint {
+            font-size: 16px;
+            margin-top: 10px;
+            display: none;
+        }
+        .step-by-step {
+            margin-top: 30px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .step-by-step p {
+            font-size: 16px;
+            text-align: left;
+            margin: 10px 0;
+        }
+        .highlight {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Expand Using the Distributive Property</h1>
+    <p>Use the distributive property to expand the expression. Enter your answer in the box below.</p>
+
+    <div class="expression" id="expression"></div>
+
+    <input type="text" id="student-answer" placeholder="Enter your expanded expression">
+    <br>
+    <button onclick="checkAnswer()">Check Answer</button>
+    <button onclick="showHint()">Hint</button>
+    <button onclick="showSteps()">Step-by-Step</button>
+    <button onclick="randomExpression()">New Problem</button>
+
+    <div id="feedback" class="feedback"></div>
+    <div id="hint" class="hint"></div>
+
+    <div id="steps" class="step-by-step" style="display:none;">
+        <h3>Step-by-Step Expansion</h3>
+        <p id="step1"></p>
+        <p id="step2"></p>
+        <p id="step3"></p>
+    </div>
+</div>
+
+<script>
+    let currentExpression = {};
+    
+    function randomExpression() {
+        // Randomly generate a distributive expression (a(bx + c) format)
+        const a = Math.floor(Math.random() * 9) + 1;  // Random number for outside factor
+        const b = Math.floor(Math.random() * 9) + 1;  // Random number for first term inside parenthesis
+        const c = Math.floor(Math.random() * 9) + 1;  // Random number for second term inside parenthesis
+        const bSign = Math.random() < 0.5 ? '-' : '+';  // Randomly make the b term positive or negative
+        const variable = Math.random() < 0.5 ? 'x' : 'y'; // Randomly choose x or y
+
+        // Expanded expression
+        const expandedBTerm = a * b;
+        const expandedCTerm = a * (bSign === '-' ? -c : c);
+
+        currentExpression = {
+            a: a,
+            b: b,
+            bSign: bSign,
+            c: c,
+            variable: variable,
+            expanded: `${expandedBTerm}${variable} ${expandedCTerm >= 0 ? '+' : ''} ${expandedCTerm}`,  // Correct expanded form
+            step1: `${a}(${b}${variable} ${bSign} ${c})`,  // Showing a(bx + c)
+            step2: `${a} * ${b}${variable} ${bSign} ${a} * ${c}`,  // Visualizing distributive steps
+            step3: `${expandedBTerm}${variable} ${expandedCTerm >= 0 ? '+' : ''} ${expandedCTerm}`  // Final expanded form
+        };
+
+        document.getElementById("expression").textContent = `${a}(${b}${variable} ${bSign} ${c})`;
+        document.getElementById("feedback").textContent = '';
+        document.getElementById("student-answer").value = '';
+        document.getElementById("hint").style.display = 'none';
+        document.getElementById("steps").style.display = 'none';
+    }
+
+    function checkAnswer() {
+        const answer = document.getElementById("student-answer").value.replace(/\s/g, ''); // Remove spaces
+
+        if (answer === currentExpression.expanded.replace(/\s/g, '')) {
+            document.getElementById("feedback").textContent = "Correct! Well done.";
+            document.getElementById("feedback").className = "correct";
+        } else {
+            document.getElementById("feedback").textContent = "Incorrect. Try again.";
+            document.getElementById("feedback").className = "incorrect";
+        }
+    }
+
+    function showHint() {
+        document.getElementById("hint").textContent = `Hint: Use the distributive property to multiply ${currentExpression.a} with both terms inside the parenthesis.`;
+        document.getElementById("hint").style.display = 'block';
+    }
+
+    function showSteps() {
+        document.getElementById("step1").innerHTML = `Step 1: Start with the expression: <span class="highlight">${currentExpression.step1}</span>`;
+        document.getElementById("step2").innerHTML = `Step 2: Apply distributive property: <span class="highlight">${currentExpression.step2}</span>`;
+        document.getElementById("step3").innerHTML = `Step 3: Simplify the expression: <span class="highlight">${currentExpression.step3}</span>`;
+        document.getElementById("steps").style.display = 'block';
+    }
+
+    // Initialize the first random expression
+    window.onload = randomExpression;
+</script>
+
+</body>
+</html>
