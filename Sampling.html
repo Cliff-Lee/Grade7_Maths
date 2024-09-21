@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sampling Methods Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .scenario {
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Classify Sampling Methods</h1>
+        <p>Select the correct sampling method for each survey description and see if it's biased or unbiased.</p>
+        
+        <div id="game-area">
+            <div class="scenario" id="scenario-text">
+                <!-- Scenario text will go here -->
+            </div>
+            <div class="buttons">
+                <button onclick="selectMethod('random')">Random Sampling</button>
+                <button onclick="selectMethod('stratified')">Stratified Sampling</button>
+                <button onclick="selectMethod('convenience')">Convenience Sampling</button>
+                <button onclick="selectMethod('systematic')">Systematic Sampling</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <button onclick="nextScenario()">Next Scenario</button>
+    </div>
+
+    <script>
+        const scenarios = [
+            // Original scenarios
+            {
+                text: "A researcher randomly selects 100 students from a list of all students in a school to participate in a survey.",
+                correctMethod: "random",
+                isBiased: false
+            },
+            {
+                text: "A company surveys the first 50 customers who enter their store on a Saturday morning.",
+                correctMethod: "convenience",
+                isBiased: true
+            },
+            {
+                text: "A health researcher divides participants by age groups and then selects participants randomly from each age group.",
+                correctMethod: "stratified",
+                isBiased: false
+            },
+            {
+                text: "A professor surveys every 10th student who enters the library on a given day.",
+                correctMethod: "systematic",
+                isBiased: false
+            },
+            // New scenarios relevant to international school students
+            {
+                text: "The school wants to survey students about their favorite cafeteria meals. They choose to survey 5 students from each grade level to ensure all age groups are represented.",
+                correctMethod: "stratified",
+                isBiased: false
+            },
+            {
+                text: "The student council wants to know opinions on the new school uniform policy. They decide to ask the first 100 students they see during the lunch break.",
+                correctMethod: "convenience",
+                isBiased: true
+            },
+            {
+                text: "A teacher is interested in how well students are sleeping and decides to ask every 5th student who walks into the assembly hall.",
+                correctMethod: "systematic",
+                isBiased: false
+            },
+            {
+                text: "The school is conducting a survey to see how international students are adjusting. They randomly select 50 students from the complete list of all students in the school.",
+                correctMethod: "random",
+                isBiased: false
+            },
+            {
+                text: "For a science project, students want to know how many hours their peers spend on homework each night. They ask all their friends in their grade.",
+                correctMethod: "convenience",
+                isBiased: true
+            },
+            {
+                text: "The school is interested in the extracurricular preferences of students. They divide students into groups based on their interests (arts, sports, etc.) and survey a random sample from each group.",
+                correctMethod: "stratified",
+                isBiased: false
+            }
+        ];
+
+        let currentScenario = 0;
+
+        function loadScenario() {
+            document.getElementById("scenario-text").textContent = scenarios[currentScenario].text;
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("feedback").className = "feedback";
+        }
+
+        function selectMethod(method) {
+            const scenario = scenarios[currentScenario];
+            let feedbackText = "";
+            let feedbackClass = "";
+            
+            if (method === scenario.correctMethod) {
+                feedbackText = `Correct! This method is ${scenario.isBiased ? "biased" : "unbiased"}.`;
+                feedbackClass = "feedback correct";
+            } else {
+                feedbackText = `Incorrect! The correct method is ${scenario.correctMethod} and it is ${scenario.isBiased ? "biased" : "unbiased"}.`;
+                feedbackClass = "feedback incorrect";
+            }
+
+            document.getElementById("feedback").textContent = feedbackText;
+            document.getElementById("feedback").className = feedbackClass;
+        }
+
+        function nextScenario() {
+            currentScenario++;
+            if (currentScenario >= scenarios.length) {
+                currentScenario = 0;
+                alert("You've completed all scenarios! Starting over.");
+            }
+            loadScenario();
+        }
+
+        // Load the first scenario on page load
+        window.onload = loadScenario;
+    </script>
+
+</body>
+</html>
