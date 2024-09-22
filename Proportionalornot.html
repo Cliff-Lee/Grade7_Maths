@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proportional vs Non-Proportional Relationships</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #4CAF50;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        input {
+            width: 60px;
+            padding: 5px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        #graph-container {
+            margin-top: 30px;
+        }
+        .scenario {
+            margin-top: 30px;
+        }
+        .proportional {
+            background-color: #A2D9CE;
+        }
+        .non-proportional {
+            background-color: #F5B7B1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Proportional vs Non-Proportional Relationships</h1>
+        <p>Enter values for two variables below. The applet will determine if the relationship is proportional or non-proportional.</p>
+
+        <table>
+            <tr>
+                <th>Input X</th>
+                <th>Input Y</th>
+            </tr>
+            <tr>
+                <td><input type="number" id="x1" value="1"></td>
+                <td><input type="number" id="y1" value="2"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="x2" value="2"></td>
+                <td><input type="number" id="y2" value="4"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="x3" value="3"></td>
+                <td><input type="number" id="y3" value="6"></td>
+            </tr>
+        </table>
+
+        <button onclick="checkProportionality()">Check Proportionality</button>
+
+        <div class="result">
+            <h2 id="result-text"></h2>
+        </div>
+
+        <div id="graph-container"></div>
+
+        <div class="scenario">
+            <h3>Practical Example</h3>
+            <p id="scenario-text"></p>
+            <button onclick="generateScenario()">Generate More Examples</button>
+        </div>
+    </div>
+
+    <script>
+        let resultText = '';
+
+        function checkProportionality() {
+            // Get input values from the table
+            const x1 = parseFloat(document.getElementById("x1").value);
+            const y1 = parseFloat(document.getElementById("y1").value);
+            const x2 = parseFloat(document.getElementById("x2").value);
+            const y2 = parseFloat(document.getElementById("y2").value);
+            const x3 = parseFloat(document.getElementById("x3").value);
+            const y3 = parseFloat(document.getElementById("y3").value);
+
+            // Calculate ratios for proportionality check
+            const ratio1 = y1 / x1;
+            const ratio2 = y2 / x2;
+            const ratio3 = y3 / x3;
+
+            let resultClass = '';
+
+            // Check if ratios are equal (proportional relationship)
+            if (ratio1 === ratio2 && ratio2 === ratio3) {
+                resultText = 'The relationship is Proportional!';
+                resultClass = 'proportional';
+            } else {
+                resultText = 'The relationship is Non-Proportional!';
+                resultClass = 'non-proportional';
+            }
+
+            // Update result text and color
+            const resultElement = document.getElementById("result-text");
+            resultElement.innerHTML = resultText;
+            resultElement.className = resultClass;
+
+            // Generate a graph of the values
+            plotGraph([x1, x2, x3], [y1, y2, y3]);
+
+            // Generate the initial practical scenario
+            generateScenario();
+        }
+
+        function plotGraph(xValues, yValues) {
+            const trace = {
+                x: xValues,
+                y: yValues,
+                mode: 'lines+markers',
+                type: 'scatter',
+                marker: { color: 'red' }
+            };
+
+            const data = [trace];
+            const layout = {
+                title: 'Graph of X vs Y',
+                xaxis: { title: 'X values' },
+                yaxis: { title: 'Y values' }
+            };
+
+            Plotly.newPlot('graph-container', data, layout);
+        }
+
+        function generateScenario() {
+            const scenarioText = document.getElementById("scenario-text");
+            const scenarios = {
+                proportional: [
+                    `If you buy 3 apples for $6, then buying 6 apples for $12 would maintain the same price per apple. This is a proportional relationship.`,
+                    `A car travels 100 miles in 2 hours and 200 miles in 4 hours. The speed stays constant, so this is a proportional relationship.`,
+                    `If a person drinks 2 liters of water in 1 day, they would drink 4 liters in 2 days at the same rate. This is a proportional relationship.`
+                ],
+                nonProportional: [
+                    `If you buy 3 apples for $6, but buying 6 apples costs $15, the price per apple has changed. This is a non-proportional relationship.`,
+                    `A taxi charges a $5 base fee plus $2 per mile. This is non-proportional because the total cost depends on the base fee and the distance.`,
+                    `If you use 10 units of electricity for $30, but using 20 units costs $75, the price per unit changes. This is a non-proportional relationship.`
+                ]
+            };
+
+            let example = '';
+            if (resultText.includes('Proportional')) {
+                const randomIndex = Math.floor(Math.random() * scenarios.proportional.length);
+                example = scenarios.proportional[randomIndex];
+            } else {
+                const randomIndex = Math.floor(Math.random() * scenarios.nonProportional.length);
+                example = scenarios.nonProportional[randomIndex];
+            }
+            scenarioText.innerHTML = example;
+        }
+    </script>
+
+</body>
+</html>

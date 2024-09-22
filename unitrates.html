@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Diagram for Unit Rates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .input-section {
+            margin: 20px 0;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            width: 60px;
+        }
+        #bar-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 30px;
+        }
+        .bar {
+            height: 50px;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 50px;
+        }
+        .label {
+            margin-top: 10px;
+        }
+        .scenario {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bar Diagrams for Unit Rates</h1>
+
+        <div class="input-section">
+            <label for="numerator1">Enter Numerator 1:</label>
+            <input type="number" id="numerator1" min="1" value="1">
+            <label for="denominator1">Enter Denominator 1:</label>
+            <input type="number" id="denominator1" min="1" value="1">
+            <br>
+            <label for="numerator2">Enter Numerator 2:</label>
+            <input type="number" id="numerator2" min="1" value="1">
+            <label for="denominator2">Enter Denominator 2:</label>
+            <input type="number" id="denominator2" min="1" value="1">
+            <br>
+            <button onclick="drawBars()">Show Bar Diagram</button>
+        </div>
+
+        <div id="bar-container">
+            <div id="bar1"></div>
+            <div id="bar2"></div>
+        </div>
+        <div class="label">
+            <p id="bar1-label"></p>
+            <p id="bar2-label"></p>
+        </div>
+
+        <div class="scenario">
+            <h2>Practical Scenario:</h2>
+            <p id="scenario-text"></p>
+        </div>
+    </div>
+
+    <script>
+        function drawBars() {
+            const numerator1 = parseFloat(document.getElementById("numerator1").value);
+            const denominator1 = parseFloat(document.getElementById("denominator1").value);
+            const numerator2 = parseFloat(document.getElementById("numerator2").value);
+            const denominator2 = parseFloat(document.getElementById("denominator2").value);
+
+            // Calculate unit rates
+            const unitRate1 = numerator1 / denominator1;
+            const unitRate2 = numerator2 / denominator2;
+
+            // Draw the bar for fraction 1
+            const bar1 = document.getElementById("bar1");
+            bar1.style.width = (unitRate1 * 100) + "px";
+            bar1.style.backgroundColor = "#4CAF50";
+            bar1.innerHTML = numerator1 + "/" + denominator1;
+
+            // Draw the bar for fraction 2
+            const bar2 = document.getElementById("bar2");
+            bar2.style.width = (unitRate2 * 100) + "px";
+            bar2.style.backgroundColor = "#FF5733";
+            bar2.innerHTML = numerator2 + "/" + denominator2;
+
+            // Update the labels below the bars
+            document.getElementById("bar1-label").innerHTML = "Unit Rate 1: " + unitRate1;
+            document.getElementById("bar2-label").innerHTML = "Unit Rate 2: " + unitRate2;
+
+            // Practical scenarios text
+            const scenarioText = document.getElementById("scenario-text");
+            scenarioText.innerHTML = `In a practical scenario, imagine you are comparing two speeds: one person covers ${numerator1} miles in ${denominator1} hours, 
+            while another covers ${numerator2} miles in ${denominator2} hours. The bar diagram above compares their speeds visually. 
+            The longer the bar, the faster the rate.`;
+        }
+    </script>
+
+</body>
+</html>

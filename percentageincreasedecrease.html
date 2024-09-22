@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percent Increase and Decrease Visualization</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .scenario-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e3f2fd;
+        }
+        .slider-container {
+            margin: 20px;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        .bar {
+            height: 50px;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 50px;
+        }
+        #result-bar {
+            background-color: #FF5733;
+        }
+        #graph-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Percent Increase and Decrease Visualization</h1>
+
+        <div class="scenario-container">
+            <h2>Scenario</h2>
+            <p id="scenario-text">Original price of a product is $100. Adjust the percentage increase or decrease.</p>
+            <button onclick="generateNewScenario()">Generate New Scenario</button>
+        </div>
+
+        <div class="slider-container">
+            <h3>Adjust Percentage:</h3>
+            <input type="range" id="percent-slider" min="-100" max="100" value="0" oninput="updateBarModel()">
+            <p>Percentage: <span id="percent-value">0</span>%</p>
+        </div>
+
+        <div class="bar-container">
+            <div class="bar" id="original-bar" style="width: 300px;">Original: $<span id="original-value">100</span></div>
+            <div class="bar" id="result-bar" style="width: 300px;">New: $<span id="new-value">100</span></div>
+        </div>
+
+        <div id="graph-container"></div>
+    </div>
+
+    <script>
+        let currentScenario = {};
+        const scenarios = [
+            {
+                description: 'The original price of a product is $100. Adjust the percentage to see how the price changes.',
+                originalValue: 100
+            },
+            {
+                description: 'The original salary is $2000. Adjust the percentage to see how a raise or cut affects the salary.',
+                originalValue: 2000
+            },
+            {
+                description: 'The original rent for an apartment is $800. Adjust the percentage to see how the rent changes with increase or decrease.',
+                originalValue: 800
+            },
+            {
+                description: 'The original population of a town is 50,000. Adjust the percentage to see how population increases or decreases.',
+                originalValue: 50000
+            },
+            {
+                description: 'The original price of a car is $15,000. Adjust the percentage to see how discounts or price increases affect the price.',
+                originalValue: 15000
+            },
+            {
+                description: 'The original budget for a project is $5000. Adjust the percentage to see how increasing or decreasing the budget affects the total.',
+                originalValue: 5000
+            }
+        ];
+
+        function generateNewScenario() {
+            const randomIndex = Math.floor(Math.random() * scenarios.length);
+            currentScenario = scenarios[randomIndex];
+
+            // Update scenario description and original value
+            document.getElementById('scenario-text').innerHTML = currentScenario.description;
+            document.getElementById('original-value').innerHTML = currentScenario.originalValue;
+            document.getElementById('new-value').innerHTML = currentScenario.originalValue;
+            document.getElementById('percent-slider').value = 0;
+            document.getElementById('percent-value').innerHTML = 0;
+            updateBarModel();
+        }
+
+        function updateBarModel() {
+            const percent = parseFloat(document.getElementById('percent-slider').value);
+            const originalValue = currentScenario.originalValue || 100;
+            const newValue = originalValue + (originalValue * percent / 100);
+
+            document.getElementById('percent-value').innerHTML = percent;
+            document.getElementById('new-value').innerHTML = newValue.toFixed(2);
+
+            // Update bar width to reflect the percentage change
+            const originalBarWidth = 300; // base width for the original value
+            const newBarWidth = originalBarWidth * (1 + percent / 100);
+            document.getElementById('result-bar').style.width = newBarWidth + 'px';
+
+            // Update graph with the new values
+            plotGraph(originalValue, newValue);
+        }
+
+        function plotGraph(original, newValue) {
+            const data = [{
+                x: ['Original', 'New'],
+                y: [original, newValue],
+                type: 'bar',
+                marker: {
+                    color: ['#4CAF50', '#FF5733']
+                }
+            }];
+
+            const layout = {
+                title: 'Original vs New Value',
+                yaxis: { title: 'Amount' }
+            };
+
+            Plotly.newPlot('graph-container', data, layout);
+        }
+
+        // Initialize with the first scenario
+        generateNewScenario();
+    </script>
+
+</body>
+</html>

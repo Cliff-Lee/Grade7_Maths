@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percent Error Calculator with Practical Experiment</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .input-section, .experiment-section {
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            padding: 10px;
+            margin: 10px;
+            width: 100px;
+        }
+        button {
+            padding: 10px;
+            margin: 10px;
+        }
+        .result-section {
+            margin: 20px 0;
+        }
+        #graph-container {
+            margin-top: 30px;
+        }
+        .experiment-result {
+            padding: 20px;
+            background-color: #e3f2fd;
+        }
+        #points-image {
+            position: relative;
+            border: 2px solid #4CAF50;
+            width: 300px;
+            height: 300px;
+            display: block;
+            margin: 0 auto;
+            background-color: #e8f5e9; /* Light green background */
+        }
+        .dot {
+            width: 5px;
+            height: 5px;
+            background-color: #FF5733;
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Percent Error Calculator</h1>
+
+        <!-- Practical Experiment Section -->
+        <div class="experiment-section">
+            <h2>Practical Experiment: Estimate Points</h2>
+            <button onclick="generatePoints()">Generate Random Number of Points</button>
+            <div id="points-image"></div>
+            <p>Try to estimate the number of points displayed:</p>
+            <input type="number" id="estimate-points" placeholder="Your Estimate">
+            <button onclick="submitEstimate()">Submit Estimate</button>
+            <div class="experiment-result">
+                <p id="actual-points-result"></p>
+                <p id="experiment-percent-error-result"></p>
+            </div>
+        </div>
+
+        <!-- Manual Input Section -->
+        <div class="input-section">
+            <h2>Manual Input</h2>
+            <p>Enter the estimated and actual values to calculate the percent error.</p>
+            <input type="number" id="estimated-value" placeholder="Estimated Value">
+            <input type="number" id="actual-value" placeholder="Actual Value">
+            <button onclick="calculatePercentError()">Calculate Percent Error</button>
+            <p id="percent-error-result"></p>
+        </div>
+
+        <!-- Graph Container -->
+        <div id="graph-container"></div>
+    </div>
+
+    <script>
+        let actualPoints = 0;
+
+        // Function to calculate percent error based on estimated and actual values
+        function calculatePercentError() {
+            const estimatedValue = parseFloat(document.getElementById('estimated-value').value);
+            const actualValue = parseFloat(document.getElementById('actual-value').value);
+
+            if (isNaN(estimatedValue) || isNaN(actualValue) || actualValue === 0) {
+                alert("Please enter valid numbers. Actual value should not be zero.");
+                return;
+            }
+
+            const percentError = Math.abs((estimatedValue - actualValue) / actualValue) * 100;
+            document.getElementById('percent-error-result').innerHTML = `Percent Error: ${percentError.toFixed(2)}%`;
+
+            plotGraph(estimatedValue, actualValue, percentError);
+        }
+
+        // Function to plot the estimated and actual values
+        function plotGraph(estimated, actual, percentError) {
+            const data = [{
+                x: ['Estimated', 'Actual'],
+                y: [estimated, actual],
+                type: 'bar',
+                marker: {
+                    color: ['#FF5733', '#4CAF50']
+                }
+            }];
+
+            const layout = {
+                title: `Estimated vs Actual (Percent Error: ${percentError.toFixed(2)}%)`,
+                yaxis: { title: 'Value' }
+            };
+
+            Plotly.newPlot('graph-container', data, layout);
+        }
+
+        // Function to generate a random number of points and display them as dots
+        function generatePoints() {
+            actualPoints = Math.floor(Math.random() * 100) + 1; // Random number between 1 and 100
+            const pointsImage = document.getElementById('points-image');
+
+            // Clear the existing points
+            pointsImage.innerHTML = '';
+
+            // Generate random points inside the div
+            for (let i = 0; i < actualPoints; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                // Ensure points stay within the 300x300px bounds of the container
+                const leftPos = Math.random() * 290; // 5px padding to fit within the box
+                const topPos = Math.random() * 290;
+                dot.style.left = `${leftPos}px`;
+                dot.style.top = `${topPos}px`;
+                pointsImage.appendChild(dot);
+            }
+
+            // Reset the estimate input and results
+            document.getElementById('estimate-points').value = '';
+            document.getElementById('actual-points-result').innerHTML = '';
+            document.getElementById('experiment-percent-error-result').innerHTML = '';
+        }
+
+        // Function to submit the student's estimate and calculate percent error for the experiment
+        function submitEstimate() {
+            const estimatePoints = parseFloat(document.getElementById('estimate-points').value);
+
+            if (isNaN(estimatePoints)) {
+                alert("Please enter a valid estimate.");
+                return;
+            }
+
+            const percentError = Math.abs((estimatePoints - actualPoints) / actualPoints) * 100;
+
+            document.getElementById('actual-points-result').innerHTML = `Actual Points: ${actualPoints}`;
+            document.getElementById('experiment-percent-error-result').innerHTML = `Your Percent Error: ${percentError.toFixed(2)}%`;
+
+            plotGraph(estimatePoints, actualPoints, percentError);
+        }
+
+        // Initialize with an empty graph
+        plotGraph(0, 0, 0);
+
+    </script>
+
+</body>
+
+  <footer> <p>Created by cliffpackman@gmail.com 23/9/2024 </p> </footer>
+</html>

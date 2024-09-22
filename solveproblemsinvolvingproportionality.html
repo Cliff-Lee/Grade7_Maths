@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proportional Relationships - Real-World Scenarios</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        select, input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+        .representation-container {
+            margin-top: 20px;
+            display: none;
+        }
+        #graph-container {
+            margin-top: 20px;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #4CAF50;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        .equation-container {
+            margin-top: 20px;
+        }
+        .scenario-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e3f2fd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Proportional Relationships - Real-World Scenarios</h1>
+
+        <div class="scenario-container">
+            <h2>Scenario</h2>
+            <p id="scenario-text"></p>
+            <button onclick="generateNewScenario()">Generate New Scenario</button>
+        </div>
+
+        <select id="representation-select" onchange="showRepresentation()">
+            <option value="">Select Representation</option>
+            <option value="table">Table</option>
+            <option value="graph">Graph</option>
+            <option value="equation">Equation</option>
+        </select>
+
+        <div id="table-container" class="representation-container">
+            <h2>Table Representation</h2>
+            <table>
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                </tr>
+                <tr>
+                    <td><input type="number" id="x1" value="1"></td>
+                    <td><input type="number" id="y1" value="2"></td>
+                </tr>
+                <tr>
+                    <td><input type="number" id="x2" value="2"></td>
+                    <td><input type="number" id="y2" value=""></td>
+                </tr>
+                <tr>
+                    <td><input type="number" id="x3" value="3"></td>
+                    <td><input type="number" id="y3" value="6"></td>
+                </tr>
+            </table>
+            <button onclick="solveTable()">Solve Table</button>
+            <p id="table-result"></p>
+        </div>
+
+        <div id="graph-container" class="representation-container">
+            <h2>Graph Representation</h2>
+            <p>Input your values to plot a proportional relationship graph:</p>
+            <input type="number" id="gx1" placeholder="X1" value="1">
+            <input type="number" id="gy1" placeholder="Y1" value="2">
+            <input type="number" id="gx2" placeholder="X2" value="2">
+            <input type="number" id="gy2" placeholder="Y2" value="4">
+            <input type="number" id="gx3" placeholder="X3" value="3">
+            <input type="number" id="gy3" placeholder="Y3" value="6">
+            <button onclick="plotGraph()">Plot Graph</button>
+            <div id="graph-plot"></div>
+        </div>
+
+        <div id="equation-container" class="representation-container">
+            <h2>Equation Representation</h2>
+            <p>Use the form \( y = kx \) to solve for the missing value.</p>
+            <input type="number" id="k-value" placeholder="Constant (k)" value="">
+            <input type="number" id="x-value" placeholder="X value" value="">
+            <button onclick="solveEquation()">Solve Equation</button>
+            <p id="equation-result"></p>
+        </div>
+    </div>
+
+    <script>
+        let currentScenario = {};
+
+        const scenarios = [
+            {
+                description: 'You are buying apples. The price for 1 apple is $2. How much would 2 apples and 3 apples cost?',
+                xValues: [1, 2, 3],
+                yValues: [2, '', 6],
+                k: 2
+            },
+            {
+                description: 'You are driving at a constant speed of 60 miles per hour. How far will you travel in 2 hours and 3 hours?',
+                xValues: [1, 2, 3],
+                yValues: [60, '', 180],
+                k: 60
+            },
+            {
+                description: 'You are filling water bottles. 1 bottle holds 500 ml of water. How much will 2 and 3 bottles hold?',
+                xValues: [1, 2, 3],
+                yValues: [500, '', 1500],
+                k: 500
+            },
+            {
+                description: 'You order pizzas. Each pizza costs $12. How much will 2 pizzas and 3 pizzas cost?',
+                xValues: [1, 2, 3],
+                yValues: [12, '', 36],
+                k: 12
+            },
+            {
+                description: 'A plant grows 5 cm every week. How tall will it be after 2 weeks and 3 weeks?',
+                xValues: [1, 2, 3],
+                yValues: [5, '', 15],
+                k: 5
+            },
+            {
+                description: 'A car rental service charges $40 per day. How much will you pay for 2 days and 4 days?',
+                xValues: [1, 2, 4],
+                yValues: [40, '', 160],
+                k: 40
+            },
+            {
+                description: 'Movie tickets cost $8 each. How much will 2 tickets and 5 tickets cost?',
+                xValues: [1, 2, 5],
+                yValues: [8, '', 40],
+                k: 8
+            },
+            {
+                description: 'You run 3 miles in 30 minutes. How far will you run in 60 minutes and 90 minutes?',
+                xValues: [30, 60, 90],
+                yValues: [3, '', 9],
+                k: 0.1
+            },
+            {
+                description: 'It takes 4 hours to paint 2 rooms. How long will it take to paint 3 rooms and 5 rooms?',
+                xValues: [2, 3, 5],
+                yValues: [4, '', 10],
+                k: 2
+            },
+            {
+                description: 'You bake 12 cookies in 30 minutes. How many cookies can you bake in 60 minutes and 90 minutes?',
+                xValues: [30, 60, 90],
+                yValues: [12, '', 36],
+                k: 0.4
+            },
+            {
+                description: 'You cycle 10 miles in 1 hour. How far will you cycle in 2 hours and 3 hours?',
+                xValues: [1, 2, 3],
+                yValues: [10, '', 30],
+                k: 10
+            },
+            {
+                description: 'A car uses 5 gallons of fuel for 100 miles. How much fuel will it need for 200 miles and 300 miles?',
+                xValues: [100, 200, 300],
+                yValues: [5, '', 15],
+                k: 0.05
+            },
+            {
+                description: 'You pack 8 boxes in 2 hours. How many boxes can you pack in 4 hours and 6 hours?',
+                xValues: [2, 4, 6],
+                yValues: [8, '', 24],
+                k: 4
+            },
+            {
+                description: 'You drink 2 liters of water every day. How much water will you drink in 3 days and 5 days?',
+                xValues: [1, 3, 5],
+                yValues: [2, '', 10],
+                k: 2
+            },
+            {
+                description: 'A builder completes 10 square meters of a wall in 2 hours. How much will he complete in 4 hours and 6 hours?',
+                xValues: [2, 4, 6],
+                yValues: [10, '', 30],
+                k: 5
+            },
+            {
+                description: 'You walk 1 mile in 15 minutes. How far will you walk in 30 minutes and 45 minutes?',
+                xValues: [15, 30, 45],
+                yValues: [1, '', 3],
+                k: 0.067
+            },
+            {
+                description: 'A photographer charges $100 for 2 hours of a photoshoot. How much will it cost for 3 hours and 5 hours?',
+                xValues: [2, 3, 5],
+                yValues: [100, '', 250],
+                k: 50
+            },
+            {
+                description: 'You shovel 50 square feet of snow in 1 hour. How much can you shovel in 2 hours and 3 hours?',
+                xValues: [1, 2, 3],
+                yValues: [50, '', 150],
+                k: 50
+            },
+            {
+                description: 'A hotel room costs $100 per night. How much will you pay for 3 nights and 5 nights?',
+                xValues: [1, 3, 5],
+                yValues: [100, '', 500],
+                k: 100
+            },
+            {
+                description: 'You burn 400 calories in 1 hour of exercise. How many calories will you burn in 2 hours and 4 hours?',
+                xValues: [1, 2, 4],
+                yValues: [400, '', 1600],
+                k: 400
+            }
+        ];
+
+        function generateNewScenario() {
+            const randomIndex = Math.floor(Math.random() * scenarios.length);
+            currentScenario = scenarios[randomIndex];
+
+            document.getElementById('scenario-text').innerHTML = currentScenario.description;
+
+            document.getElementById('x1').value = currentScenario.xValues[0];
+            document.getElementById('y1').value = currentScenario.yValues[0];
+            document.getElementById('x2').value = currentScenario.xValues[1];
+            document.getElementById('y2').value = currentScenario.yValues[1];
+            document.getElementById('x3').value = currentScenario.xValues[2];
+            document.getElementById('y3').value = currentScenario.yValues[2];
+
+            document.getElementById('gx1').value = currentScenario.xValues[0];
+            document.getElementById('gy1').value = currentScenario.yValues[0];
+            document.getElementById('gx2').value = currentScenario.xValues[1];
+            document.getElementById('gy2').value = currentScenario.yValues[1];
+            document.getElementById('gx3').value = currentScenario.xValues[2];
+            document.getElementById('gy3').value = currentScenario.yValues[2];
+
+            document.getElementById('k-value').value = currentScenario.k;
+        }
+
+        function showRepresentation() {
+            const selectedOption = document.getElementById("representation-select").value;
+            const tableContainer = document.getElementById("table-container");
+            const graphContainer = document.getElementById("graph-container");
+            const equationContainer = document.getElementById("equation-container");
+
+            tableContainer.style.display = "none";
+            graphContainer.style.display = "none";
+            equationContainer.style.display = "none";
+
+            if (selectedOption === "table") {
+                tableContainer.style.display = "block";
+            } else if (selectedOption === "graph") {
+                graphContainer.style.display = "block";
+            } else if (selectedOption === "equation") {
+                equationContainer.style.display = "block";
+            }
+        }
+
+        function solveTable() {
+            const x1 = parseFloat(document.getElementById("x1").value);
+            const y1 = parseFloat(document.getElementById("y1").value);
+            const x2 = parseFloat(document.getElementById("x2").value);
+            const y3 = parseFloat(document.getElementById("y3").value);
+
+            const k = y1 / x1;
+
+            const y2 = k * x2;
+            document.getElementById("table-result").innerHTML = `The missing Y value is: ${y2}`;
+            document.getElementById("y2").value = y2;
+        }
+
+        function plotGraph() {
+            const xValues = [
+                parseFloat(document.getElementById("gx1").value),
+                parseFloat(document.getElementById("gx2").value),
+                parseFloat(document.getElementById("gx3").value)
+            ];
+            const yValues = [
+                parseFloat(document.getElementById("gy1").value),
+                parseFloat(document.getElementById("gy2").value),
+                parseFloat(document.getElementById("gy3").value)
+            ];
+
+            const trace = {
+                x: xValues,
+                y: yValues,
+                mode: 'lines+markers',
+                type: 'scatter',
+                marker: { color: 'blue' }
+            };
+
+            const data = [trace];
+            const layout = {
+                title: 'Proportional Relationship Graph',
+                xaxis: { title: 'X values' },
+                yaxis: { title: 'Y values' }
+            };
+
+            Plotly.newPlot('graph-plot', data, layout);
+        }
+
+        function solveEquation() {
+            const k = parseFloat(document.getElementById("k-value").value);
+            const x = parseFloat(document.getElementById("x-value").value);
+            const y = k * x;
+
+            document.getElementById("equation-result").innerHTML = `The Y value for X = ${x} is: ${y}`;
+        }
+
+        generateNewScenario();
+    </script>
+
+</body>
+</html>
