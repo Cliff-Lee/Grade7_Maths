@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addo with Integers (-10 to 10)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-top: 20px;
+        }
+
+        #game-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 40px;
+        }
+
+        /* Instructions Section */
+        #instructions {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        #instructions h3 {
+            margin-top: 0;
+            color: #343a40;
+        }
+
+        /* Left Column - Player Grids */
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .player-section {
+            margin: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 70px);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .grid-cell {
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            font-size: 24px;
+            padding: 10px;
+            border: 2px solid #6c757d;
+            border-radius: 6px;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Remove spinner arrows */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .grid-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 24px;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .grid-input:focus {
+            background-color: #e0f7fa;
+            border-radius: 4px;
+        }
+
+        .grid-cell.marked {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .grid-cell.winner {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        /* Right Column - Game Interface */
+        .game-interface {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .game-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .game-controls button {
+            flex: 1 1 calc(50% - 10px);
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .game-controls button.success {
+            background-color: #28a745;
+        }
+
+        .game-controls button.success:hover {
+            background-color: #218838;
+        }
+
+        .game-controls button.danger {
+            background-color: #dc3545;
+        }
+
+        .game-controls button.danger:hover {
+            background-color: #c82333;
+        }
+
+        .game-controls button.generate {
+            background-color: #17a2b8;
+        }
+
+        .game-controls button.generate:hover {
+            background-color: #138496;
+        }
+
+        /* Calculation Display */
+        #calculation-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        /* Solution Input */
+        #solution-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        #solution-inputs input[type="number"] {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+            border: 2px solid #6c757d;
+            border-radius: 4px;
+        }
+
+        #solution-inputs button {
+            padding: 8px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        #solution-inputs button:hover {
+            background-color: #0069d9;
+        }
+
+        /* Results Display */
+        #game-result, #simulation-result {
+            font-weight: bold;
+            color: #343a40;
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 800px) {
+            #game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .game-interface {
+                max-width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 60px);
+                gap: 8px;
+            }
+
+            .grid-cell {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+                padding: 8px;
+            }
+
+            .game-controls button {
+                flex: 1 1 100%;
+            }
+
+            #solution-inputs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #solution-inputs button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Play Addo with Integers (-10 to 10)</h1>
+
+    <div id="instructions">
+        <h3>How to Play</h3>
+        <p>
+            <strong>Addo with Integers</strong> is a strategic game where each player fills a 3x3 grid with unique integers ranging from -10 to 10.
+            The objective is to correctly calculate the sum of two randomly drawn integers between -5 and 5.
+            Enter the sum into the solution box, and if the number exists on your grid, it will be highlighted.
+            The first player to have three highlighted numbers in a row, column, or diagonal wins the game.
+        </p>
+        <p>
+            <strong>Steps to Play:</strong>
+            <ol>
+                <li>Fill each player's 3x3 grid with unique numbers between -10 and 10.</li>
+                <li>Click "Start Game" to begin.</li>
+                <li>Two different numbers between -5 and 5 will be drawn, and their sum will be displayed as "Drawn Numbers: X and Y so X + Y = ...".</li>
+                <li>Calculate the sum and enter it in the solution input box, then click "Submit".</li>
+                <li>If the sum exists on your grid, the corresponding cell will be highlighted.</li>
+                <li>The first player to align three highlighted numbers in a row, column, or diagonal wins the game.</li>
+            </ol>
+        </p>
+        <p>
+            You can also generate random boards by clicking "Generate Random Boards" or reset the grids to start anew with "Reset Grids".
+            Additionally, run simulations to see which board configuration performs better over 1000 games.
+        </p>
+    </div>
+
+    <div id="game-container">
+        <!-- Left Column: Player Grids -->
+        <div class="grid-container">
+            <div class="player-section">
+                <h3>Player 1</h3>
+                <div class="grid" id="player1-grid">
+                    <!-- 3x3 grid for Player 1 -->
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                </div>
+            </div>
+            <div class="player-section">
+                <h3>Player 2</h3>
+                <div class="grid" id="player2-grid">
+                    <!-- 3x3 grid for Player 2 -->
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                    <div class="grid-cell"><input type="number" min="-10" max="10" class="grid-input"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Game Interface -->
+        <div class="game-interface">
+            <div class="game-controls">
+                <button id="reset-grids" class="danger">Reset Grids</button>
+                <button id="generate-random-boards" class="generate">Generate Random Boards</button>
+                <button id="start-game" class="success">Start Game</button>
+                <button id="simulate-games" class="success">Simulate 1000 Games</button>
+            </div>
+
+            <div id="calculation-display">No game started yet.</div>
+
+            <div id="solution-inputs">
+                <div class="solution-section">
+                    <input type="number" id="solution-input" placeholder="Enter Sum">
+                    <button id="submit-solution">Submit</button>
+                </div>
+            </div>
+
+            <div>
+                <h3>Game Results:</h3>
+                <p id="game-result">No game played yet.</p>
+            </div>
+
+            <div>
+                <h3>Simulation Results:</h3>
+                <p id="simulation-result">No simulations run yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let player1Grid = [];
+        let player2Grid = [];
+        const cardValues = Array.from({ length: 11 }, (_, i) => i - 5); // [-5, -4, ..., 5]
+        let gameInProgress = false;
+        let currentSum = null;
+        let drawnNumbers = [];
+
+        // Simulation variables
+        let simulationInProgress = false;
+        let simulationResults = {
+            player1Wins: 0,
+            player2Wins: 0,
+            draws: 0
+        };
+
+        // Function to get grid values from inputs
+        function getGridValues(gridId) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-input`);
+            const values = Array.from(cells).map(cell => {
+                const val = parseInt(cell.value);
+                return isNaN(val) ? null : val;
+            });
+            return values;
+        }
+
+        // Function to validate grid values (unique and within range)
+        function validateGrid(gridValues, player) {
+            const uniqueValues = new Set();
+            for (let i = 0; i < gridValues.length; i++) {
+                const val = gridValues[i];
+                if (val === null || val < -10 || val > 10) {
+                    alert(`Player ${player}: Please ensure all grid cells are filled with integers between -10 and 10.`);
+                    return false;
+                }
+                if (uniqueValues.has(val)) {
+                    alert(`Player ${player}: Duplicate number "${val}" found. All numbers must be unique.`);
+                    return false;
+                }
+                uniqueValues.add(val);
+            }
+            return true;
+        }
+
+        // Function to generate unique random numbers for a grid
+        function generateUniqueRandomNumbers(min, max, count) {
+            const range = [];
+            for (let i = min; i <= max; i++) {
+                range.push(i);
+            }
+            // Shuffle the range
+            for (let i = range.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [range[i], range[j]] = [range[j], range[i]];
+            }
+            return range.slice(0, count);
+        }
+
+        // Function to generate random boards
+        function generateRandomBoards() {
+            const p1Numbers = generateUniqueRandomNumbers(-10, 10, 9);
+            const p2Numbers = generateUniqueRandomNumbers(-10, 10, 9);
+
+            fillGrid('player1-grid', p1Numbers);
+            fillGrid('player2-grid', p2Numbers);
+        }
+
+        // Function to fill grid with values
+        function fillGrid(gridId, gridValues) {
+            const inputs = document.querySelectorAll(`#${gridId} .grid-input`);
+            inputs.forEach((input, index) => {
+                input.value = (gridValues[index] !== null && gridValues[index] !== undefined) ? gridValues[index] : '';
+            });
+        }
+
+        // Function to reset grids
+        function resetGrids() {
+            if (confirm('Are you sure you want to reset both grids?')) {
+                fillGrid('player1-grid', Array(9).fill(''));
+                fillGrid('player2-grid', Array(9).fill(''));
+                document.getElementById('game-result').innerText = 'No game played yet.';
+                document.getElementById('simulation-result').innerText = 'No simulations run yet.';
+                document.getElementById('calculation-display').innerText = 'No game started yet.';
+                gameInProgress = false;
+            }
+        }
+
+        // Function to start a single game
+        function startGame() {
+            if (gameInProgress) {
+                alert('A game is already in progress. Please reset before starting a new game.');
+                return;
+            }
+
+            player1Grid = getGridValues('player1-grid');
+            player2Grid = getGridValues('player2-grid');
+            drawnNumbers = [];
+            currentSum = null;
+
+            // Validate grids
+            if (!validateGrid(player1Grid, 1) || !validateGrid(player2Grid, 2)) {
+                return;
+            }
+
+            // Initialize marked cells
+            initializeMarkedCells('player1-grid');
+            initializeMarkedCells('player2-grid');
+
+            gameInProgress = true;
+            document.getElementById('game-result').innerText = 'Game in progress...';
+            document.getElementById('calculation-display').innerText = 'Drawing numbers...';
+
+            // Draw two unique random numbers from -5 to 5
+            drawNumbersAndCalculate();
+        }
+
+        // Function to initialize marked cells
+        function initializeMarkedCells(gridId) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-cell`);
+            cells.forEach(cell => {
+                cell.classList.remove('marked');
+                cell.classList.remove('winner');
+            });
+        }
+
+        // Function to draw two unique random numbers and calculate the sum
+        function drawNumbersAndCalculate() {
+            if (!gameInProgress) return;
+
+            // Draw two unique random numbers from -5 to 5
+            const available = cardValues.slice(); // Clone the array
+            const num1 = available.splice(Math.floor(Math.random() * available.length), 1)[0];
+            const num2 = available.splice(Math.floor(Math.random() * available.length), 1)[0];
+            drawnNumbers.push(num1, num2);
+            currentSum = num1 + num2;
+
+            // Display the calculation without revealing the sum
+            document.getElementById('calculation-display').innerText = `Drawn Numbers: ${num1} and ${num2} so ${num1} + ${num2} = ...`;
+        }
+
+        // Function to handle solution submission
+        function submitSolution() {
+            if (!gameInProgress || currentSum === null) {
+                alert('No game in progress or no sum calculated yet.');
+                return;
+            }
+
+            const solutionInput = document.getElementById('solution-input');
+            const solution = parseInt(solutionInput.value);
+            if (isNaN(solution)) {
+                alert('Please enter a valid number.');
+                return;
+            }
+
+            if (solution !== currentSum) {
+                alert('Incorrect solution.');
+                solutionInput.value = '';
+                return;
+            }
+
+            // Highlight cells on both grids if the sum exists
+            let player1Marked = false;
+            let player2Marked = false;
+
+            player1Grid.forEach((num, index) => {
+                if (num === solution) {
+                    const cell = document.querySelector(`#player1-grid .grid-cell:nth-child(${index + 1})`);
+                    cell.classList.add('marked');
+                    player1Marked = true;
+                }
+            });
+
+            player2Grid.forEach((num, index) => {
+                if (num === solution) {
+                    const cell = document.querySelector(`#player2-grid .grid-cell:nth-child(${index + 1})`);
+                    cell.classList.add('marked');
+                    player2Marked = true;
+                }
+            });
+
+            // Clear the input field
+            solutionInput.value = '';
+
+            // Check for win conditions
+            const player1Win = checkWin('player1-grid');
+            const player2Win = checkWin('player2-grid');
+
+            if (player1Win && player2Win) {
+                endGame('Both players achieved three in a row! It\'s a draw!');
+            } else if (player1Win) {
+                endGame('Player 1 Wins!');
+            } else if (player2Win) {
+                endGame('Player 2 Wins!');
+            } else {
+                // Continue the game by drawing next numbers after a short delay
+                setTimeout(drawNumbersAndCalculate, 1000); // Wait 1 second before next draw
+            }
+        }
+
+        // Function to check if a grid has three marked in a row
+        function checkWin(gridId) {
+            const grid = document.querySelectorAll(`#${gridId} .grid-cell`);
+            const marks = Array.from(grid).map(cell => cell.classList.contains('marked'));
+
+            // Check rows
+            for (let i = 0; i < 3; i++) {
+                if (marks[i * 3] && marks[i * 3 + 1] && marks[i * 3 + 2]) {
+                    highlightWinningCells(gridId, [i * 3, i * 3 + 1, i * 3 + 2]);
+                    return true;
+                }
+            }
+
+            // Check columns
+            for (let i = 0; i < 3; i++) {
+                if (marks[i] && marks[i + 3] && marks[i + 6]) {
+                    highlightWinningCells(gridId, [i, i + 3, i + 6]);
+                    return true;
+                }
+            }
+
+            // Check diagonals
+            if (marks[0] && marks[4] && marks[8]) {
+                highlightWinningCells(gridId, [0, 4, 8]);
+                return true;
+            }
+            if (marks[2] && marks[4] && marks[6]) {
+                highlightWinningCells(gridId, [2, 4, 6]);
+                return true;
+            }
+
+            return false;
+        }
+
+        // Function to highlight winning cells
+        function highlightWinningCells(gridId, indices) {
+            indices.forEach(index => {
+                const cell = document.querySelector(`#${gridId} .grid-cell:nth-child(${index + 1})`);
+                cell.classList.add('winner');
+            });
+        }
+
+        // Function to end the game
+        function endGame(message) {
+            gameInProgress = false;
+            document.getElementById('game-result').innerText = message;
+            document.getElementById('calculation-display').innerText = 'Game Over.';
+        }
+
+        // Function to simulate multiple games with real-time updates
+        async function simulateGames(numGames = 1000) {
+            if (simulationInProgress) {
+                alert('A simulation is already in progress. Please wait for it to finish.');
+                return;
+            }
+
+            simulationInProgress = true;
+            simulationResults = {
+                player1Wins: 0,
+                player2Wins: 0,
+                draws: 0
+            };
+
+            document.getElementById('simulation-result').innerText = `Simulating ${numGames} games... Completed: 0 | Player 1 Wins: 0, Player 2 Wins: 0, Draws: 0`;
+
+            // Retrieve and validate grids
+            const simPlayer1Grid = getGridValues('player1-grid');
+            const simPlayer2Grid = getGridValues('player2-grid');
+
+            if (!validateGrid(simPlayer1Grid, 1) || !validateGrid(simPlayer2Grid, 2)) {
+                simulationInProgress = false;
+                return;
+            }
+
+            for (let i = 1; i <= numGames; i++) {
+                // Clone grids to avoid modifying originals
+                const p1Grid = [...simPlayer1Grid];
+                const p2Grid = [...simPlayer2Grid];
+                const p1Marks = Array(9).fill(false);
+                const p2Marks = Array(9).fill(false);
+                let winner = null;
+                let availableNumbers = [...cardValues];
+
+                while (availableNumbers.length >= 2 && !winner) {
+                    // Draw two unique random numbers from -5 to 5
+                    let num1 = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+                    let num2 = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+                    while (num2 === num1) {
+                        num2 = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+                    }
+
+                    const sum = num1 + num2;
+
+                    // Mark numbers on Player 1's grid
+                    const p1Index = p1Grid.indexOf(sum);
+                    if (p1Index !== -1) {
+                        p1Marks[p1Index] = true;
+                        if (checkWinSimulation(p1Marks)) {
+                            winner = 'player1';
+                            simulationResults.player1Wins++;
+                            break;
+                        }
+                    }
+
+                    // Mark numbers on Player 2's grid
+                    const p2Index = p2Grid.indexOf(sum);
+                    if (p2Index !== -1) {
+                        p2Marks[p2Index] = true;
+                        if (checkWinSimulation(p2Marks)) {
+                            if (winner === 'player1') {
+                                simulationResults.draws++;
+                            } else {
+                                winner = 'player2';
+                                simulationResults.player2Wins++;
+                            }
+                            break;
+                        }
+                    }
+
+                    // Remove drawn numbers to avoid repetition
+                    availableNumbers = availableNumbers.filter(n => n !== num1 && n !== num2);
+                }
+
+                // If no winner after all possible draws
+                if (!winner) {
+                    simulationResults.draws++;
+                }
+
+                // Update simulation results every 100 games or at the end
+                if (i % 100 === 0 || i === numGames) {
+                    document.getElementById('simulation-result').innerText = `Simulating ${numGames} games... Completed: ${i} | Player 1 Wins: ${simulationResults.player1Wins}, Player 2 Wins: ${simulationResults.player2Wins}, Draws: ${simulationResults.draws}`;
+                    // Allow the browser to update the UI
+                    await new Promise(resolve => setTimeout(resolve, 0));
+                }
+            }
+
+            // Final update
+            document.getElementById('simulation-result').innerText = `Out of ${numGames} games: Player 1 Wins: ${simulationResults.player1Wins}, Player 2 Wins: ${simulationResults.player2Wins}, Draws: ${simulationResults.draws}`;
+            simulationInProgress = false;
+        }
+
+        // Helper function to check win in simulation
+        function checkWinSimulation(marks) {
+            // Check rows
+            for (let i = 0; i < 3; i++) {
+                if (marks[i * 3] && marks[i * 3 + 1] && marks[i * 3 + 2]) {
+                    return true;
+                }
+            }
+
+            // Check columns
+            for (let i = 0; i < 3; i++) {
+                if (marks[i] && marks[i + 3] && marks[i + 6]) {
+                    return true;
+                }
+            }
+
+            // Check diagonals
+            if (marks[0] && marks[4] && marks[8]) {
+                return true;
+            }
+            if (marks[2] && marks[4] && marks[6]) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Function to prevent duplicate numbers in grid inputs
+        function preventDuplicates(gridId) {
+            const inputs = document.querySelectorAll(`#${gridId} .grid-input`);
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    const currentVal = parseInt(input.value);
+                    if (isNaN(currentVal)) return;
+
+                    const allValues = Array.from(document.querySelectorAll(`#${gridId} .grid-input`))
+                        .map(cell => parseInt(cell.value))
+                        .filter(val => !isNaN(val));
+
+                    const duplicates = allValues.filter(val => val === currentVal);
+                    if (duplicates.length > 1) {
+                        alert(`Duplicate number "${currentVal}" is not allowed in this grid.`);
+                        input.value = '';
+                    }
+                });
+            });
+        }
+
+        // Initialize duplicate prevention on both grids
+        preventDuplicates('player1-grid');
+        preventDuplicates('player2-grid');
+
+        // Event listeners
+        document.getElementById('start-game').addEventListener('click', startGame);
+        document.getElementById('simulate-games').addEventListener('click', () => simulateGames(1000));
+        document.getElementById('reset-grids').addEventListener('click', resetGrids);
+        document.getElementById('generate-random-boards').addEventListener('click', generateRandomBoards);
+        document.getElementById('submit-solution').addEventListener('click', submitSolution);
+
+        // Allow pressing Enter to submit the solution
+        document.getElementById('solution-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                submitSolution();
+            }
+        });
+
+        // Automatically generate random boards on page load for convenience
+        window.addEventListener('load', () => {
+            generateRandomBoards();
+        });
+    </script>
+</body>
+</html>

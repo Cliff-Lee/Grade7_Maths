@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo with Integers (-25 to 25)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #main-container {
+            display: flex;
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Player Grids Section */
+        #game-container {
+            width: 50%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #instructions {
+            margin-bottom: 20px;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid #007BFF;
+        }
+
+        #instructions h3 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+
+        .grid-section {
+            margin-bottom: 20px;
+        }
+
+        .grid-section h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .grid-cell {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        .grid-cell.highlighted {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        /* Controls and Results Section */
+        #simulation-container {
+            width: 50%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #simulation-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #reset-game {
+            background-color: #dc3545;
+        }
+
+        #reset-game:hover {
+            background-color: #c82333;
+        }
+
+        #start-game {
+            background-color: #28a745;
+        }
+
+        #start-game:hover {
+            background-color: #218838;
+        }
+
+        #submit-result {
+            background-color: #17a2b8;
+        }
+
+        #submit-result:hover {
+            background-color: #117a8b;
+        }
+
+        #drawn-numbers {
+            margin-top: 20px;
+            font-size: 18px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #user-input-section {
+            margin-top: 20px;
+        }
+
+        #user-input-section input {
+            padding: 8px;
+            font-size: 16px;
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        #game-result, #simulation-result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1000px) {
+            #main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #game-container, #simulation-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <!-- Player Grids Section -->
+        <div id="game-container">
+            <h1>Bingo with Integers (-25 to 25)</h1>
+
+            <!-- Instructions Section -->
+            <div id="instructions">
+                <h3>How to Play</h3>
+                <p>
+                    At the start of the game, two integers between <strong>-5</strong> and <strong>5</strong> will be chosen at random.
+                    Their product will be checked against the numbers on your board. 
+                    <strong>Choose your board strategically to maximize your chances of winning.</strong>
+                    Winning requires a complete row, column, or diagonal of highlighted numbers on your grid.
+                </p>
+            </div>
+
+            <div id="grid-container">
+                <div class="grid-section">
+                    <h3>Player 1</h3>
+                    <div class="grid" id="player1-grid">
+                        <!-- 3x3 grid for Player 1 -->
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                    </div>
+                </div>
+                <div class="grid-section">
+                    <h3>Player 2</h3>
+                    <div class="grid" id="player2-grid">
+                        <!-- 3x3 grid for Player 2 -->
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                        <input type="number" min="-25" max="25" class="grid-cell">
+                    </div>
+                </div>
+            </div>
+
+            <button id="generate-grids">Generate Random Grids</button>
+            <button id="start-game">Start Game</button>
+            <button id="reset-game">Reset Game</button>
+        </div>
+
+        <!-- Simulation and Results Section -->
+        <div id="simulation-container">
+            <h2>Game Simulation</h2>
+            <button id="simulate-games">Simulate 1000 Games</button>
+
+            <div id="drawn-numbers">
+                <h3>Drawn Numbers:</h3>
+                <!-- Drawn numbers will appear here -->
+            </div>
+
+            <div id="user-input-section" style="display: none;">
+                <p id="drawn-message"></p>
+                <input type="number" id="user-result" placeholder="Product">
+                <button id="submit-result">Submit</button>
+                <p id="feedback-message" style="color: red; margin-top: 10px;"></p>
+            </div>
+
+            <h3>Game Results:</h3>
+            <p id="game-result"></p>
+
+            <h3>Simulation Results:</h3>
+            <p id="simulation-result"></p>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let player1Grid = [];
+        let player2Grid = [];
+        let currentDraw = {};
+        let gameOver = false;
+        let isAwaitingInput = false;
+
+        // Function to generate unique random numbers within range
+        function generateUniqueNumbers(count, min, max) {
+            const numbers = new Set();
+            while (numbers.size < count) {
+                const num = getRandomInt(min, max);
+                numbers.add(num);
+            }
+            return Array.from(numbers);
+        }
+
+        // Function to get grid values from inputs
+        function getGridValues(gridId) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-cell`);
+            return Array.from(cells).map(cell => {
+                const value = parseInt(cell.value);
+                return isNaN(value) ? null : value;
+            });
+        }
+
+        // Function to fill grid with values
+        function fillGrid(gridId, gridValues) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-cell`);
+            cells.forEach((cell, index) => {
+                cell.value = gridValues[index] !== null ? gridValues[index] : '';
+                cell.classList.remove('highlighted');
+            });
+        }
+
+        // Function to generate random grids
+        function generateGrids() {
+            // Generate unique numbers for each player
+            player1Grid = generateUniqueNumbers(9, -25, 25);
+            player2Grid = generateUniqueNumbers(9, -25, 25);
+
+            // Fill the grids
+            fillGrid('player1-grid', player1Grid);
+            fillGrid('player2-grid', player2Grid);
+
+            // Reset game state
+            gameOver = false;
+            isAwaitingInput = false;
+            document.getElementById('game-result').innerHTML = '';
+            document.getElementById('drawn-numbers').innerHTML = '<h3>Drawn Numbers:</h3>';
+            document.getElementById('simulation-result').innerHTML = '';
+            document.getElementById('user-input-section').style.display = 'none';
+            document.getElementById('feedback-message').innerText = '';
+            stopDrawing();
+        }
+
+        // Function to get random integer between min and max inclusive
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // Function to start the game
+        function startGame() {
+            if (gameOver) {
+                alert('The game is over. Please reset to start a new game.');
+                return;
+            }
+
+            // Get current grid values
+            player1Grid = getGridValues('player1-grid');
+            player2Grid = getGridValues('player2-grid');
+
+            // Validate grids
+            if (!validateGrids(player1Grid, 'Player 1') || !validateGrids(player2Grid, 'Player 2')) {
+                return;
+            }
+
+            // Disable grid inputs during the game
+            disableGridInputs(true);
+
+            // Start the first draw
+            drawNumbers();
+        }
+
+        // Function to validate grids
+        function validateGrids(grid, playerName) {
+            if (grid.includes(null)) {
+                alert(`${playerName}'s grid contains empty cells. Please fill all cells before starting the game.`);
+                return false;
+            }
+            // Check for duplicates
+            const unique = new Set(grid);
+            if (unique.size !== grid.length) {
+                alert(`${playerName}'s grid contains duplicate numbers. Please ensure all numbers are unique.`);
+                return false;
+            }
+            return true;
+        }
+
+        // Function to disable or enable grid inputs
+        function disableGridInputs(disable) {
+            const cells = document.querySelectorAll('.grid-cell');
+            cells.forEach(cell => {
+                cell.disabled = disable;
+            });
+        }
+
+        // Function to stop drawing (used in reset)
+        function stopDrawing() {
+            // No setInterval used in this implementation
+            // This function is kept for compatibility
+            // In this flow, drawing is controlled sequentially
+        }
+
+        // Function to draw numbers and prompt user input
+        function drawNumbers() {
+            if (gameOver) {
+                return;
+            }
+
+            // Draw two random integers
+            const num1 = getRandomInt(-5, 5);
+            const num2 = getRandomInt(-5, 5);
+            const product = num1 * num2;
+
+            // Store current draw
+            currentDraw = {
+                numbers: [num1, num2],
+                product: product
+            };
+
+            // Display drawn numbers
+            const drawnNumbersDiv = document.getElementById('drawn-numbers');
+            const currentDrawText = `<p><strong>Numbers Drawn:</strong> ${num1} and ${num2} | ${num1} x ${num2} = ...</p>`;
+            drawnNumbersDiv.innerHTML += currentDrawText;
+
+            // Show user input section with the current draw message
+            document.getElementById('user-input-section').style.display = 'block';
+            document.getElementById('drawn-message').innerText = `Numbers Drawn: ${num1} and ${num2} | ${num1} x ${num2} = `;
+            document.getElementById('user-result').value = '';
+            document.getElementById('feedback-message').innerText = '';
+
+            // Set flag to indicate awaiting input
+            isAwaitingInput = true;
+        }
+
+        // Function to submit user result
+        function submitResult() {
+            if (!isAwaitingInput || gameOver) {
+                return;
+            }
+
+            const userResult = parseInt(document.getElementById('user-result').value);
+            if (isNaN(userResult)) {
+                document.getElementById('feedback-message').innerText = 'Please enter a valid number for the product.';
+                return;
+            }
+
+            // Validate user input
+            if (userResult !== currentDraw.product) {
+                document.getElementById('feedback-message').innerText = `Incorrect. The correct product was ${currentDraw.product}.`;
+                // Continue the game after a short delay to allow the user to read the message
+                isAwaitingInput = false;
+                setTimeout(() => {
+                    document.getElementById('user-input-section').style.display = 'none';
+                    drawNumbers();
+                }, 1500);
+                return;
+            } else {
+                // Correct input
+                document.getElementById('feedback-message').style.color = 'green';
+                document.getElementById('feedback-message').innerText = `Correct! The product is ${currentDraw.product}.`;
+
+                // Highlight matched numbers
+                highlightNumber('player1-grid', currentDraw.product);
+                highlightNumber('player2-grid', currentDraw.product);
+
+                // Check for Bingo
+                const p1Bingo = checkBingo('player1-grid');
+                const p2Bingo = checkBingo('player2-grid');
+
+                if (p1Bingo && p2Bingo) {
+                    document.getElementById('game-result').innerHTML = `<span style="color: orange;">Both players have Bingo! It's a Draw!</span>`;
+                    gameOver = true;
+                } else if (p1Bingo) {
+                    document.getElementById('game-result').innerHTML = `<span style="color: green;">Player 1 has Bingo and wins the game!</span>`;
+                    gameOver = true;
+                } else if (p2Bingo) {
+                    document.getElementById('game-result').innerHTML = `<span style="color: green;">Player 2 has Bingo and wins the game!</span>`;
+                    gameOver = true;
+                }
+
+                // Continue the game if not over after a short delay
+                isAwaitingInput = false;
+                setTimeout(() => {
+                    document.getElementById('user-input-section').style.display = 'none';
+                    if (!gameOver) {
+                        drawNumbers();
+                    }
+                }, 1500);
+            }
+        }
+
+        // Function to highlight number on grid
+        function highlightNumber(gridId, number) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-cell`);
+            cells.forEach(cell => {
+                if (parseInt(cell.value) === number && !cell.classList.contains('highlighted')) {
+                    cell.classList.add('highlighted');
+                }
+            });
+        }
+
+        // Function to check Bingo (row, column, diagonal)
+        function checkBingo(gridId) {
+            const cells = document.querySelectorAll(`#${gridId} .grid-cell`);
+            const grid = Array.from(cells).map(cell => cell.classList.contains('highlighted'));
+
+            // Rows
+            for (let i = 0; i < 3; i++) {
+                if (grid[i * 3] && grid[i * 3 + 1] && grid[i * 3 + 2]) {
+                    return true;
+                }
+            }
+
+            // Columns
+            for (let i = 0; i < 3; i++) {
+                if (grid[i] && grid[i + 3] && grid[i + 6]) {
+                    return true;
+                }
+            }
+
+            // Diagonals
+            if (grid[0] && grid[4] && grid[8]) {
+                return true;
+            }
+            if (grid[2] && grid[4] && grid[6]) {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Function to simulate many games and get statistics with dynamic updates
+        async function simulateGames(numGames = 1000) {
+            // Validate grids
+            player1Grid = getGridValues('player1-grid');
+            player2Grid = getGridValues('player2-grid');
+
+            if (player1Grid.includes(null) || player2Grid.includes(null)) {
+                alert('Both players must fill all grid cells before simulating games.');
+                return;
+            }
+
+            // Check for duplicates
+            const uniqueP1 = new Set(player1Grid);
+            const uniqueP2 = new Set(player2Grid);
+            if (uniqueP1.size !== player1Grid.length) {
+                alert("Player 1's grid contains duplicate numbers. Please ensure all numbers are unique.");
+                return;
+            }
+            if (uniqueP2.size !== player2Grid.length) {
+                alert("Player 2's grid contains duplicate numbers. Please ensure all numbers are unique.");
+                return;
+            }
+
+            // Disable grid inputs during simulation
+            disableGridInputs(true);
+
+            // Reset simulation results
+            let player1Wins = 0;
+            let player2Wins = 0;
+            let draws = 0;
+
+            // Clear previous simulation results
+            document.getElementById('simulation-result').innerHTML = '';
+
+            for (let i = 1; i <= numGames; i++) {
+                // Draw two random integers
+                const num1 = getRandomInt(-5, 5);
+                const num2 = getRandomInt(-5, 5);
+                const product = num1 * num2;
+
+                // Check if product is on grids
+                const p1Has = player1Grid.includes(product);
+                const p2Has = player2Grid.includes(product);
+
+                // Determine outcome
+                if (p1Has && !p2Has) {
+                    player1Wins++;
+                } else if (!p1Has && p2Has) {
+                    player2Wins++;
+                } else if (p1Has && p2Has) {
+                    draws++;
+                } else {
+                    // Neither has the number; count as draw
+                    draws++;
+                }
+
+                // Update simulation results dynamically every 100 games
+                if (i % 100 === 0 || i === numGames) {
+                    document.getElementById('simulation-result').innerHTML = `
+                        Simulating... ${i}/${numGames} games completed.<br>
+                        Player 1 Wins: ${player1Wins}<br>
+                        Player 2 Wins: ${player2Wins}<br>
+                        Draws: ${draws}<br>
+                    `;
+                    await delay(50); // Small delay for visual effect
+                }
+            }
+
+            // Final simulation results
+            document.getElementById('simulation-result').innerHTML = `
+                <strong>Simulation Completed:</strong><br>
+                Out of ${numGames} games:<br>
+                Player 1 Wins: ${player1Wins}<br>
+                Player 2 Wins: ${player2Wins}<br>
+                Draws: ${draws}<br>
+            `;
+
+            // Re-enable grid inputs after simulation
+            disableGridInputs(false);
+        }
+
+        // Utility function to introduce delays
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Function to reset the game
+        function resetGame() {
+            if (confirm('Are you sure you want to reset the game? All highlights will be cleared and the game will stop.')) {
+                fillGrid('player1-grid', player1Grid);
+                fillGrid('player2-grid', player2Grid);
+                gameOver = false;
+                isAwaitingInput = false;
+                document.getElementById('game-result').innerHTML = '';
+                document.getElementById('drawn-numbers').innerHTML = '<h3>Drawn Numbers:</h3>';
+                document.getElementById('simulation-result').innerHTML = '';
+                disableGridInputs(false);
+                document.getElementById('user-input-section').style.display = 'none';
+                document.getElementById('feedback-message').innerText = '';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('generate-grids').addEventListener('click', generateGrids);
+        document.getElementById('start-game').addEventListener('click', startGame);
+        document.getElementById('simulate-games').addEventListener('click', () => simulateGames(1000));
+        document.getElementById('reset-game').addEventListener('click', resetGame);
+        document.getElementById('submit-result').addEventListener('click', submitResult);
+
+        // Initialize grids on page load
+        window.onload = generateGrids;
+    </script>
+</body>
+    <footer> <p>Created by cliffpackman@gmail.com 23/9/2024 </p> </footer>
+</html>
