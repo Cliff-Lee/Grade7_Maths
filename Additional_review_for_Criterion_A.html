@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Practice - Check Your Answers</title>
+    <!-- Include MathJax for proper math typesetting -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            text-align: center;
+        }
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .question {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .question label {
+            flex: 1 1 60%;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        .feedback {
+            font-weight: bold;
+            margin-left: 10px;
+            flex: 1 1 15%;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        input[type="text"], select {
+            padding: 5px;
+            width: 200px;
+            font-size: 1em;
+            flex: 1 1 20%;
+            min-width: 150px;
+        }
+        .radio-group {
+            display: flex;
+            align-items: center;
+            flex: 1 1 60%;
+        }
+        .radio-group label {
+            margin-right: 10px;
+        }
+        @media (max-width: 600px) {
+            .question label, input[type="text"], select, .radio-group {
+                flex: 1 1 100%;
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            .feedback {
+                flex: 1 1 100%;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Math Practice</h1>
+    <h2>Check Your Answers as You Type</h2>
+
+    <div class="section" id="part1">
+        <h3>Part 1: Number Problems (Integers)</h3>
+        <div class="question" id="q1">
+            <label>1. 8 + (-5) = _______</label>
+            <input type="text" data-answer="3">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q2">
+            <label>2. -3 + (-6) = _______</label>
+            <input type="text" data-answer="-9">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q3">
+            <label>3. 7 - 9 = _______</label>
+            <input type="text" data-answer="-2">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q4">
+            <label>4. -12 + 15 = _______</label>
+            <input type="text" data-answer="3">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q5">
+            <label>5. -8 - (-10) = _______</label>
+            <input type="text" data-answer="2">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q6">
+            <label>6. 14 × (-3) = _______</label>
+            <input type="text" data-answer="-42">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q7">
+            <label>7. -5 × (-6) = _______</label>
+            <input type="text" data-answer="30">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q8">
+            <label>8. -24 ÷ 4 = _______</label>
+            <input type="text" data-answer="-6">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q9">
+            <label>9. 30 ÷ (-6) = _______</label>
+            <input type="text" data-answer="-5">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q10">
+            <label>10. (-56) ÷ (-7) = _______</label>
+            <input type="text" data-answer="8">
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="section" id="part2">
+        <h3>Part 2: Number Problems (Rational Numbers)</h3>
+        <div class="question" id="q11">
+            <label>11. \( \frac{2}{3} + \frac{-1}{4} = \) _______</label>
+            <input type="text" data-answer="0.4167,5/12">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q12">
+            <label>12. \( \frac{2}{5} - \frac{3}{7} = \) _______</label>
+            <input type="text" data-answer="-0.0286,-1/35">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q13">
+            <label>13. -1.2 × 4 = _______</label>
+            <input type="text" data-answer="-4.8">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q14">
+            <label>14. -3.5 × (-2) = _______</label>
+            <input type="text" data-answer="7">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q15">
+            <label>15. \( \frac{6.4}{-1.6} = \) _______</label>
+            <input type="text" data-answer="-4">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q16">
+            <label>16. -4 × 8 = _______</label>
+            <input type="text" data-answer="-32">
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="section" id="part3">
+        <h3>Part 3: Mixed Operations (Integers and Rational Numbers)</h3>
+        <div class="question" id="q17">
+            <label>17. 8 + (-3) × 2 = _______</label>
+            <input type="text" data-answer="2">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q18">
+            <label>18. (-5) × (6 - 10) = _______</label>
+            <input type="text" data-answer="20">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q19">
+            <label>19. 3.5 + (-1.2) × (-4) = _______</label>
+            <input type="text" data-answer="8.3,83/10">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q20">
+            <label>20. 6 ÷ (-2) + 9 = _______</label>
+            <input type="text" data-answer="6">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q21">
+            <label>21. -5 + 2 × (-3) = _______</label>
+            <input type="text" data-answer="-11">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q22">
+            <label>22. 2.4 × (-1.5) - 3 = _______</label>
+            <input type="text" data-answer="-6.6">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q23a">
+            <label>23a. If a = 5 and b = −3, what is a + 2b?</label>
+            <input type="text" data-answer="-1">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q23b">
+            <label>23b. If a = −2.5 and b = 1.5, what is ab?</label>
+            <input type="text" data-answer="-3.75">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q23c">
+            <label>23c. If a = -6 and b = 4, what is \( a^2 - b^2 \)?</label>
+            <input type="text" data-answer="20">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q23d">
+            <label>23d. If a = −8 and b = 3, what is a + b?</label>
+            <input type="text" data-answer="-5">
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="section" id="part4">
+        <h3>Part 4: Word Problems (Integers)</h3>
+        <div class="question" id="q24">
+            <label>24. A diver is at a depth of 60 meters below sea level. He ascends 15 meters, descends 10 meters, and then ascends another 25 meters. What is the diver's final depth?</label>
+            <input type="text" data-answer="-30">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q25">
+            <label>25. A mountain climber starts at an altitude of 2000 meters above sea level. She climbs 500 meters, descends 1300 meters, and then climbs another 800 meters. What is the climber's final altitude?</label>
+            <input type="text" data-answer="2000">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q26">
+            <label>26. The temperature at 8 pm was -4°C. It rose by 8°C at midnight and then dropped by 12°C by morning. What was the temperature in the morning?</label>
+            <input type="text" data-answer="-8">
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="section" id="part5">
+        <h3>Part 5: Word Problems (Rational Numbers)</h3>
+        <div class="question" id="q27">
+            <label>27. You have 3.5 kg of dough. You use two-thirds of it for bread and one-fifth for pastries. How much dough is left?</label>
+            <input type="text" data-answer="0.467">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q28">
+            <label>28. A pot contains 7.2 liters of water. Three-fourths of the water evaporates, and then 0.5 liters are drained out. How much water remains in the pot?</label>
+            <input type="text" data-answer="1.3">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q29">
+            <label>29. A 10.5-meter rope is cut into two-thirds for one project, and 1.2 meters is used for another. How much rope is left?</label>
+            <input type="text" data-answer="2.3">
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="section" id="part6">
+        <h3>Part 6: Challenging Word Problems (Integers and Rational Numbers)</h3>
+        <div class="question" id="q30">
+            <label>30. A company made a profit of $600 in the first quarter, lost $750 in the second quarter, and made a profit of $200 in the third quarter. What was the company's total profit or loss?</label>
+            <input type="text" data-answer="50">
+            <div class="feedback"></div>
+        </div>
+        <div class="question" id="q31">
+            <label>31. A farmer owns 8.5 km² of land. He sells two-fifths of it and then buys another 3.2 km². How much land does the farmer own in the end?</label>
+            <input type="text" data-answer="8.3">
+            <div class="feedback"></div>
+        </div>
+        <!-- Question 32 has been removed as per the request -->
+        <div class="question" id="q33">
+            <label>33. Pick the right word to fill the blanks:</label>
+            <div style="margin-left: 20px; width: 100%;">
+                <div class="question">
+                    <label>A positive and negative number represent 
+                        <select data-answer="numbers">
+                            <option value="">--Select--</option>
+                            <option value="numbers">numbers</option>
+                            <option value="quantities">quantities</option>
+                            <option value="amounts">amounts</option>
+                        </select>
+                        above or below 
+                        <select data-answer="zero">
+                            <option value="">--Select--</option>
+                            <option value="each other">each other</option>
+                            <option value="zero">zero</option>
+                        </select>.
+                    </label>
+                    <div class="feedback"></div>
+                </div>
+                <div class="question">
+                    <label>+, -, × and ÷ are 
+                        <select data-answer="operations">
+                            <option value="">--Select--</option>
+                            <option value="quantities">quantities</option>
+                            <option value="operations">operations</option>
+                        </select>
+                        as they tell you 
+                        <select data-answer="what to do">
+                            <option value="">--Select--</option>
+                            <option value="what to do">what to do</option>
+                            <option value="how much">how much</option>
+                        </select>.
+                    </label>
+                    <div class="feedback"></div>
+                </div>
+                <div class="question">
+                    <label>Addition (+) and multiplication (×) are Commutative but - and ÷ are not.</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="q33_true_false" value="True" data-answer="True">
+                            True
+                        </label>
+                        <label>
+                            <input type="radio" name="q33_true_false" value="False" data-answer="True">
+                            False
+                        </label>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+                <div class="question">
+                    <label>When you generalize you investigate many examples to 
+                        <select data-answer="make a rule">
+                            <option value="">--Select--</option>
+                            <option value="practice">practice</option>
+                            <option value="make a rule">make a rule</option>
+                        </select>.
+                    </label>
+                    <div class="feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const selects = document.querySelectorAll('select');
+            const radioGroups = document.querySelectorAll('.radio-group');
+
+            // Function to parse user input
+            function parseInput(input) {
+                if (input.includes('/')) {
+                    // Parse as fraction
+                    const parts = input.split('/');
+                    if (parts.length !== 2) return NaN;
+                    const numerator = parseFloat(parts[0]);
+                    const denominator = parseFloat(parts[1]);
+                    if (isNaN(numerator) || isNaN(denominator) || denominator === 0) return NaN;
+                    return numerator / denominator;
+                } else {
+                    // Parse as decimal
+                    return parseFloat(input);
+                }
+            }
+
+            // Function to compare two numbers within a tolerance
+            function isCloseEnough(a, b, epsilon = 0.0001) {
+                return Math.abs(a - b) < epsilon;
+            }
+
+            // Check text inputs
+            inputs.forEach(function(input) {
+                input.addEventListener('input', function() {
+                    const userInput = input.value.trim();
+                    const expectedAnswer = input.getAttribute('data-answer').trim();
+
+                    const feedback = input.nextElementSibling;
+
+                    // Special handling for questions that require full expressions
+                    if (expectedAnswer.toLowerCase().includes('assuming')) {
+                        // For placeholder or unclear answers
+                        feedback.textContent = 'Please review the question.';
+                        feedback.className = 'feedback';
+                        return;
+                    }
+
+                    const userValue = parseInput(userInput);
+                    const expectedValues = expectedAnswer.split(',').map(ans => parseFloat(ans.trim())).filter(val => !isNaN(val));
+
+                    let correct = false;
+                    expectedValues.forEach(function(val) {
+                        if (isCloseEnough(userValue, val)) {
+                            correct = true;
+                        }
+                    });
+
+                    if (correct) {
+                        feedback.textContent = 'Correct!';
+                        feedback.className = 'feedback correct';
+                    } else {
+                        feedback.textContent = 'Incorrect.';
+                        feedback.className = 'feedback incorrect';
+                    }
+                });
+            });
+
+            // Check select dropdowns
+            selects.forEach(function(select) {
+                select.addEventListener('change', function() {
+                    const userAnswer = select.value.trim().toLowerCase();
+                    const correctAnswer = select.getAttribute('data-answer').trim().toLowerCase();
+
+                    const feedback = select.parentElement.nextElementSibling;
+
+                    if (userAnswer === correctAnswer) {
+                        feedback.textContent = 'Correct!';
+                        feedback.className = 'feedback correct';
+                    } else {
+                        feedback.textContent = 'Incorrect.';
+                        feedback.className = 'feedback incorrect';
+                    }
+                });
+            });
+
+            // Check radio buttons
+            radioGroups.forEach(function(group) {
+                const radios = group.querySelectorAll('input[type="radio"]');
+                radios.forEach(function(radio) {
+                    radio.addEventListener('change', function() {
+                        const correctAnswer = radio.getAttribute('data-answer');
+                        const feedback = group.nextElementSibling;
+
+                        if (radio.value === correctAnswer) {
+                            feedback.textContent = 'Correct!';
+                            feedback.className = 'feedback correct';
+                        } else {
+                            feedback.textContent = 'Incorrect.';
+                            feedback.className = 'feedback incorrect';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
