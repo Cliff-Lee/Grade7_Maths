@@ -3,91 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Notation Matching Exercise</title>
+    <title>Scientific Notation Puzzle 2</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        h1 {
-            color: navy;
-        }
         .container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            margin-top: 50px;
         }
-        .left, .right {
-            width: 40%;
-        }
-        .item {
-            background-color: #D6E4F0;
-            border: 2px solid #003F7F;
-            padding: 20px;
+        .box {
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border: 2px solid black;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 70px;
+            text-align: center;
             margin: 10px;
-            border-radius: 10px;
             cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 8px;
         }
-        .correct {
-            background-color: lightgreen;
+        .digit {
+            font-size: 32px;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border: 2px solid gray;
+            text-align: center;
+            line-height: 70px;
+            user-select: none;
+            background-color: #dcdcdc;
+            border-radius: 8px;
         }
-        .item:hover {
-            background-color: #A7D0FF;
+        .output {
+            margin-top: 20px;
+            font-size: 30px;
+        }
+        .exponent {
+            vertical-align: super;
+            font-size: 18px;
+            color: #888;
+            font-weight: normal;
+            position: relative;
+            top: -20px;
+        }
+        .operator {
+            font-size: 32px;
+            line-height: 70px;
         }
     </style>
 </head>
 <body>
-    <h1>Match the Scientific Notation to the Ordinary Numbers</h1>
+    <h1>Scientific Notation Puzzle 2</h1>
+    <p>Drag digits 1 to 9 (at most twice each) into the boxes to maximize the sum of the expressions.</p>
+    
     <div class="container">
-        <div class="left">
-            <div class="item" draggable="true" id="notation1">7.34 × 10<sup>7</sup></div>
-            <div class="item" draggable="true" id="notation2">7.34 × 10<sup>10</sup></div>
-            <div class="item" draggable="true" id="notation3">7.34 × 10<sup>2</sup></div>
-            <div class="item" draggable="true" id="notation4">7.34 × 10<sup>5</sup></div>
-        </div>
-        <div class="right">
-            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target1">73,400,000</div>
-            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target2">73,400,000,000</div>
-            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target3">734</div>
-            <div class="item" ondrop="drop(event)" ondragover="allowDrop(event)" id="target4">734,000</div>
-        </div>
+        <!-- First row: Addition -->
+        <div class="box" id="digit1_1" onclick="removeDigit('digit1_1')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power1_1" onclick="removeDigit('power1_1')"></div></span>
+        <span class="operator"> + </span>
+        <div class="box" id="digit1_2" onclick="removeDigit('digit1_2')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power1_2" onclick="removeDigit('power1_2')"></div></span>
+        <span class="operator"> = </span>
+        <span id="result1">0</span>
+        <br>
+
+        <!-- Second row: Subtraction -->
+        <div class="box" id="digit2_1" onclick="removeDigit('digit2_1')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power2_1" onclick="removeDigit('power2_1')"></div></span>
+        <span class="operator"> - </span>
+        <div class="box" id="digit2_2" onclick="removeDigit('digit2_2')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power2_2" onclick="removeDigit('power2_2')"></div></span>
+        <span class="operator"> = </span>
+        <span id="result2">0</span>
+        <br>
+
+        <!-- Third row: Multiplication -->
+        <div class="box" id="digit3_1" onclick="removeDigit('digit3_1')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power3_1" onclick="removeDigit('power3_1')"></div></span>
+        <span class="operator"> &times; </span>
+        <div class="box" id="digit3_2" onclick="removeDigit('digit3_2')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power3_2" onclick="removeDigit('power3_2')"></div></span>
+        <span class="operator"> = </span>
+        <span id="result3">0</span>
+        <br>
+
+        <!-- Fourth row: Division -->
+        <div class="box" id="digit4_1" onclick="removeDigit('digit4_1')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power4_1" onclick="removeDigit('power4_1')"></div></span>
+        <span class="operator"> ÷ </span>
+        <div class="box" id="digit4_2" onclick="removeDigit('digit4_2')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power4_2" onclick="removeDigit('power4_2')"></div></span>
+        <span class="operator"> = </span>
+        <span id="result4">0</span>
+    </div>
+
+    <!-- Digit bank -->
+    <div>
+        <span class="digit" id="digit_1" draggable="true" ondragstart="drag(event)">1</span>
+        <span class="digit" id="digit_2" draggable="true" ondragstart="drag(event)">2</span>
+        <span class="digit" id="digit_3" draggable="true" ondragstart="drag(event)">3</span>
+        <span class="digit" id="digit_4" draggable="true" ondragstart="drag(event)">4</span>
+        <span class="digit" id="digit_5" draggable="true" ondragstart="drag(event)">5</span>
+        <span class="digit" id="digit_6" draggable="true" ondragstart="drag(event)">6</span>
+        <span class="digit" id="digit_7" draggable="true" ondragstart="drag(event)">7</span>
+        <span class="digit" id="digit_8" draggable="true" ondragstart="drag(event)">8</span>
+        <span class="digit" id="digit_9" draggable="true" ondragstart="drag(event)">9</span>
+    </div>
+
+    <!-- Final sum -->
+    <div class="output">
+        <p>Total Sum: <span id="final_result">0</span></p>
     </div>
 
     <script>
-        const correctMatches = {
-            notation1: 'target1',
-            notation2: 'target2',
-            notation3: 'target3',
-            notation4: 'target4'
+        let chosenDigits = [];
+        let positions = {
+            "digit1_1": null, "power1_1": null, "digit1_2": null, "power1_2": null,
+            "digit2_1": null, "power2_1": null, "digit2_2": null, "power2_2": null,
+            "digit3_1": null, "power3_1": null, "digit3_2": null, "power3_2": null,
+            "digit4_1": null, "power4_1": null, "digit4_2": null, "power4_2": null
         };
 
-        function allowDrop(event) {
-            event.preventDefault();
-        }
-
+        // Allow dragging
         function drag(event) {
             event.dataTransfer.setData("text", event.target.id);
         }
 
-        function drop(event) {
+        // Allow drop on box
+        function allowDrop(event) {
             event.preventDefault();
-            const data = event.dataTransfer.getData("text");
-            const draggedElement = document.getElementById(data);
+        }
 
-            // Check if the match is correct
-            if (correctMatches[draggedElement.id] === event.target.id) {
-                event.target.appendChild(draggedElement);
-                event.target.style.backgroundColor = "lightgreen"; // Change to green if correct
+        // Handle dropping digit into a box
+        function drop(event, id) {
+            event.preventDefault();
+            let digitId = event.dataTransfer.getData("text");
+            let digit = document.getElementById(digitId).innerText;
+
+            if (!chosenDigits.includes(digit) || chosenDigits.filter(d => d === digit).length < 2) {
+                document.getElementById(id).innerText = digit;
+                positions[id] = digit;
+                chosenDigits.push(digit);
+                calculateResults();
             } else {
-                alert("Incorrect match. Try again!");
+                alert("Digit already used twice!");
             }
         }
 
-        const items = document.querySelectorAll('.left .item');
-        items.forEach(item => {
-            item.addEventListener('dragstart', drag);
+        // Remove digit from box
+        function removeDigit(id) {
+            let digit = positions[id];
+            if (digit !== null) {
+                document.getElementById(id).innerText = "";
+                positions[id] = null;
+                chosenDigits = chosenDigits.filter(d => d !== digit);
+                calculateResults();
+            }
+        }
+
+        // Calculate the result of each expression
+        function calculateResults() {
+            const results = [1, 2, 3, 4].map(row => {
+                const digit1 = positions[`digit${row}_1`] || 0;
+                const power1 = positions[`power${row}_1`] || 0;
+                const digit2 = positions[`digit${row}_2`] || 0;
+                const power2 = positions[`power${row}_2`] || 0;
+                const num1 = digit1 * Math.pow(10, power1);
+                const num2 = digit2 * Math.pow(10, power2);
+
+                let result = 0;
+                if (row === 1) {
+                    result = num1 + num2;
+                } else if (row === 2) {
+                    result = num1 - num2;
+                } else if (row === 3) {
+                    result = num1 * num2;
+                } else if (row === 4) {
+                    result = num2 !== 0 ? num1 / num2 : 0;
+                }
+                document.getElementById(`result${row}`).innerText = result;
+                return result;
+            });
+
+            // Calculate the total sum of all expressions
+            const total = results.reduce((sum, val) => sum + val, 0);
+            document.getElementById("final_result").innerText = total;
+        }
+
+        // Allow dropping into boxes
+        const allBoxes = [
+            "digit1_1", "power1_1", "digit1_2", "power1_2",
+            "digit2_1", "power2_1", "digit2_2", "power2_2",
+            "digit3_1", "power3_1", "digit3_2", "power3_2",
+            "digit4_1", "power4_1", "digit4_2", "power4_2"
+        ];
+        allBoxes.forEach(id => {
+            document.getElementById(id).addEventListener("dragover", allowDrop);
+            document.getElementById(id).addEventListener("drop", (event) => drop(event, id));
         });
     </script>
 </body>
-    <footer> <p>Created by cliffpackman@gmail.com 17/9/2024 </p> </footer>
 </html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Notation Puzzle - Product of 800,000,000</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .box {
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border: 2px solid black;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 70px;
+            text-align: center;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        .digit {
+            font-size: 32px;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border: 2px solid gray;
+            text-align: center;
+            line-height: 70px;
+            user-select: none;
+            background-color: #dcdcdc;
+            border-radius: 8px;
+        }
+        .output {
+            margin-top: 20px;
+            font-size: 30px;
+        }
+        .exponent {
+            vertical-align: super;
+            font-size: 18px;
+            color: #888;
+            font-weight: normal;
+            position: relative;
+            top: -20px;
+        }
+        .operator {
+            font-size: 32px;
+            line-height: 70px;
+        }
+        .check-result {
+            margin-top: 20px;
+            font-size: 26px;
+            color: green;
+        }
+        .wrong-result {
+            margin-top: 20px;
+            font-size: 26px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scientific Notation Puzzle 2</h1>
+    <p>Using the digits 1 to 9 (at most once), fill in the boxes to make a product that equals 800,000,000.</p>
+    
+    <div class="container">
+        <!-- Scientific Notation Expression -->
+        <div class="box" id="digit1" onclick="removeDigit('digit1')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power1" onclick="removeDigit('power1')"></div></span>
+        <span class="operator"> &times; </span>
+        <div class="box" id="digit2" onclick="removeDigit('digit2')"></div>
+        &times; 10<span class="exponent"><div class="box" id="power2" onclick="removeDigit('power2')"></div></span>
+    </div>
+
+    <!-- Digit bank -->
+    <div>
+        <span class="digit" id="digit_1" draggable="true" ondragstart="drag(event)">1</span>
+        <span class="digit" id="digit_2" draggable="true" ondragstart="drag(event)">2</span>
+        <span class="digit" id="digit_3" draggable="true" ondragstart="drag(event)">3</span>
+        <span class="digit" id="digit_4" draggable="true" ondragstart="drag(event)">4</span>
+        <span class="digit" id="digit_5" draggable="true" ondragstart="drag(event)">5</span>
+        <span class="digit" id="digit_6" draggable="true" ondragstart="drag(event)">6</span>
+        <span class="digit" id="digit_7" draggable="true" ondragstart="drag(event)">7</span>
+        <span class="digit" id="digit_8" draggable="true" ondragstart="drag(event)">8</span>
+        <span class="digit" id="digit_9" draggable="true" ondragstart="drag(event)">9</span>
+    </div>
+
+    <!-- Result -->
+    <div class="output">
+        <p>Resulting Product: <span id="result">0</span></p>
+    </div>
+    <div id="resultMessage"></div>
+
+    <script>
+        let chosenDigits = [];
+        let positions = {
+            "digit1": null, "power1": null,
+            "digit2": null, "power2": null
+        };
+
+        // Allow dragging
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        // Allow drop on box
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        // Handle dropping digit into a box
+        function drop(event, id) {
+            event.preventDefault();
+            let digitId = event.dataTransfer.getData("text");
+            let digit = document.getElementById(digitId).innerText;
+
+            if (!chosenDigits.includes(digit)) {
+                document.getElementById(id).innerText = digit;
+                positions[id] = digit;
+                chosenDigits.push(digit);
+                document.getElementById(digitId).style.visibility = 'hidden'; // Hide the used digit
+                calculateProduct();
+            } else {
+                alert("Digit already used!");
+            }
+        }
+
+        // Remove digit from box
+        function removeDigit(id) {
+            let digit = positions[id];
+            if (digit !== null) {
+                document.getElementById(id).innerText = "";
+                positions[id] = null;
+                chosenDigits = chosenDigits.filter(d => d !== digit);
+                calculateProduct();
+            }
+        }
+
+        // Calculate the product of the two numbers
+        function calculateProduct() {
+            if (positions.digit1 !== null && positions.power1 !== null && positions.digit2 !== null && positions.power2 !== null) {
+                const num1 = positions.digit1 * Math.pow(10, positions.power1);
+                const num2 = positions.digit2 * Math.pow(10, positions.power2);
+                const product = num1 * num2;
+
+                document.getElementById("result").innerText = product;
+
+                if (product === 800000000) {
+                    document.getElementById("resultMessage").innerHTML = "<p class='check-result'>Correct! The product is 800,000,000.</p>";
+                } else {
+                    document.getElementById("resultMessage").innerHTML = "<p class='wrong-result'>Try Again. The product is not correct.</p>";
+                }
+            }
+        }
+
+        // Allow dropping into boxes
+        const allBoxes = ["digit1", "power1", "digit2", "power2"];
+        allBoxes.forEach(id => {
+            document.getElementById(id).addEventListener("dragover", allowDrop);
+            document.getElementById(id).addEventListener("drop", (event) => drop(event, id));
+        });
+    </script>
+</body>
+</html>
