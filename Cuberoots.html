@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
- <title>Filling boxes - Cube Roots</title>
+ <title>Filling Boxes - Cube Roots</title>
 
 <head>
-   
     <style>
         /* Basic styles */
         body {
@@ -90,6 +89,31 @@
             opacity: 0.5;
             box-sizing: border-box;
         }
+        /* Style for inquiry questions */
+        #inquirySection {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        #inquirySection div {
+            width: 30%;
+        }
+        /* Style for keywords table */
+        #keywordsTable {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
         /* Style for footer */
         footer {
             margin-top: 30px;
@@ -97,85 +121,104 @@
             text-align: center;
             color: gray;
         }
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            #cubeWrapper {
-                width: 200px;
-                height: 200px;
-            }
-            .cube {
-                width: 150px;
-                height: 150px;
-            }
-            .cubeFace {
-                width: 150px;
-                height: 150px;
-            }
-        }
-        /* Ensure text flows around cubes */
-        #explanation {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 10px;
-        }
-        .tilingTitle {
-            font-size: 18px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .tilingImage {
-            margin: 20px auto;
-            width: 200px;
-            height: 200px;
-            position: relative;
-            perspective: 800px;
-            overflow: hidden;
-            border: 1px solid #ccc;
-        }
-        .tilingCube {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transform-style: preserve-3d;
-            top: 50%;
-            left: 50%;
-            transform-origin: center center;
-            transform: translate(-50%, -50%) rotateX(-30deg) rotateY(-30deg);
-        }
-        .tilingCubeFace {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background-color: #87CEFA;
-            border: 1px solid #000;
-            box-sizing: border-box;
-            opacity: 0.9;
-        }
-        .tilingCubeFace.front  { transform: rotateY(  0deg) translateZ(75px); }
-        .tilingCubeFace.back   { transform: rotateY(180deg) translateZ(75px); }
-        .tilingCubeFace.right  { transform: rotateY( 90deg) translateZ(75px); }
-        .tilingCubeFace.left   { transform: rotateY(-90deg) translateZ(75px); }
-        .tilingCubeFace.top    { transform: rotateX( 90deg) translateZ(75px); }
-        .tilingCubeFace.bottom { transform: rotateX(-90deg) translateZ(75px); }
-        /* Grid lines on tiling cube faces */
-        .tilingCubeFace::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(to right, black 1px, transparent 1px),
-                              linear-gradient(to bottom, black 1px, transparent 1px);
-            background-size: calc(100% / var(--divisions)) calc(100% / var(--divisions));
-            top: 0;
-            left: 0;
-            opacity: 0.5;
-            box-sizing: border-box;
-        }
     </style>
 </head>
 <body>
 
 <h1>Filling the Cube - Cube Roots</h1>
+
+<!-- Inquiry Questions Section in Columns -->
+<div id="inquirySection">
+    <div id="factualQuestions">
+        <h3>Factual Questions:</h3>
+        <ul>
+            <li>What is the relationship between the volume of a cube and its side length?</li>
+            <li>How do we calculate the cube root of a perfect cube like 216?</li>
+            <li>What is a perfect cube, and how can we visually represent it using smaller cubes?</li>
+        </ul>
+    </div>
+    <div id="conceptualQuestions">
+        <h3>Conceptual Questions:</h3>
+        <ul>
+            <li>How can filling a larger cube with smaller cubes help us understand the concept of cube roots?</li>
+            <li>Why does finding the cube root of a volume provide the side length of a cube?</li>
+            <li>In what situations might filling cubes with smaller cubes help us solve real-world problems?</li>
+        </ul>
+    </div>
+    <div id="debatableQuestions">
+        <h3>Debatable Questions:</h3>
+        <ul>
+            <li>Can all cubic volumes be filled with smaller cubes in multiple ways?</li>
+            <li>Is visualizing cube roots through filling cubes a more effective method than calculating them algebraically?</li>
+            <li>Are there limitations to using cube tiling as a method for understanding cube roots?</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Table of Keywords -->
+<div id="keywordsTable">
+    <h2>Table of Keywords</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>English</th>
+                <th>Korean</th>
+                <th>Chinese (Simplified)</th>
+                <th>Japanese</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Cube</td>
+                <td>정육면체</td>
+                <td>立方体</td>
+                <td>立方体</td>
+            </tr>
+            <tr>
+                <td>Volume</td>
+                <td>부피</td>
+                <td>体积</td>
+                <td>体積</td>
+            </tr>
+            <tr>
+                <td>Side length</td>
+                <td>변의 길이</td>
+                <td>边长</td>
+                <td>辺の長さ</td>
+            </tr>
+            <tr>
+                <td>Cube root</td>
+                <td>세제곱근</td>
+                <td>立方根</td>
+                <td>立方根</td>
+            </tr>
+            <tr>
+                <td>Perfect cube</td>
+                <td>완전세제곱수</td>
+                <td>完全立方数</td>
+                <td>完全立方数</td>
+            </tr>
+            <tr>
+                <td>Tiling</td>
+                <td>타일링</td>
+                <td>平铺</td>
+                <td>タイリング</td>
+            </tr>
+            <tr>
+                <td>Calculate</td>
+                <td>계산하다</td>
+                <td>计算</td>
+                <td>計算する</td>
+            </tr>
+            <tr>
+                <td>Smaller cubes</td>
+                <td>작은 정육면체들</td>
+                <td>小立方体</td>
+                <td>小さな立方体</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <div id="controls">
     <div id="lengthBox" class="box hidden">Length</div>
