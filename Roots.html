@@ -80,11 +80,130 @@
             font-size: 18px;
             font-weight: bold;
         }
+        /* Styles for inquiry questions and table of keywords */
+        #inquirySection {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        #inquirySection div {
+            width: 30%;
+        }
+        #keywordsTable {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
 <h1>Tiling the Floor - Square Roots</h1>
+
+<!-- Inquiry Questions Section in Columns -->
+<div id="inquirySection">
+    <div id="factualQuestions">
+        <h3>Factual Questions:</h3>
+        <ul>
+            <li>What is the relationship between the area of a square and its side length?</li>
+            <li>How do we calculate the square root of a perfect square like 225 or 900?</li>
+            <li>What is a perfect square, and how can we visually represent it using smaller squares?</li>
+        </ul>
+    </div>
+    <div id="conceptualQuestions">
+        <h3>Conceptual Questions:</h3>
+        <ul>
+            <li>How can tiling with smaller squares help us understand the concept of square roots?</li>
+            <li>Why does finding the square root of an area provide the side length of a square?</li>
+            <li>In what situations might tiling with squares of different sizes help us solve real-world problems?</li>
+        </ul>
+    </div>
+    <div id="debatableQuestions">
+        <h3>Debatable Questions:</h3>
+        <ul>
+            <li>Can all square areas be tiled with smaller squares in multiple ways?</li>
+            <li>Is visualizing square roots through tiling a more effective method than calculating them algebraically?</li>
+            <li>Are there limitations to using tiling as a method for understanding square roots?</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Table of Keywords -->
+<div id="keywordsTable">
+    <h2>Table of Keywords</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>English</th>
+                <th>Korean</th>
+                <th>Chinese (Simplified)</th>
+                <th>Japanese</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Square</td>
+                <td>정사각형</td>
+                <td>正方形</td>
+                <td>正方形</td>
+            </tr>
+            <tr>
+                <td>Area</td>
+                <td>면적</td>
+                <td>面积</td>
+                <td>面積</td>
+            </tr>
+            <tr>
+                <td>Side length</td>
+                <td>변의 길이</td>
+                <td>边长</td>
+                <td>辺の長さ</td>
+            </tr>
+            <tr>
+                <td>Square root</td>
+                <td>제곱근</td>
+                <td>平方根</td>
+                <td>平方根</td>
+            </tr>
+            <tr>
+                <td>Perfect square</td>
+                <td>완전제곱수</td>
+                <td>完全平方数</td>
+                <td>完全平方数</td>
+            </tr>
+            <tr>
+                <td>Tiling</td>
+                <td>타일링</td>
+                <td>平铺</td>
+                <td>タイリング</td>
+            </tr>
+            <tr>
+                <td>Calculate</td>
+                <td>계산하다</td>
+                <td>计算</td>
+                <td>計算する</td>
+            </tr>
+            <tr>
+                <td>Smaller squares</td>
+                <td>작은 정사각형들</td>
+                <td>小正方形</td>
+                <td>小さな正方形</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr>
 
 <div id="controls">
     <div id="lengthBox" class="box hidden">Length</div>
@@ -127,11 +246,11 @@
         Consider these examples:
     </p>
     <ul>
-        <li>Area = 225. What is the side length? .</li>
-        <li>Area = 900. What is the side length? .</li>
-        <li>Area = 2916. What is the side length? .</li>
-	<li>Can these tiled with smaller squares?.</li>
-        <li>Is it possible to find an area that can be tiled in more than two different ways with square tiles?.</li>
+        <li>Area = 225. What is the side length?</li>
+        <li>Area = 900. What is the side length?</li>
+        <li>Area = 2916. What is the side length?</li>
+        <li>Can these be tiled with smaller squares?</li>
+        <li>Is it possible to find an area that can be tiled in more than two different ways with square tiles?</li>
     </ul>
     <p>
         By understanding that the square root of the area gives us the side length, we can calculate the square roots of perfect squares. This concept is visualized in our applet with smaller squares, and the same principle applies to larger squares.
@@ -296,5 +415,5 @@
 </script>
 
 </body>
-	<footer> <p>Created by cliffpackman@gmail.com 17/9/2024 </p> </footer>
+<footer> <p>Created by cliffpackman@gmail.com 17/9/2024 </p> </footer>
 </html>
