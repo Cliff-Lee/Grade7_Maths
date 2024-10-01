@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathemagics unit - Algebra Review</title>
+    <!-- MathJax for Math Typesetting -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        /* Navigation Tabs */
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #34495e;
+        }
+        nav button {
+            flex: 1;
+            padding: 14px 16px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        nav button:hover, nav button.active {
+            background-color: #1abc9c;
+            color: black;
+        }
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.5s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        /* Applet Container */
+        .applet-container {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .applet-container h3 {
+            margin-top: 0;
+        }
+        .question {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #16a085;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .hint {
+            margin-top: 10px;
+            color: #2980b9;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .hint-text {
+            margin-top: 10px;
+            color: #34495e;
+            display: none;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .options li {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Algebra Interactive App</h1>
+    </header>
+
+    <nav>
+        <button class="tab-link active" onclick="openTab(event, 'CombineLikeTerms')">Combine Like Terms</button>
+        <button class="tab-link" onclick="openTab(event, 'ExpandExpressions')">Expand Expressions</button>
+        <button class="tab-link" onclick="openTab(event, 'RecognizeLinear')">Recognize Linear Expressions</button>
+        <button class="tab-link" onclick="openTab(event, 'AddSubtractExpressions')">Add/Subtract Expressions</button>
+        <button class="tab-link" onclick="openTab(event, 'AdditiveInverse')">Additive Inverse</button>
+        <button class="tab-link" onclick="openTab(event, 'GreatestCommonFactor')">Greatest Common Factor</button>
+        <button class="tab-link" onclick="openTab(event, 'FactorExpressions')">Factor Expressions</button>
+        <button class="tab-link" onclick="openTab(event, 'SimplifyExpressions')">Simplify Expressions</button>
+        <button class="tab-link" onclick="openTab(event, 'PropertiesOfEquality')">Properties of Equality</button>
+        <button class="tab-link" onclick="openTab(event, 'SolveEquations')">Solve Equations</button>
+        <button class="tab-link" onclick="openTab(event, 'SolutionPossibilities')">Solution Possibilities</button>
+    </nav>
+
+    <!-- Combine Like Terms Applet -->
+    <div id="CombineLikeTerms" class="tab-content active">
+        <div class="applet-container">
+            <h3>Combine Like Terms with Integer and Rational Coefficients</h3>
+            <div class="question" id="combine-problem">Loading question...</div>
+            <ul class="options" id="combine-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkCombineAnswer()">Submit</button>
+            <button onclick="generateCombineProblem()">Next Problem</button>
+            <div class="feedback" id="combine-feedback"></div>
+            <div class="hint" onclick="toggleHint('combine')">Show Explanation</div>
+            <div class="hint-text" id="combine-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Expand Expressions Applet -->
+    <div id="ExpandExpressions" class="tab-content">
+        <div class="applet-container">
+            <h3>Expand Linear Expressions Using the Distributive Property</h3>
+            <div class="question" id="expand-problem">Loading question...</div>
+            <ul class="options" id="expand-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkExpandAnswer()">Submit</button>
+            <button onclick="generateExpandProblem()">Next Problem</button>
+            <div class="feedback" id="expand-feedback"></div>
+            <div class="hint" onclick="toggleHint('expand')">Show Explanation</div>
+            <div class="hint-text" id="expand-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Recognize Linear Expressions Applet -->
+    <div id="RecognizeLinear" class="tab-content">
+        <div class="applet-container">
+            <h3>Recognize and Understand Linear Expressions</h3>
+            <div class="question" id="recognize-problem">Loading question...</div>
+            <ul class="options" id="recognize-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkRecognizeAnswer()">Submit</button>
+            <button onclick="generateRecognizeProblem()">Next Problem</button>
+            <div class="feedback" id="recognize-feedback"></div>
+            <div class="hint" onclick="toggleHint('recognize')">Show Explanation</div>
+            <div class="hint-text" id="recognize-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Add and Subtract Expressions Applet -->
+    <div id="AddSubtractExpressions" class="tab-content">
+        <div class="applet-container">
+            <h3>Add/Subtract Linear Expressions</h3>
+            <div class="question" id="addsub-problem">Loading question...</div>
+            <ul class="options" id="addsub-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkAddSubAnswer()">Submit</button>
+            <button onclick="generateAddSubProblem()">Next Problem</button>
+            <div class="feedback" id="addsub-feedback"></div>
+            <div class="hint" onclick="toggleHint('addsub')">Show Explanation</div>
+            <div class="hint-text" id="addsub-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Additive Inverse Applet -->
+    <div id="AdditiveInverse" class="tab-content">
+        <div class="applet-container">
+            <h3>Find the Additive Inverse of Linear Expressions</h3>
+            <div class="question" id="inverse-problem">Loading question...</div>
+            <ul class="options" id="inverse-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkInverseAnswer()">Submit</button>
+            <button onclick="generateInverseProblem()">Next Problem</button>
+            <div class="feedback" id="inverse-feedback"></div>
+            <div class="hint" onclick="toggleHint('inverse')">Show Explanation</div>
+            <div class="hint-text" id="inverse-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Greatest Common Factor Applet -->
+    <div id="GreatestCommonFactor" class="tab-content">
+        <div class="applet-container">
+            <h3>Find the Greatest Common Factor of Monomials Using Prime Factorization</h3>
+            <div class="question" id="gcf-problem">Loading question...</div>
+            <ul class="options" id="gcf-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkGCFAnswer()">Submit</button>
+            <button onclick="generateGCFProblem()">Next Problem</button>
+            <div class="feedback" id="gcf-feedback"></div>
+            <div class="hint" onclick="toggleHint('gcf')">Show Explanation</div>
+            <div class="hint-text" id="gcf-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Factor Expressions Applet -->
+    <div id="FactorExpressions" class="tab-content">
+        <div class="applet-container">
+            <h3>Factor Linear Expressions Using the Distributive Property</h3>
+            <div class="question" id="factor-problem">Loading question...</div>
+            <ul class="options" id="factor-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkFactorAnswer()">Submit</button>
+            <button onclick="generateFactorProblem()">Next Problem</button>
+            <div class="feedback" id="factor-feedback"></div>
+            <div class="hint" onclick="toggleHint('factor')">Show Explanation</div>
+            <div class="hint-text" id="factor-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Simplify Expressions Applet -->
+    <div id="SimplifyExpressions" class="tab-content">
+        <div class="applet-container">
+            <h3>Simplify Linear Expressions</h3>
+            <div class="question" id="simplify-problem">Loading question...</div>
+            <ul class="options" id="simplify-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkSimplifyAnswer()">Submit</button>
+            <button onclick="generateSimplifyProblem()">Next Problem</button>
+            <div class="feedback" id="simplify-feedback"></div>
+            <div class="hint" onclick="toggleHint('simplify')">Show Explanation</div>
+            <div class="hint-text" id="simplify-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Properties of Equality Applet -->
+    <div id="PropertiesOfEquality" class="tab-content">
+        <div class="applet-container">
+            <h3>Recognize the Properties of Equality</h3>
+            <div class="question" id="equality-problem">Loading question...</div>
+            <ul class="options" id="equality-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkEqualityAnswer()">Submit</button>
+            <button onclick="generateEqualityProblem()">Next Problem</button>
+            <div class="feedback" id="equality-feedback"></div>
+            <div class="hint" onclick="toggleHint('equality')">Show Explanation</div>
+            <div class="hint-text" id="equality-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Solve Equations Applet -->
+    <div id="SolveEquations" class="tab-content">
+        <div class="applet-container">
+            <h3>Write and Solve Two-Step Equations</h3>
+            <div class="question" id="solve-problem">Loading question...</div>
+            <ul class="options" id="solve-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkSolveAnswer()">Submit</button>
+            <button onclick="generateSolveProblem()">Next Problem</button>
+            <div class="feedback" id="solve-feedback"></div>
+            <div class="hint" onclick="toggleHint('solve')">Show Explanation</div>
+            <div class="hint-text" id="solve-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <!-- Solution Possibilities Applet -->
+    <div id="SolutionPossibilities" class="tab-content">
+        <div class="applet-container">
+            <h3>Recognize Solution Possibilities of Equations</h3>
+            <div class="question" id="solution-problem">Loading question...</div>
+            <ul class="options" id="solution-options">
+                <!-- Options will be generated here -->
+            </ul>
+            <button onclick="checkSolutionAnswer()">Submit</button>
+            <button onclick="generateSolutionProblem()">Next Problem</button>
+            <div class="feedback" id="solution-feedback"></div>
+            <div class="hint" onclick="toggleHint('solution')">Show Explanation</div>
+            <div class="hint-text" id="solution-hint">Explanation will appear here.</div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Tabs Function
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            MathJax.typesetPromise(); // Re-render MathJax
+        }
+
+        // Function to toggle hint visibility
+        function toggleHint(applet) {
+            const hint = document.getElementById(`${applet}-hint`);
+            if (hint.style.display === "none" || hint.style.display === "") {
+                hint.style.display = "block";
+            } else {
+                hint.style.display = "none";
+            }
+            MathJax.typesetPromise();
+        }
+
+        // --------------------- Combine Like Terms ---------------------
+        const combineProblems = [
+            {
+                question: "Combine like terms: \\( 3x + 5x + 2 \\)",
+                options: ["\\( 8x + 2 \\)", "\\( 2x + 8 \\)", "\\( 15x + 2 \\)", "\\( 8x - 2 \\)"],
+                answer: "\\( 8x + 2 \\)",
+                explanation: "Combine the coefficients of like terms: \\( 3x + 5x = 8x \\), and the constants remain as is."
+            },
+            {
+                question: "Combine like terms: \\( 7a - 2a + 4 \\)",
+                options: ["\\( 5a + 4 \\)", "\\( 9a + 4 \\)", "\\( 5a - 4 \\)", "\\( 7a + 4 \\)"],
+                answer: "\\( 5a + 4 \\)",
+                explanation: "Combine the coefficients of like terms: \\( 7a - 2a = 5a \\), and the constants remain as is."
+            },
+            {
+                question: "Combine like terms: \\( 4m - 3m + 6 - 2 \\)",
+                options: ["\\( m + 4 \\)", "\\( m + 8 \\)", "\\( 7m + 4 \\)", "\\( m + 2 \\)"],
+                answer: "\\( m + 4 \\)",
+                explanation: "Combine like terms: \\( 4m - 3m = m \\) and \\( 6 - 2 = 4 \\)."
+            },
+            {
+                question: "Combine like terms: \\( 10y + 5 - 4y + 3 \\)",
+                options: ["\\( 14y + 8 \\)", "\\( 6y + 8 \\)", "\\( 14y - 8 \\)", "\\( 6y - 8 \\)"],
+                answer: "\\( 6y + 8 \\)",
+                explanation: "Combine like terms: \\( 10y - 4y = 6y \\) and \\( 5 + 3 = 8 \\)."
+            }
+        ];
+
+        let currentCombineProblem = {};
+
+        function generateCombineProblem() {
+            const randomIndex = Math.floor(Math.random() * combineProblems.length);
+            currentCombineProblem = combineProblems[randomIndex];
+            document.getElementById('combine-problem').innerHTML = currentCombineProblem.question;
+            const optionsList = document.getElementById('combine-options');
+            optionsList.innerHTML = '';
+            currentCombineProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="combineOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('combine-feedback').innerText = '';
+            // Replace newline characters with <br> for proper formatting
+            const formattedExplanation = currentCombineProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('combine-hint').innerHTML = formattedExplanation;
+            document.getElementById('combine-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkCombineAnswer() {
+            const options = document.getElementsByName('combineOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('combine-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentCombineProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentCombineProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateCombineProblem();
+
+        // --------------------- Expand Expressions ---------------------
+        const expandProblems = [
+            {
+                question: "Expand: \\( 3(x + 4) \\)",
+                options: ["\\( 3x + 4 \\)", "\\( 3x + 12 \\)", "\\( 7x + 4 \\)", "\\( 3x - 12 \\)"],
+                answer: "\\( 3x + 12 \\)",
+                explanation: "Use the distributive property: \\( 3 \\times x = 3x \\) and \\( 3 \\times 4 = 12 \\), so \\( 3x + 12 \\)."
+            },
+            {
+                question: "Expand: \\( -4(m - 3) \\)",
+                options: ["\\( -4m + 3 \\)", "\\( -4m - 12 \\)", "\\( -4m + 12 \\)", "\\( 4m - 12 \\)"],
+                answer: "\\( -4m + 12 \\)",
+                explanation: "Use the distributive property: \\( -4 \\times m = -4m \\) and \\( -4 \\times (-3) = 12 \\), so \\( -4m + 12 \\)."
+            },
+            {
+                question: "Expand: \\( 5(2x - 7) \\)",
+                options: ["\\( 10x - 35 \\)", "\\( 10x + 35 \\)", "\\( 7x - 10 \\)", "\\( 10x - 7 \\)"],
+                answer: "\\( 10x - 35 \\)",
+                explanation: "Use the distributive property: \\( 5 \\times 2x = 10x \\) and \\( 5 \\times (-7) = -35 \\), so \\( 10x - 35 \\)."
+            },
+            {
+                question: "Expand: \\( 2(a + 3b) \\)",
+                options: ["\\( 2a + 3b \\)", "\\( 4a + 6b \\)", "\\( 2a + 6b \\)", "\\( a + 6b \\)"],
+                answer: "\\( 2a + 6b \\)",
+                explanation: "Use the distributive property: \\( 2 \\times a = 2a \\) and \\( 2 \\times 3b = 6b \\), so \\( 2a + 6b \\)."
+            }
+        ];
+
+        let currentExpandProblem = {};
+
+        function generateExpandProblem() {
+            const randomIndex = Math.floor(Math.random() * expandProblems.length);
+            currentExpandProblem = expandProblems[randomIndex];
+            document.getElementById('expand-problem').innerHTML = currentExpandProblem.question;
+            const optionsList = document.getElementById('expand-options');
+            optionsList.innerHTML = '';
+            currentExpandProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="expandOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('expand-feedback').innerText = '';
+            const formattedExplanation = currentExpandProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('expand-hint').innerHTML = formattedExplanation;
+            document.getElementById('expand-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkExpandAnswer() {
+            const options = document.getElementsByName('expandOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('expand-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentExpandProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentExpandProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateExpandProblem();
+
+        // --------------------- Recognize Linear Expressions ---------------------
+        const recognizeProblems = [
+            {
+                question: "Is \\( 3x + 2 \\) a linear expression?",
+                options: ["Yes", "No"],
+                answer: "Yes",
+                explanation: "A linear expression has variables to the first power only. \\( 3x + 2 \\) is linear."
+            },
+            {
+                question: "Is \\( 4y^2 + y \\) a linear expression?",
+                options: ["Yes", "No"],
+                answer: "No",
+                explanation: "The term \\( 4y^2 \\) has a variable raised to the second power, making it quadratic, not linear."
+            },
+            {
+                question: "Is \\( 5a - 7 \\) a linear expression?",
+                options: ["Yes", "No"],
+                answer: "Yes",
+                explanation: "All variables are to the first power, so \\( 5a - 7 \\) is linear."
+            },
+            {
+                question: "Is \\( 2m^3 + 4 \\) a linear expression?",
+                options: ["Yes", "No"],
+                answer: "No",
+                explanation: "The term \\( 2m^3 \\) has a variable raised to the third power, making it cubic, not linear."
+            }
+        ];
+
+        let currentRecognizeProblem = {};
+
+        function generateRecognizeProblem() {
+            const randomIndex = Math.floor(Math.random() * recognizeProblems.length);
+            currentRecognizeProblem = recognizeProblems[randomIndex];
+            document.getElementById('recognize-problem').innerHTML = currentRecognizeProblem.question;
+            const optionsList = document.getElementById('recognize-options');
+            optionsList.innerHTML = '';
+            currentRecognizeProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="recognizeOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('recognize-feedback').innerText = '';
+            const formattedExplanation = currentRecognizeProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('recognize-hint').innerHTML = formattedExplanation;
+            document.getElementById('recognize-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkRecognizeAnswer() {
+            const options = document.getElementsByName('recognizeOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('recognize-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentRecognizeProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is "${currentRecognizeProblem.answer}".`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateRecognizeProblem();
+
+        // --------------------- Add/Subtract Expressions ---------------------
+        const addSubProblems = [
+            {
+                question: "Simplify: \\( (3x + 2) + (5x - 4) \\)",
+                options: ["\\( 8x - 2 \\)", "\\( 8x + 6 \\)", "\\( 15x - 2 \\)", "\\( 8x + 2 \\)"],
+                answer: "\\( 8x - 2 \\)",
+                explanation: "Combine like terms: \\( 3x + 5x = 8x \\) and \\( 2 - 4 = -2 \\)."
+            },
+            {
+                question: "Simplify: \\( (7a - 3) - (2a + 5) \\)",
+                options: ["\\( 5a - 8 \\)", "\\( 9a + 2 \\)", "\\( 5a + 2 \\)", "\\( 9a - 8 \\)"],
+                answer: "\\( 5a - 8 \\)",
+                explanation: "Distribute the negative sign: \\( 7a - 3 - 2a - 5 = 5a - 8 \\)."
+            },
+            {
+                question: "Simplify: \\( (4m + 5) - (m - 2) \\)",
+                options: ["\\( 3m + 7 \\)", "\\( 5m + 3 \\)", "\\( 3m - 7 \\)", "\\( 5m - 3 \\)"],
+                answer: "\\( 3m + 7 \\)",
+                explanation: "Distribute the negative sign: \\( 4m + 5 - m + 2 = 3m + 7 \\)."
+            },
+            {
+                question: "Simplify: \\( (6y - 4) + (2y + 8) \\)",
+                options: ["\\( 8y + 4 \\)", "\\( 8y - 12 \\)", "\\( 4y + 12 \\)", "\\( 8y + 12 \\)"],
+                answer: "\\( 8y + 4 \\)",
+                explanation: "Combine like terms: \\( 6y + 2y = 8y \\) and \\( -4 + 8 = 4 \\)."
+            }
+        ];
+
+        let currentAddSubProblem = {};
+
+        function generateAddSubProblem() {
+            const randomIndex = Math.floor(Math.random() * addSubProblems.length);
+            currentAddSubProblem = addSubProblems[randomIndex];
+            document.getElementById('addsub-problem').innerHTML = currentAddSubProblem.question;
+            const optionsList = document.getElementById('addsub-options');
+            optionsList.innerHTML = '';
+            currentAddSubProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="addsubOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('addsub-feedback').innerText = '';
+            const formattedExplanation = currentAddSubProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('addsub-hint').innerHTML = formattedExplanation;
+            document.getElementById('addsub-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkAddSubAnswer() {
+            const options = document.getElementsByName('addsubOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('addsub-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentAddSubProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentAddSubProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateAddSubProblem();
+
+        // --------------------- Additive Inverse ---------------------
+        const inverseProblems = [
+            {
+                question: "Find the additive inverse of \\( 7a - 3 \\)",
+                options: ["\\( -7a + 3 \\)", "\\( 7a - 3 \\)", "\\( -7a - 3 \\)", "\\( 7a + 3 \\)"],
+                answer: "\\( -7a + 3 \\)",
+                explanation: "The additive inverse changes the sign of each term: \\( -(7a) = -7a \\) and \\( -(-3) = 3 \\), resulting in \\( -7a + 3 \\)."
+            },
+            {
+                question: "Find the additive inverse of \\( 5x + 2 \\)",
+                options: ["\\( -5x - 2 \\)", "\\( 5x - 2 \\)", "\\( -5x + 2 \\)", "\\( 5x + 2 \\)"],
+                answer: "\\( -5x - 2 \\)",
+                explanation: "The additive inverse changes the sign of each term: \\( -5x \\) and \\( -2 \\), resulting in \\( -5x - 2 \\)."
+            },
+            {
+                question: "Find the additive inverse of \\( -3m + 4 \\)",
+                options: ["\\( 3m - 4 \\)", "\\( -3m - 4 \\)", "\\( 3m + 4 \\)", "\\( -3m + 4 \\)"],
+                answer: "\\( 3m - 4 \\)",
+                explanation: "The additive inverse changes the sign of each term: \\( -(-3m) = 3m \\) and \\( -(4) = -4 \\), resulting in \\( 3m - 4 \\)."
+            },
+            {
+                question: "Find the additive inverse of \\( 2y - 5 \\)",
+                options: ["\\( -2y + 5 \\)", "\\( 2y + 5 \\)", "\\( -2y - 5 \\)", "\\( 2y - 5 \\)"],
+                answer: "\\( -2y + 5 \\)",
+                explanation: "The additive inverse changes the sign of each term: \\( -(2y) = -2y \\) and \\( -(-5) = 5 \\), resulting in \\( -2y + 5 \\)."
+            }
+        ];
+
+        let currentInverseProblem = {};
+
+        function generateInverseProblem() {
+            const randomIndex = Math.floor(Math.random() * inverseProblems.length);
+            currentInverseProblem = inverseProblems[randomIndex];
+            document.getElementById('inverse-problem').innerHTML = currentInverseProblem.question;
+            const optionsList = document.getElementById('inverse-options');
+            optionsList.innerHTML = '';
+            currentInverseProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="inverseOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('inverse-feedback').innerText = '';
+            const formattedExplanation = currentInverseProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('inverse-hint').innerHTML = formattedExplanation;
+            document.getElementById('inverse-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkInverseAnswer() {
+            const options = document.getElementsByName('inverseOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('inverse-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentInverseProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentInverseProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateInverseProblem();
+
+        // --------------------- Greatest Common Factor ---------------------
+        const gcfProblems = [
+            {
+                question: "Find the GCF of \\( 12x^3y \\) and \\( 18x^2y^2 \\)",
+                options: ["\\( 6x^2y \\)", "\\( 12x^3y^2 \\)", "\\( 18x^2y \\)", "\\( 6x^3y^2 \\)"],
+                answer: "\\( 6x^2y \\)",
+                explanation: "Prime factors of \\( 12x^3y \\): \\( 2^2 \\times 3 \\times x^3 \\times y \\).<br>Prime factors of \\( 18x^2y^2 \\): \\( 2 \\times 3^2 \\times x^2 \\times y^2 \\).<br>GCF is the product of the lowest powers: \\( 2 \\times 3 \\times x^2 \\times y = 6x^2y \\)."
+            },
+            {
+                question: "Find the GCF of \\( 20a^2b \\) and \\( 30a^3b^2 \\)",
+                options: ["\\( 10a^2b \\)", "\\( 20a^2b^2 \\)", "\\( 30a^3b \\)", "\\( 10a^3b^2 \\)"],
+                answer: "\\( 10a^2b \\)",
+                explanation: "Prime factors of \\( 20a^2b \\): \\( 2^2 \\times 5 \\times a^2 \\times b \\).<br>Prime factors of \\( 30a^3b^2 \\): \\( 2 \\times 3 \\times 5 \\times a^3 \\times b^2 \\).<br>GCF is the product of the lowest powers: \\( 2 \\times 5 \\times a^2 \\times b = 10a^2b \\)."
+            },
+            {
+                question: "Find the GCF of \\( 16m^4n^2 \\) and \\( 24m^3n^3 \\)",
+                options: ["\\( 8m^3n^2 \\)", "\\( 16m^4n^3 \\)", "\\( 24m^3n^2 \\)", "\\( 8m^4n^3 \\)"],
+                answer: "\\( 8m^3n^2 \\)",
+                explanation: "Prime factors of \\( 16m^4n^2 \\): \\( 2^4 \\times m^4 \\times n^2 \\).<br>Prime factors of \\( 24m^3n^3 \\): \\( 2^3 \\times 3 \\times m^3 \\times n^3 \\).<br>GCF is the product of the lowest powers: \\( 2^3 \\times m^3 \\times n^2 = 8m^3n^2 \\)."
+            },
+            {
+                question: "Find the GCF of \\( 9x^2y \\) and \\( 12x^3y^2 \\)",
+                options: ["\\( 3x^2y \\)", "\\( 9x^2y^2 \\)", "\\( 12x^3y \\)", "\\( 6x^2y^2 \\)"],
+                answer: "\\( 3x^2y \\)",
+                explanation: "Prime factors of \\( 9x^2y \\): \\( 3^2 \\times x^2 \\times y \\).<br>Prime factors of \\( 12x^3y^2 \\): \\( 2^2 \\times 3 \\times x^3 \\times y^2 \\).<br>GCF is the product of the lowest powers: \\( 3 \\times x^2 \\times y = 3x^2y \\)."
+            }
+        ];
+
+        let currentGCFProblem = {};
+
+        function generateGCFProblem() {
+            const randomIndex = Math.floor(Math.random() * gcfProblems.length);
+            currentGCFProblem = gcfProblems[randomIndex];
+            document.getElementById('gcf-problem').innerHTML = currentGCFProblem.question;
+            const optionsList = document.getElementById('gcf-options');
+            optionsList.innerHTML = '';
+            currentGCFProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="gcfOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('gcf-feedback').innerText = '';
+            const formattedExplanation = currentGCFProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('gcf-hint').innerHTML = formattedExplanation;
+            document.getElementById('gcf-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkGCFAnswer() {
+            const options = document.getElementsByName('gcfOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('gcf-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentGCFProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct GCF is ${currentGCFProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateGCFProblem();
+
+        // --------------------- Factor Expressions ---------------------
+        const factorProblems = [
+            {
+                question: "Factor: \\( 6x + 12 \\)",
+                options: ["\\( 6(x + 2) \\)", "\\( 12(x + 6) \\)", "\\( 6x(1 + 2) \\)", "\\( 3(2x + 4) \\)"],
+                answer: "\\( 6(x + 2) \\)",
+                explanation: "Factor out the greatest common factor (GCF), which is 6: \\( 6(x + 2) \\)."
+            },
+            {
+                question: "Factor: \\( 10a - 20 \\)",
+                options: ["\\( 10(a - 2) \\)", "\\( 5(2a - 4) \\)", "\\( 20(a - 1) \\)", "\\( 10a - 20 \\)"],
+                answer: "\\( 10(a - 2) \\)",
+                explanation: "Factor out the GCF, which is 10: \\( 10(a - 2) \\)."
+            },
+            {
+                question: "Factor: \\( 15y + 25 \\)",
+                options: ["\\( 5(3y + 5) \\)", "\\( 15(y + 5) \\)", "\\( 5y + 25 \\)", "\\( 3(5y + 5) \\)"],
+                answer: "\\( 5(3y + 5) \\)",
+                explanation: "Factor out the GCF, which is 5: \\( 5(3y + 5) \\)."
+            },
+            {
+                question: "Factor: \\( 8m^2n - 4mn \\)",
+                options: ["\\( 4mn(2m - 1) \\)", "\\( 2mn(4m - 2) \\)", "\\( 8mn(m - 0.5) \\)", "\\( 4m^2n - 2mn \\)"],
+                answer: "\\( 4mn(2m - 1) \\)",
+                explanation: "Factor out the GCF, which is 4mn: \\( 4mn(2m - 1) \\)."
+            }
+        ];
+
+        let currentFactorProblem = {};
+
+        function generateFactorProblem() {
+            const randomIndex = Math.floor(Math.random() * factorProblems.length);
+            currentFactorProblem = factorProblems[randomIndex];
+            document.getElementById('factor-problem').innerHTML = currentFactorProblem.question;
+            const optionsList = document.getElementById('factor-options');
+            optionsList.innerHTML = '';
+            currentFactorProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="factorOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('factor-feedback').innerText = '';
+            const formattedExplanation = currentFactorProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('factor-hint').innerHTML = formattedExplanation;
+            document.getElementById('factor-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkFactorAnswer() {
+            const options = document.getElementsByName('factorOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('factor-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentFactorProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentFactorProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateFactorProblem();
+
+        // --------------------- Simplify Expressions ---------------------
+        const simplifyProblems = [
+            {
+                question: "Simplify: \\( 2(3x - 4) + 5x \\)",
+                options: ["\\( 11x - 8 \\)", "\\( 11x + 8 \\)", "\\( x - 8 \\)", "\\( 6x - 13 \\)"],
+                answer: "\\( 11x - 8 \\)",
+                explanation: "Apply the distributive property: \\( 2 \\times 3x = 6x \\) and \\( 2 \\times (-4) = -8 \\). Then add \\( 5x \\): \\( 6x + 5x - 8 = 11x - 8 \\)."
+            },
+            {
+                question: "Simplify: \\( 3(2a + 5) - 4a \\)",
+                options: ["\\( 2a + 15 \\)", "\\( 6a + 15 \\)", "\\( 6a - 15 \\)", "\\( 6a + 5 \\)"],
+                answer: "\\( 2a + 15 \\)",
+                explanation: "Apply the distributive property: \\( 3 \\times 2a = 6a \\) and \\( 3 \\times 5 = 15 \\). Then subtract \\( 4a \\): \\( 6a - 4a + 15 = 2a + 15 \\)."
+            },
+            {
+                question: "Simplify: \\( 4(m - 2) + 3m \\)",
+                options: ["\\( 7m - 8 \\)", "\\( 7m + 8 \\)", "\\( m - 8 \\)", "\\( 7m - 4 \\)"],
+                answer: "\\( 7m - 8 \\)",
+                explanation: "Apply the distributive property: \\( 4 \\times m = 4m \\) and \\( 4 \\times (-2) = -8 \\). Then add \\( 3m \\): \\( 4m + 3m - 8 = 7m - 8 \\)."
+            },
+            {
+                question: "Simplify: \\( 5(2y + 3) - 2y \\)",
+                options: ["\\( 8y + 15 \\)", "\\( 10y + 15 \\)", "\\( 10y + 13 \\)", "\\( 10y - 15 \\)"],
+                answer: "\\( 8y + 15 \\)",
+                explanation: "Apply the distributive property: \\( 5 \\times 2y = 10y \\) and \\( 5 \\times 3 = 15 \\). Then subtract \\( 2y \\): \\( 10y - 2y + 15 = 8y + 15 \\)."
+            }
+        ];
+
+        let currentSimplifyProblem = {};
+
+        function generateSimplifyProblem() {
+            const randomIndex = Math.floor(Math.random() * simplifyProblems.length);
+            currentSimplifyProblem = simplifyProblems[randomIndex];
+            document.getElementById('simplify-problem').innerHTML = currentSimplifyProblem.question;
+            const optionsList = document.getElementById('simplify-options');
+            optionsList.innerHTML = '';
+            currentSimplifyProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="simplifyOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('simplify-feedback').innerText = '';
+            const formattedExplanation = currentSimplifyProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('simplify-hint').innerHTML = formattedExplanation;
+            document.getElementById('simplify-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkSimplifyAnswer() {
+            const options = document.getElementsByName('simplifyOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('simplify-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentSimplifyProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentSimplifyProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateSimplifyProblem();
+
+        // --------------------- Properties of Equality ---------------------
+        const equalityProblems = [
+            {
+                question: "If you add the same number to both sides of an equation, which property is this?",
+                options: [
+                    "Multiplication Property of Equality",
+                    "Addition Property of Equality",
+                    "Subtraction Property of Equality",
+                    "Division Property of Equality"
+                ],
+                answer: "Addition Property of Equality",
+                explanation: "Adding the same number to both sides maintains the equality, which is the Addition Property of Equality."
+            },
+            {
+                question: "If you multiply both sides of an equation by the same nonzero number, which property is this?",
+                options: [
+                    "Division Property of Equality",
+                    "Addition Property of Equality",
+                    "Multiplication Property of Equality",
+                    "Subtraction Property of Equality"
+                ],
+                answer: "Multiplication Property of Equality",
+                explanation: "Multiplying both sides by the same nonzero number maintains the equality, which is the Multiplication Property of Equality."
+            },
+            {
+                question: "If you subtract the same number from both sides of an equation, which property is this?",
+                options: [
+                    "Addition Property of Equality",
+                    "Subtraction Property of Equality",
+                    "Multiplication Property of Equality",
+                    "Division Property of Equality"
+                ],
+                answer: "Subtraction Property of Equality",
+                explanation: "Subtracting the same number from both sides maintains the equality, which is the Subtraction Property of Equality."
+            },
+            {
+                question: "If you divide both sides of an equation by the same nonzero number, which property is this?",
+                options: [
+                    "Division Property of Equality",
+                    "Addition Property of Equality",
+                    "Subtraction Property of Equality",
+                    "Multiplication Property of Equality"
+                ],
+                answer: "Division Property of Equality",
+                explanation: "Dividing both sides by the same nonzero number maintains the equality, which is the Division Property of Equality."
+            }
+        ];
+
+        let currentEqualityProblem = {};
+
+        function generateEqualityProblem() {
+            const randomIndex = Math.floor(Math.random() * equalityProblems.length);
+            currentEqualityProblem = equalityProblems[randomIndex];
+            document.getElementById('equality-problem').innerHTML = currentEqualityProblem.question;
+            const optionsList = document.getElementById('equality-options');
+            optionsList.innerHTML = '';
+            currentEqualityProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="equalityOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('equality-feedback').innerText = '';
+            const formattedExplanation = currentEqualityProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('equality-hint').innerHTML = formattedExplanation;
+            document.getElementById('equality-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkEqualityAnswer() {
+            const options = document.getElementsByName('equalityOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('equality-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentEqualityProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is "${currentEqualityProblem.answer}".`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateEqualityProblem();
+
+        // --------------------- Solve Equations ---------------------
+        const solveProblems = [
+            {
+                question: "Solve for \( x \): \\( 2x + 3 = 7 \\)",
+                options: ["\\( x = 2 \\)", "\\( x = 3 \\)", "\\( x = 1 \\)", "\\( x = 4 \\)"],
+                answer: "\\( x = 2 \\)",
+                explanation: "Subtract 3 from both sides: \\( 2x = 4 \\). Then divide both sides by 2: \\( x = 2 \\)."
+            },
+            {
+                question: "Solve for \( x \): \\( 5a - 10 = 0 \\)",
+                options: ["\\( a = 2 \\)", "\\( a = -2 \\)", "\\( a = 0 \\)", "\\( a = 10 \\)"],
+                answer: "\\( a = 2 \\)",
+                explanation: "Add 10 to both sides: \\( 5a = 10 \\). Then divide both sides by 5: \\( a = 2 \\)."
+            },
+            {
+                question: "Solve for \( y \): \\( 3y + 5 = 20 \\)",
+                options: ["\\( y = 5 \\)", "\\( y = 15 \\)", "\\( y = -5 \\)", "\\( y = 25 \\)"],
+                answer: "\\( y = 5 \\)",
+                explanation: "Subtract 5 from both sides: \\( 3y = 15 \\). Then divide both sides by 3: \\( y = 5 \\)."
+            },
+            {
+                question: "Solve for \( z \): \\( 4z - 8 = 0 \\)",
+                options: ["\\( z = 2 \\)", "\\( z = -2 \\)", "\\( z = 8 \\)", "\\( z = -8 \\)"],
+                answer: "\\( z = 2 \\)",
+                explanation: "Add 8 to both sides: \\( 4z = 8 \\). Then divide both sides by 4: \\( z = 2 \\)."
+            }
+        ];
+
+        let currentSolveProblem = {};
+
+        function generateSolveProblem() {
+            const randomIndex = Math.floor(Math.random() * solveProblems.length);
+            currentSolveProblem = solveProblems[randomIndex];
+            document.getElementById('solve-problem').innerHTML = currentSolveProblem.question;
+            const optionsList = document.getElementById('solve-options');
+            optionsList.innerHTML = '';
+            currentSolveProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="solveOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('solve-feedback').innerText = '';
+            const formattedExplanation = currentSolveProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('solve-hint').innerHTML = formattedExplanation;
+            document.getElementById('solve-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkSolveAnswer() {
+            const options = document.getElementsByName('solveOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('solve-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentSolveProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is ${currentSolveProblem.answer}.`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateSolveProblem();
+
+        // --------------------- Solution Possibilities ---------------------
+        const solutionProblems = [
+            {
+                question: "Determine the number of solutions for the equation: \\( 4x + 2 = 4x + 5 \\)",
+                options: ["One Solution", "No Solution", "Infinitely Many Solutions"],
+                answer: "No Solution",
+                explanation: "Subtract \\( 4x \\) from both sides: \\( 2 = 5 \\), which is a contradiction. Hence, no solution."
+            },
+            {
+                question: "Determine the number of solutions for the equation: \\( 2x + 3 = 2x + 3 \\)",
+                options: ["One Solution", "No Solution", "Infinitely Many Solutions"],
+                answer: "Infinitely Many Solutions",
+                explanation: "Subtract \\( 2x \\) from both sides: \\( 3 = 3 \\), which is always true. Hence, infinitely many solutions."
+            },
+            {
+                question: "Determine the number of solutions for the equation: \\( 5y - 10 = 5y + 5 \\)",
+                options: ["One Solution", "No Solution", "Infinitely Many Solutions"],
+                answer: "No Solution",
+                explanation: "Subtract \\( 5y \\) from both sides: \\( -10 = 5 \\), which is a contradiction. Hence, no solution."
+            },
+            {
+                question: "Determine the number of solutions for the equation: \\( 3z + 4 = 3z + 4 \\)",
+                options: ["One Solution", "No Solution", "Infinitely Many Solutions"],
+                answer: "Infinitely Many Solutions",
+                explanation: "Subtract \\( 3z \\) from both sides: \\( 4 = 4 \\), which is always true. Hence, infinitely many solutions."
+            }
+        ];
+
+        let currentSolutionProblem = {};
+
+        function generateSolutionProblem() {
+            const randomIndex = Math.floor(Math.random() * solutionProblems.length);
+            currentSolutionProblem = solutionProblems[randomIndex];
+            document.getElementById('solution-problem').innerHTML = currentSolutionProblem.question;
+            const optionsList = document.getElementById('solution-options');
+            optionsList.innerHTML = '';
+            currentSolutionProblem.options.forEach(option => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <label>
+                        <input type="radio" name="solutionOption" value="${option}">
+                        ${option}
+                    </label>
+                `;
+                optionsList.appendChild(li);
+            });
+            document.getElementById('solution-feedback').innerText = '';
+            const formattedExplanation = currentSolutionProblem.explanation.replace(/\\n/g, '<br>');
+            document.getElementById('solution-hint').innerHTML = formattedExplanation;
+            document.getElementById('solution-hint').style.display = 'none';
+            MathJax.typesetPromise();
+        }
+
+        function checkSolutionAnswer() {
+            const options = document.getElementsByName('solutionOption');
+            let selected = null;
+            options.forEach(option => {
+                if (option.checked) {
+                    selected = option.value;
+                }
+            });
+            const feedback = document.getElementById('solution-feedback');
+            if (!selected) {
+                feedback.style.color = 'red';
+                feedback.innerText = 'Please select an option.';
+                return;
+            }
+            if (selected === currentSolutionProblem.answer) {
+                feedback.style.color = 'green';
+                feedback.innerText = 'Correct!';
+            } else {
+                feedback.style.color = 'red';
+                feedback.innerText = `Incorrect. The correct answer is "${currentSolutionProblem.answer}".`;
+            }
+            MathJax.typesetPromise();
+        }
+
+        // Initialize the first problem
+        generateSolutionProblem();
+
+    </script>
+
+</body>
+    <footer>
+        <p>Created by cliffpackman@gmail.com on 1/10/2024</p>
+    </footer>
+</html>
