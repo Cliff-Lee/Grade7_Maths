@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Russian Peasant Multiplication Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-section, .visualization, .questions, .summary, .controls {
+            margin-bottom: 30px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        tr.highlight {
+            background-color: #ffeb3b;
+        }
+        .hidden {
+            display: none;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        .reflection {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-left: 150px;
+        }
+        .note {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Russian Peasant Multiplication Explorer</h1>
+        
+        <!-- User Input Section -->
+        <div class="input-section">
+            <label for="number1">First Integer:</label>
+            <input type="number" id="number1" required step="1" pattern="^-?\d+$"><br>
+            <span id="error1" class="error hidden">Please enter a valid integer.</span><br>
+            
+            <label for="number2">Second Integer:</label>
+            <input type="number" id="number2" required step="1" pattern="^-?\d+$"><br>
+            <span id="error2" class="error hidden">Please enter a valid integer.</span><br>
+            
+            <button id="startBtn" disabled>Start</button>
+            <button id="clearBtn" class="hidden">Clear</button>
+        </div>
+        
+        <!-- Step-by-Step Visualization -->
+        <div class="visualization hidden">
+            <h2>Step-by-Step Multiplication</h2>
+            <table id="multiplicationTable">
+                <thead>
+                    <tr>
+                        <th>Halved (Integer Division)</th>
+                        <th>Doubled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Steps will be dynamically added here -->
+                </tbody>
+            </table>
+            <p class="note">* Halving is performed using integer division (remainders are ignored).</p>
+            <p><strong>Intermediate Sum:</strong> <span id="intermediateSum">0</span></p>
+        </div>
+        
+        <!-- Interactive Questions -->
+        <div class="questions hidden">
+            <h2>Questions to Consider</h2>
+            <div class="question">
+                <p><strong>1. </strong>What do you notice about the numbers in the first column when they contribute to the sum?</p>
+            </div>
+            <div class="question">
+                <p><strong>2. </strong>How does halving and doubling affect the product compared to the traditional multiplication method?</p>
+            </div>
+            <div class="question">
+                <p><strong>3. </strong>Can you find a pattern in which values are added and which are ignored?</p>
+            </div>
+        </div>
+        
+        <!-- Summary and Reflection -->
+        <div class="summary hidden">
+            <h2>Summary</h2>
+            <p><strong>Final Product:</strong> <span id="finalProduct"></span> <em>(Sum equals the product of the two integers)</em></p>
+            <p><strong>Values Added:</strong> <span id="valuesAdded"></span></p>
+            <div class="reflection">
+                <h3>Reflection</h3>
+                <p>Consider why the Russian Peasant Multiplication algorithm works and how it relates to the binary representation of numbers. Think about the efficiency and the underlying mathematical principles that make this method effective.</p>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="controls hidden">
+            <button id="restartBtn">Restart</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('startBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const visualization = document.querySelector('.visualization');
+            const multiplicationTable = document.getElementById('multiplicationTable').querySelector('tbody');
+            const intermediateSum = document.getElementById('intermediateSum');
+            const questionsSection = document.querySelector('.questions');
+            const summarySection = document.querySelector('.summary');
+            const finalProduct = document.getElementById('finalProduct');
+            const valuesAdded = document.getElementById('valuesAdded');
+            const controls = document.querySelector('.controls');
+            const number1 = document.getElementById('number1');
+            const number2 = document.getElementById('number2');
+            const error1 = document.getElementById('error1');
+            const error2 = document.getElementById('error2');
+
+            let sum = 0;
+            let addedValues = [];
+
+            // Function to validate integer input
+            function validateInput() {
+                let valid = true;
+
+                // Validate first number
+                if (!Number.isInteger(Number(number1.value))) {
+                    error1.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    error1.classList.add('hidden');
+                }
+
+                // Validate second number
+                if (!Number.isInteger(Number(number2.value))) {
+                    error2.classList.remove('hidden');
+                    valid = false;
+                } else {
+                    error2.classList.add('hidden');
+                }
+
+                // Enable or disable the start button
+                startBtn.disabled = !valid || number1.value.trim() === '' || number2.value.trim() === '';
+            }
+
+            // Add event listeners for input validation
+            number1.addEventListener('input', validateInput);
+            number2.addEventListener('input', validateInput);
+
+            startBtn.addEventListener('click', function() {
+                const num1 = parseInt(number1.value, 10);
+                const num2 = parseInt(number2.value, 10);
+
+                // Final validation before starting
+                if (!Number.isInteger(num1) || !Number.isInteger(num2)) {
+                    alert('Please enter valid integers.');
+                    return;
+                }
+
+                // Initialize variables
+                let a = Math.abs(num1);
+                let b = Math.abs(num2);
+                sum = 0;
+                addedValues = [];
+                multiplicationTable.innerHTML = '';
+                intermediateSum.textContent = '0';
+
+                // Handle negative numbers
+                const isNegative = (num1 < 0) ^ (num2 < 0) ? true : false;
+
+                // Show visualization and questions
+                visualization.classList.remove('hidden');
+                questionsSection.classList.remove('hidden');
+                clearBtn.classList.remove('hidden');
+                startBtn.classList.add('hidden');
+
+                // Step-by-step process
+                while (a >= 1) {
+                    const row = multiplicationTable.insertRow();
+                    const cellA = row.insertCell(0);
+                    const cellB = row.insertCell(1);
+
+                    cellA.textContent = a;
+                    cellB.textContent = b;
+
+                    if (a % 2 !== 0) {
+                        row.classList.add('highlight');
+                        sum += b;
+                        addedValues.push(b);
+                        intermediateSum.textContent = sum;
+                    }
+
+                    a = Math.floor(a / 2); // Halving with integer division
+                    b = b * 2; // Doubling
+                }
+
+                // Adjust sign of the final product
+                const finalResult = isNegative ? -sum : sum;
+
+                // Display summary
+                finalProduct.textContent = finalResult;
+                valuesAdded.textContent = addedValues.join(' + ') + (isNegative ? ' = ' + finalResult : '');
+                summarySection.classList.remove('hidden');
+                controls.classList.remove('hidden');
+            });
+
+            clearBtn.addEventListener('click', function() {
+                // Reset all fields and sections
+                number1.value = '';
+                number2.value = '';
+                visualization.classList.add('hidden');
+                questionsSection.classList.add('hidden');
+                summarySection.classList.add('hidden');
+                controls.classList.add('hidden');
+                clearBtn.classList.add('hidden');
+                startBtn.classList.remove('hidden');
+                startBtn.disabled = true;
+
+                // Clear error messages
+                error1.classList.add('hidden');
+                error2.classList.add('hidden');
+            });
+
+            restartBtn.addEventListener('click', function() {
+                // Similar to clear, but keep the clear button hidden and show start
+                number1.value = '';
+                number2.value = '';
+                visualization.classList.add('hidden');
+                questionsSection.classList.add('hidden');
+                summarySection.classList.add('hidden');
+                controls.classList.add('hidden');
+                clearBtn.classList.add('hidden');
+                startBtn.classList.remove('hidden');
+                startBtn.disabled = true;
+
+                // Clear error messages
+                error1.classList.add('hidden');
+                error2.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+
+     <footer> <p>Created by cliffpackman@gmail.com 8/10/2024 </p> </footer>
