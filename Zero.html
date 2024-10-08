@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovering Zero!</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background-color: #00796b;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 1.2em;
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .title {
+            font-size: 1.8em;
+            color: #00796b;
+            margin-bottom: 10px;
+        }
+
+        .card .content {
+            font-size: 1.1em;
+            line-height: 1.6;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .card.active .content {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Interactive Elements */
+        .example-box {
+            background: #c8e6c9;
+            padding: 15px;
+            border: 1px dashed #00796b;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        .canvas-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        canvas {
+            border: 2px solid #00796b;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            /* Adjusted height for historyCanvas and numeralCanvas */
+            height: auto; /* Let height adjust based on content */
+        }
+
+        /* Specific Canvas Heights */
+        #historyCanvas {
+            width: 280px;
+            height: 160px; /* Increased height */
+        }
+
+        #numeralCanvas {
+            width: 280px;
+            height: 160px; /* Increased height */
+        }
+
+        #romanCanvas {
+            width: 280px;
+            height: 160px; /* Increased height for more text */
+        }
+
+        /* Converter Styles */
+        .converter, .binary-arithmetic, .roman-arithmetic {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .converter input[type="number"], 
+        .binary-arithmetic input[type="text"], 
+        .roman-arithmetic input[type="number"], 
+        .roman-arithmetic select {
+            padding: 10px;
+            font-size: 1em;
+            width: 150px;
+            border: 2px solid #00796b;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .converter button, 
+        .binary-arithmetic button, 
+        .roman-arithmetic button {
+            padding: 10px 15px;
+            font-size: 1em;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .converter button:hover, 
+        .binary-arithmetic button:hover, 
+        .roman-arithmetic button:hover {
+            background-color: #004d40;
+        }
+
+        .converter p, 
+        .binary-arithmetic p, 
+        .roman-arithmetic p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        /* Fun Facts Styles */
+        .fun-facts {
+            background: #fff3e0;
+            padding: 15px;
+            border: 1px solid #ff9800;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .fun-facts ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .card .title {
+                font-size: 1.5em;
+            }
+
+            .converter input[type="number"], 
+            .binary-arithmetic input[type="text"], 
+            .roman-arithmetic input[type="number"], 
+            .roman-arithmetic select {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Discovering Zero!</h1>
+        <p>Explore the fascinating world of zero with interactive examples and animations.</p>
+    </div>
+
+    <!-- Grid Container -->
+    <div class="grid-container">
+
+        <!-- Additive Identity Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Additive Identity</div>
+            <div class="content">
+                <p>Zero is the additive identity because adding zero to any number does not change its value.</p>
+                <div class="example-box">
+                    <strong>Try it out!</strong><br>
+                    What is 7 + 0? <strong>7</strong><br>
+                    How about 123 + 0? <strong>123</strong>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="additiveCanvas" width="280" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multiplicative Absorber Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Multiplicative Absorber</div>
+            <div class="content">
+                <p>When any number is multiplied by zero, the result is always zero.</p>
+                <div class="example-box">
+                    <strong>Try it out!</strong><br>
+                    What is 5 × 0? <strong>0</strong><br>
+                    How about 999 × 0? <strong>0</strong>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="multiplicativeCanvas" width="280" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Even Number Property Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Zero: An Even Number</div>
+            <div class="content">
+                <p>Zero is considered an even number because it can be divided by two without leaving a remainder.</p>
+                <div class="example-box">
+                    <strong>Example:</strong><br>
+                    0 ÷ 2 = 0
+                </div>
+                <div class="fun-facts">
+                    <strong>Fun Fact:</strong>
+                    <ul>
+                        <li>Zero is the only integer that is neither positive nor negative.</li>
+                        <li>Zero plays a crucial role in defining the properties of even numbers.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zero in Computer Science Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Zero in Computer Science</div>
+            <div class="content">
+                <p>In computer science, zero is a key part of binary code, the language of computers! It's used to represent off states in circuits.</p>
+                <div class="example-box">
+                    <strong>Did you know?</strong><br>
+                    Binary code only uses 0s and 1s. The number 4 in binary is written as <strong>100</strong>
+                </div>
+                <div class="canvas-container">
+                    <canvas id="binaryCanvas" width="280" height="120"></canvas>
+                </div>
+                <div class="converter">
+                    <h3>Convert Your Number to Binary!</h3>
+                    <input type="number" id="numberInput" placeholder="Enter a number">
+                    <button onclick="convertToBinary()">Convert</button>
+                    <p id="binaryResult"></p>
+                </div>
+                <div class="binary-arithmetic">
+                    <h3>Explore Binary Arithmetic!</h3>
+                    <input type="text" id="binaryInput1" placeholder="First binary">
+                    <input type="text" id="binaryInput2" placeholder="Second binary">
+                    <button onclick="binaryAddition()">Add</button>
+                    <p id="binarySum"></p>
+                </div>
+                <!-- Moved Binary to Decimal Converter from Numeral Systems -->
+                <div class="converter">
+                    <h3>Convert Binary to Decimal!</h3>
+                    <input type="text" id="binaryToDecimalInputCS" placeholder="Enter binary">
+                    <button onclick="convertToDecimalCS()">Convert</button>
+                    <p id="decimalResultCS"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Facts Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Historical Facts About Zero</div>
+            <div class="content">
+                <p>Zero has a rich history and wasn't always a part of number systems!</p>
+                <div class="example-box">
+                    <strong>Historical Milestones:</strong><br>
+                    - The concept of zero was first used in ancient Mesopotamia.<br>
+                    - It was later developed independently in India.<br>
+                    - Zero was introduced to Europe through Arabic mathematicians.
+                </div>
+                <div class="canvas-container">
+                    <canvas id="historyCanvas" width="280" height="160"></canvas>
+                </div>
+                <div class="fun-facts">
+                    <strong>Fun Fact:</strong>
+                    <ul>
+                        <li>The symbol for zero (0) was first used in India around the 5th century.</li>
+                        <li>Zero was a revolutionary concept that enabled the development of algebra and calculus.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zero in Numeral Systems Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Zero in Numeral Systems</div>
+            <div class="content">
+                <p>Zero plays a vital role in positional numeral systems, unlike non-positional systems like Roman numerals.</p>
+                <div class="example-box">
+                    <strong>Comparison:</strong><br>
+                    <strong>Positional (Decimal):</strong> 105 means 1×100 + 0×10 + 5×1.<br>
+                    <strong>Non-Positional (Roman):</strong> V represents 5, but there's no symbol for zero.
+                </div>
+                <div class="canvas-container">
+                    <canvas id="numeralCanvas" width="280" height="160"></canvas>
+                </div>
+                <!-- Removed Binary to Decimal Converter from here -->
+                <div class="fun-facts">
+                    <strong>Fun Fact:</strong>
+                    <ul>
+                        <li>Without zero, it's challenging to perform calculations like addition, subtraction, multiplication, and division efficiently.</li>
+                        <li>Zero allows us to represent large numbers succinctly and perform complex mathematical operations.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roman Numerals Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Roman Numerals</div>
+            <div class="content">
+                <p>Roman numerals are a non-positional numeral system that originated in ancient Rome.</p>
+                <div class="example-box">
+                    <strong>Basics:</strong><br>
+                    I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1000<br>
+                    Numbers are formed by combining symbols and adding their values. When a smaller numeral appears before a larger one, it is subtracted.
+                </div>
+                <div class="canvas-container">
+                    <canvas id="romanCanvas" width="280" height="160"></canvas>
+                </div>
+                <div class="converter">
+                    <h3>Convert Decimal to Roman Numerals!</h3>
+                    <input type="number" id="decimalToRomanInput" placeholder="Enter a number">
+                    <button onclick="convertToRoman()">Convert</button>
+                    <p id="romanResult"></p>
+                </div>
+                <div class="roman-arithmetic">
+                    <h3>Perform Arithmetic with Roman Numerals!</h3>
+                    <input type="number" id="romanInput1" placeholder="First number">
+                    <select id="romanOperation">
+                        <option value="add">+</option>
+                        <option value="subtract">-</option>
+                        <option value="multiply">×</option>
+                        <option value="divide">÷</option>
+                    </select>
+                    <input type="number" id="romanInput2" placeholder="Second number">
+                    <button onclick="romanArithmetic()">Calculate</button>
+                    <p id="romanArithmeticResult"></p>
+                    <p id="comparisonQuestion"></p>
+                </div>
+                <div class="fun-facts">
+                    <strong>Fun Fact:</strong>
+                    <ul>
+                        <li>Roman numerals are still used today in clock faces, book chapters, and movie titles.</li>
+                        <li>The largest number commonly represented is 3,999 (MMMCMXCIX).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fun Facts Card -->
+        <div class="card" onclick="toggleCard(event, this)">
+            <div class="title">Fun Facts About Zero</div>
+            <div class="content">
+                <div class="fun-facts">
+                    <ul>
+                        <li>Zero is the only number that cannot be represented by Roman numerals.</li>
+                        <li>In temperature scales like Celsius and Kelvin, zero marks significant points (freezing point of water and absolute zero).</li>
+                        <li>Zero is essential in defining coordinates in a graph, acting as the origin.</li>
+                        <li>Zero is used in various fields such as economics (zero-sum games), physics (ground state), and more.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Interactivity and Animations -->
+    <script>
+        // Function to toggle card content
+        function toggleCard(event, card) {
+            // Prevent toggle when clicking on interactive elements
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'BUTTON' || event.target.tagName === 'SELECT') {
+                return;
+            }
+
+            // Close any other open cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            // Toggle the clicked card
+            card.classList.toggle('active');
+
+            // Trigger animations based on card title
+            const title = card.querySelector('.title').innerText;
+            switch(title) {
+                case 'Additive Identity':
+                    drawAdditiveAnimation();
+                    break;
+                case 'Multiplicative Absorber':
+                    drawMultiplicativeAnimation();
+                    break;
+                case 'Zero: An Even Number':
+                    // No canvas animation for this card
+                    break;
+                case 'Zero in Computer Science':
+                    drawBinaryAnimation();
+                    break;
+                case 'Historical Facts About Zero':
+                    drawHistoryAnimation();
+                    break;
+                case 'Zero in Numeral Systems':
+                    drawNumeralAnimation();
+                    break;
+                case 'Roman Numerals':
+                    drawRomanAnimation();
+                    break;
+                case 'Fun Facts About Zero':
+                    // No canvas animation for this card
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Additive Identity Animation
+        function drawAdditiveAnimation() {
+            const canvas = document.getElementById('additiveCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '20px Comic Sans MS';
+            ctx.fillStyle = '#00796b';
+            ctx.fillText('7 + 0 = 7', 60, 50);
+            ctx.fillText('123 + 0 = 123', 50, 90);
+        }
+
+        // Multiplicative Absorber Animation
+        function drawMultiplicativeAnimation() {
+            const canvas = document.getElementById('multiplicativeCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '20px Comic Sans MS';
+            ctx.fillStyle = '#ff5722';
+            ctx.fillText('5 × 0 = 0', 80, 50);
+            ctx.fillText('999 × 0 = 0', 60, 90);
+        }
+
+        // Binary Conversion Animation
+        function drawBinaryAnimation() {
+            const canvas = document.getElementById('binaryCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '18px Comic Sans MS';
+            ctx.fillStyle = '#00796b';
+            ctx.fillText('Binary 4 = 100', 80, 50);
+            ctx.fillText('Off = 0, On = 1', 80, 90);
+        }
+
+        // Historical Facts Animation
+        function drawHistoryAnimation() {
+            const canvas = document.getElementById('historyCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '16px Comic Sans MS';
+            ctx.fillStyle = '#ff9800';
+            ctx.fillText('5th Century:', 50, 40);
+            ctx.fillText('Zero in India', 80, 70);
+            ctx.fillText('Middle Ages:', 50, 100);
+            ctx.fillText('Zero in Europe', 80, 130);
+        }
+
+        // Numeral Systems Comparison Animation
+        function drawNumeralAnimation() {
+            const canvas = document.getElementById('numeralCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '16px Comic Sans MS';
+            ctx.fillStyle = '#00796b';
+            ctx.fillText('Positional:', 60, 40);
+            ctx.fillText('105 = 1×100 + 0×10 + 5×1', 20, 70);
+            ctx.fillStyle = '#ff9800';
+            ctx.fillText('Non-Positional:', 60, 100);
+            ctx.fillText('V = 5', 100, 130);
+        }
+
+        // Roman Numerals Animation
+        function drawRomanAnimation() {
+            const canvas = document.getElementById('romanCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '16px Comic Sans MS';
+            ctx.fillStyle = '#6a1b9a';
+            ctx.fillText('I = 1', 50, 40);
+            ctx.fillText('V = 5', 50, 70);
+            ctx.fillText('X = 10', 50, 100);
+            ctx.fillText('L = 50', 150, 40);
+            ctx.fillText('C = 100', 150, 70);
+            ctx.fillText('D = 500', 150, 100);
+            ctx.fillText('M = 1000', 150, 130);
+        }
+
+        // Binary Converter Function (Decimal to Binary)
+        function convertToBinary() {
+            const number = document.getElementById('numberInput').value;
+            const result = document.getElementById('binaryResult');
+            if (number === '') {
+                result.textContent = 'Please enter a number.';
+                return;
+            }
+            if (isNaN(number) || number < 0) {
+                result.textContent = 'Please enter a valid positive number.';
+                return;
+            }
+            const binary = Number(number).toString(2);
+            result.innerHTML = `<strong>${number}</strong> in binary is <strong>${binary}</strong>`;
+        }
+
+        // Binary to Decimal Converter Function (Moved to Computer Science)
+        function convertToDecimalCS() {
+            const binary = document.getElementById('binaryToDecimalInputCS').value;
+            const result = document.getElementById('decimalResultCS');
+            if (binary === '') {
+                result.textContent = 'Please enter a binary number.';
+                return;
+            }
+            // Validate binary input
+            if (!/^[01]+$/.test(binary)) {
+                result.textContent = 'Invalid binary number.';
+                return;
+            }
+            const decimal = parseInt(binary, 2);
+            result.innerHTML = `<strong>${binary}</strong> in decimal is <strong>${decimal}</strong>`;
+        }
+
+        // Binary Arithmetic Function (Addition)
+        function binaryAddition() {
+            const bin1 = document.getElementById('binaryInput1').value;
+            const bin2 = document.getElementById('binaryInput2').value;
+            const sumResult = document.getElementById('binarySum');
+
+            // Validate binary inputs
+            if (!/^[01]+$/.test(bin1) || !/^[01]+$/.test(bin2)) {
+                sumResult.textContent = 'Please enter valid binary numbers.';
+                return;
+            }
+
+            // Convert to decimal, add, then convert back to binary
+            const dec1 = parseInt(bin1, 2);
+            const dec2 = parseInt(bin2, 2);
+            const decSum = dec1 + dec2;
+            const binSum = decSum.toString(2);
+
+            sumResult.innerHTML = `<strong>${bin1}</strong> + <strong>${bin2}</strong> = <strong>${binSum}</strong> (Decimal: ${decSum})`;
+        }
+
+        // Roman Numerals Conversion Functions
+        function convertToRoman() {
+            const num = parseInt(document.getElementById('decimalToRomanInput').value);
+            const result = document.getElementById('romanResult');
+            if (isNaN(num) || num <= 0 || num > 3999) {
+                result.textContent = 'Please enter a number between 1 and 3999.';
+                return;
+            }
+            const roman = decimalToRoman(num);
+            result.innerHTML = `<strong>${num}</strong> in Roman numerals is <strong>${roman}</strong>`;
+        }
+
+        function romanArithmetic() {
+            const num1 = parseInt(document.getElementById('romanInput1').value);
+            const num2 = parseInt(document.getElementById('romanInput2').value);
+            const operation = document.getElementById('romanOperation').value;
+            const result = document.getElementById('romanArithmeticResult');
+            const comparison = document.getElementById('comparisonQuestion');
+
+            if (isNaN(num1) || isNaN(num2)) {
+                result.textContent = 'Please enter valid numbers.';
+                comparison.textContent = '';
+                return;
+            }
+
+            let arithmeticResult;
+            switch(operation) {
+                case 'add':
+                    arithmeticResult = num1 + num2;
+                    break;
+                case 'subtract':
+                    arithmeticResult = num1 - num2;
+                    break;
+                case 'multiply':
+                    arithmeticResult = num1 * num2;
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        result.textContent = 'Cannot divide by zero.';
+                        comparison.textContent = '';
+                        return;
+                    }
+                    arithmeticResult = Math.floor(num1 / num2);
+                    break;
+                default:
+                    result.textContent = 'Invalid operation.';
+                    comparison.textContent = '';
+                    return;
+            }
+
+            if (arithmeticResult <= 0 || arithmeticResult > 3999) {
+                result.textContent = 'Result out of range (1-3999).';
+                comparison.textContent = '';
+                return;
+            }
+
+            const romanResult = decimalToRoman(arithmeticResult);
+            let operationSymbol = '';
+            switch(operation) {
+                case 'add':
+                    operationSymbol = '+';
+                    break;
+                case 'subtract':
+                    operationSymbol = '-';
+                    break;
+                case 'multiply':
+                    operationSymbol = '×';
+                    break;
+                case 'divide':
+                    operationSymbol = '÷';
+                    break;
+            }
+
+            result.innerHTML = `<strong>${num1}</strong> ${operationSymbol} <strong>${num2}</strong> = <strong>${arithmeticResult}</strong> (${romanResult})`;
+
+            // Add comparison question
+            comparison.textContent = 'Which calculation method is easier? (Decimal or Roman Numerals)';
+        }
+
+        // Helper function to convert decimal to Roman numerals
+        function decimalToRoman(num) {
+            const romanNumerals = [
+                { value: 1000, numeral: 'M' },
+                { value: 900, numeral: 'CM' },
+                { value: 500, numeral: 'D' },
+                { value: 400, numeral: 'CD' },
+                { value: 100, numeral: 'C' },
+                { value: 90, numeral: 'XC' },
+                { value: 50, numeral: 'L' },
+                { value: 40, numeral: 'XL' },
+                { value: 10, numeral: 'X' },
+                { value: 9, numeral: 'IX' },
+                { value: 5, numeral: 'V' },
+                { value: 4, numeral: 'IV' },
+                { value: 1, numeral: 'I' }
+            ];
+
+            let result = '';
+            for (let i = 0; i < romanNumerals.length; i++) {
+                while (num >= romanNumerals[i].value) {
+                    result += romanNumerals[i].numeral;
+                    num -= romanNumerals[i].value;
+                }
+            }
+            return result;
+        }
+
+    </script>
+
+</body>
+</html>
+<footer>
+    <p>Created by cliffpackman@gmail.com 9/10/2024</p>
+</footer>
