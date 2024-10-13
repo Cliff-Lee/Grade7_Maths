@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- (Head content remains the same) -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,6 +32,28 @@
         .header p {
             margin: 5px 0 0 0;
             font-size: 1.2em;
+        }
+
+        /* MYP Information Styles */
+        .myp-info {
+            background-color: #f9fbe7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .myp-info h2 {
+            margin-top: 0;
+            color: #33691e;
+        }
+
+        .myp-info p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+
+        .myp-info strong {
+            color: #558b2f;
         }
 
         /* Grid Layout */
@@ -97,24 +120,38 @@
             border: 2px solid #00796b;
             background-color: #f0f0f0;
             border-radius: 8px;
-            /* Adjusted height for historyCanvas and numeralCanvas */
-            height: auto; /* Let height adjust based on content */
+            height: auto;
         }
 
         /* Specific Canvas Heights */
+        #additiveCanvas {
+            width: 280px;
+            height: 120px;
+        }
+
+        #multiplicativeCanvas {
+            width: 280px;
+            height: 120px;
+        }
+
+        #binaryCanvas {
+            width: 280px;
+            height: 120px;
+        }
+
         #historyCanvas {
             width: 280px;
-            height: 160px; /* Increased height */
+            height: 160px;
         }
 
         #numeralCanvas {
             width: 280px;
-            height: 160px; /* Increased height */
+            height: 160px;
         }
 
         #romanCanvas {
             width: 280px;
-            height: 160px; /* Increased height for more text */
+            height: 160px;
         }
 
         /* Converter Styles */
@@ -176,6 +213,32 @@
             padding-left: 20px;
         }
 
+        /* ATL Activities Styles */
+        .atl-activities {
+            background-color: #e1f5fe;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .atl-activities h2 {
+            color: #0277bd;
+            margin-top: 0;
+        }
+
+        .atl-activities ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .atl-activities li {
+            margin-bottom: 15px;
+        }
+
+        .atl-activities strong {
+            color: #01579b;
+        }
+
         /* Responsive Design */
         @media (max-width: 600px) {
             .header h1 {
@@ -203,6 +266,16 @@
         <p>Explore the fascinating world of zero with interactive examples and animations.</p>
     </div>
 
+    <!-- MYP Information Section -->
+    <div class="myp-info">
+        <h2>MYP Information</h2>
+        <p><strong>Key Concept:</strong> Form</p>
+        <p><strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+        <p><strong>Global Context:</strong> Scientific and technical innovation - inventions in mathematics</p>
+        <p><strong>Statement of Inquiry:</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+        <p><strong>ATL Skills:</strong> i. Communication, ix. Creative thinking</p>
+    </div>
+
     <!-- Grid Container -->
     <div class="grid-container">
 
@@ -217,7 +290,7 @@
                     How about 123 + 0? <strong>123</strong>
                 </div>
                 <div class="canvas-container">
-                    <canvas id="additiveCanvas" width="280" height="120"></canvas>
+                    <canvas id="additiveCanvas"></canvas>
                 </div>
             </div>
         </div>
@@ -233,12 +306,12 @@
                     How about 999 × 0? <strong>0</strong>
                 </div>
                 <div class="canvas-container">
-                    <canvas id="multiplicativeCanvas" width="280" height="120"></canvas>
+                    <canvas id="multiplicativeCanvas"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Even Number Property Card -->
+        <!-- Zero: An Even Number Card -->
         <div class="card" onclick="toggleCard(event, this)">
             <div class="title">Zero: An Even Number</div>
             <div class="content">
@@ -267,7 +340,7 @@
                     Binary code only uses 0s and 1s. The number 4 in binary is written as <strong>100</strong>
                 </div>
                 <div class="canvas-container">
-                    <canvas id="binaryCanvas" width="280" height="120"></canvas>
+                    <canvas id="binaryCanvas"></canvas>
                 </div>
                 <div class="converter">
                     <h3>Convert Your Number to Binary!</h3>
@@ -282,7 +355,7 @@
                     <button onclick="binaryAddition()">Add</button>
                     <p id="binarySum"></p>
                 </div>
-                <!-- Moved Binary to Decimal Converter from Numeral Systems -->
+                <!-- Binary to Decimal Converter -->
                 <div class="converter">
                     <h3>Convert Binary to Decimal!</h3>
                     <input type="text" id="binaryToDecimalInputCS" placeholder="Enter binary">
@@ -304,7 +377,7 @@
                     - Zero was introduced to Europe through Arabic mathematicians.
                 </div>
                 <div class="canvas-container">
-                    <canvas id="historyCanvas" width="280" height="160"></canvas>
+                    <canvas id="historyCanvas"></canvas>
                 </div>
                 <div class="fun-facts">
                     <strong>Fun Fact:</strong>
@@ -324,12 +397,11 @@
                 <div class="example-box">
                     <strong>Comparison:</strong><br>
                     <strong>Positional (Decimal):</strong> 105 means 1×100 + 0×10 + 5×1.<br>
-                    <strong>Non-Positional (Roman):</strong> V represents 5, but there's no symbol for zero.
+                    <strong>Non-Positional (Roman):</strong> CV represents 105 without a placeholder zero.
                 </div>
                 <div class="canvas-container">
-                    <canvas id="numeralCanvas" width="280" height="160"></canvas>
+                    <canvas id="numeralCanvas"></canvas>
                 </div>
-                <!-- Removed Binary to Decimal Converter from here -->
                 <div class="fun-facts">
                     <strong>Fun Fact:</strong>
                     <ul>
@@ -351,7 +423,7 @@
                     Numbers are formed by combining symbols and adding their values. When a smaller numeral appears before a larger one, it is subtracted.
                 </div>
                 <div class="canvas-container">
-                    <canvas id="romanCanvas" width="280" height="160"></canvas>
+                    <canvas id="romanCanvas"></canvas>
                 </div>
                 <div class="converter">
                     <h3>Convert Decimal to Roman Numerals!</h3>
@@ -398,6 +470,33 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- ATL Activities Section -->
+    <div class="atl-activities">
+        <h2>ATL Activities and Prompts</h2>
+        <ul>
+            <li>
+                <strong>Communication:</strong>
+                <p>Discuss with a classmate how the invention of zero has impacted modern mathematics and technology. Share examples of areas where zero plays a crucial role.</p>
+            </li>
+            <li>
+                <strong>Creative Thinking:</strong>
+                <p>Imagine a world without zero. Create a short story, comic strip, or artwork depicting how daily life and scientific progress would be different.</p>
+            </li>
+            <li>
+                <strong>Communication:</strong>
+                <p>Explain to a family member or friend how zero acts as a placeholder in our number system. Use examples to illustrate its importance in representing large numbers.</p>
+            </li>
+            <li>
+                <strong>Creative Thinking:</strong>
+                <p>Design your own numeral system that does not use zero. How would you represent quantities and perform calculations? Present your system to the class.</p>
+            </li>
+            <li>
+                <strong>Communication & Creative Thinking:</strong>
+                <p>Work in groups to create a presentation on the historical development of zero. Include its origins, spread across cultures, and its influence on scientific innovation.</p>
+            </li>
+        </ul>
     </div>
 
     <!-- JavaScript for Interactivity and Animations -->
@@ -508,7 +607,7 @@
             ctx.fillText('105 = 1×100 + 0×10 + 5×1', 20, 70);
             ctx.fillStyle = '#ff9800';
             ctx.fillText('Non-Positional:', 60, 100);
-            ctx.fillText('V = 5', 100, 130);
+            ctx.fillText('CV = 100 + 5', 80, 130);
         }
 
         // Roman Numerals Animation
@@ -543,7 +642,7 @@
             result.innerHTML = `<strong>${number}</strong> in binary is <strong>${binary}</strong>`;
         }
 
-        // Binary to Decimal Converter Function (Moved to Computer Science)
+        // Binary to Decimal Converter Function
         function convertToDecimalCS() {
             const binary = document.getElementById('binaryToDecimalInputCS').value;
             const result = document.getElementById('decimalResultCS');
@@ -693,5 +792,5 @@
 </body>
 </html>
 <footer>
-    <p>Created by cliffpackman@gmail.com 9/10/2024</p>
+    <p>Created by cliffpackman@gmail.com 13/10/2024</p>
 </footer>
