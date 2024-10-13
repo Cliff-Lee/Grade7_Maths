@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Evolution of Mathematical Notation</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ffcc00;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            background-image: url('header-background.jpg');
+            background-size: cover;
+        }
+        h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px #ff9933;
+        }
+        nav {
+            background-color: #ff9933;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #ffcc66;
+            color: black;
+        }
+        .content {
+            padding: 20px;
+        }
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #ff9933;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .timeline-event {
+            padding: 10px 20px;
+            position: relative;
+            width: 50%;
+            background-color: inherit;
+            box-sizing: border-box;
+        }
+        .timeline-event.left {
+            left: 0;
+        }
+        .timeline-event.right {
+            left: 50%;
+        }
+        .timeline-event::before {
+            content: ' ';
+            position: absolute;
+            top: 15px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #ff9933;
+            border: 4px solid #fff;
+        }
+        .timeline-event.left::before {
+            right: -17px;
+        }
+        .timeline-event.right::before {
+            left: -17px;
+        }
+        .timeline-event img {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .fun-fact {
+            background-color: #ffcc66;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+        .quiz {
+            background-color: #d1ecf1;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        .quiz h3 {
+            margin-top: 0;
+        }
+        .quiz button {
+            background-color: #ff9933;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz button:hover {
+            background-color: #ffcc66;
+        }
+        .key-concepts, .atl-skills {
+            background-color: #fff0f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .key-concepts h2, .atl-skills h2 {
+            margin-top: 0;
+        }
+        footer {
+            background-color: #ffcc00;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .timeline-event {
+                width: 100%;
+                left: 0 !important;
+            }
+            .timeline::after {
+                left: 20px;
+            }
+            .timeline-event.left::before, .timeline-event.right::before {
+                left: 14px;
+            }
+        }
+    </style>
+    <script>
+        function checkAnswer() {
+            var selectedOption = document.querySelector('input[name="quiz"]:checked');
+            if (selectedOption) {
+                var answer = selectedOption.value;
+                if (answer == "descartes") {
+                    alert("🎉 Correct! René Descartes introduced the use of superscripts for exponents.");
+                } else {
+                    alert("❌ Oops! That's not correct. Try again!");
+                }
+            } else {
+                alert("Please select an answer before submitting.");
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>The Evolution of Mathematical Notation</h1>
+    </header>
+
+    <nav>
+        <a href="#timeline">Timeline</a>
+        <a href="#fun-facts">Fun Facts</a>
+        <a href="#quiz">Quiz Time!</a>
+        <a href="#key-concepts">Key Concepts</a>
+    </nav>
+
+    <div class="content">
+
+        <section>
+            <h2>But where did it come from?</h2>
+            <p>
+                Ever wondered how math symbols came to be? Let's dive into the exciting journey of mathematical notation and see how it has made math simpler! Along the way, we'll explore how these innovations helped us represent quantities more easily (Representation) and made complex ideas simpler to understand (Simplification).
+            </p>
+        </section>
+
+        <section id="timeline">
+            <h2>Timeline of Key Inventions</h2>
+            <div class="timeline">
+                <!-- Timeline Event 1 -->
+                <div class="timeline-event left">
+                    <h3>📜 9th Century - Al-Khwarizmi</h3>
+                    <img src="al.png" alt="Al-Khwarizmi">
+                    <p>
+                        Known as the "Father of Algebra," Al-Khwarizmi introduced methods for solving equations. He didn't have the cool symbols we use today, so he wrote everything in words! This was the beginning of finding ways to **represent** mathematical ideas.
+                    </p>
+                    <p>
+                        <strong>How It Helped:</strong> By starting to write down methods, he paved the way for future mathematicians to create symbols, making math easier to share and understand (Simplification).
+                    </p>
+                    <div class="fun-fact">
+                        <strong>Fun Fact:</strong> The word "algorithm" comes from Al-Khwarizmi's name!
+                    </div>
+                </div>
+                <!-- Timeline Event 2 -->
+                <div class="timeline-event right">
+                    <h3>🔢 1637 - René Descartes</h3>
+                    <img src="descartes.png" alt="René Descartes">
+                    <p>
+                        Descartes introduced the use of superscripts for exponents. He made it possible to write powers like x² instead of writing x multiplied by x. This was a big step in *simplifying how we represent repeated multiplication.
+                    </p>
+                    <p>
+                        <strong>How It Helped:</strong> Using exponents made equations shorter and easier to read, which is important when solving complex problems (Simplification** and Representation).
+                    </p>
+                    <div class="fun-fact">
+                        <strong>Fun Fact:</strong> Descartes is famous for saying, "I think, therefore I am."
+                    </div>
+                </div>
+                <!-- Timeline Event 3 -->
+                <div class="timeline-event left">
+                    <h3>🌟 19th Century - Scientific Notation</h3>
+                    <img src="ascientist.png" alt="Scientific Notation">
+                    <p>
+                        Scientists started using scientific notation to handle super big and super tiny numbers, like the distance between stars or the size of atoms! This innovation greatly simplified the representation of extremely large or small quantities.
+                    </p>
+                    <p>
+                        <strong>How It Helped:</strong> Scientific notation made it easier to write and calculate with huge or tiny numbers, which is essential in science and engineering (Simplification** and Representation**).
+                    </p>
+                    <div class="fun-fact">
+                        <strong>Fun Fact:</strong> Without scientific notation, writing numbers like 6,000,000,000,000,000,000,000,000 would be a real pain!
+                    </div>
+                </div>
+                <!-- Timeline Event 4 -->
+                <div class="timeline-event right">
+                    <h3>💡 20th Century - Modern Mathematical Symbols</h3>
+                    <img src="amodern.png" alt="Modern Mathematical Symbols">
+                    <p>
+                        As math evolved, so did the symbols we use. New symbols were introduced to **simplify** complex ideas and make them easier to **represent**. This includes symbols for operations, functions, and more.
+                    </p>
+                    <p>
+                        <strong>How It Helped:</strong> These symbols allow us to write equations and formulas concisely, making it easier to learn, communicate, and advance in mathematics (Simplification and Representation).
+                    </p>
+                    <div class="fun-fact">
+                        <strong>Fun Fact:</strong> The symbol "≠" means "not equal to" and helps us express inequality in a simple way!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fun-facts">
+            <h2>Did You Know?</h2>
+            <ul>
+                <li>🧮 The equals sign "=" was invented in 1557 by Robert Recorde. He chose this symbol because "no two things can be more equal than parallel lines."</li>
+                <li>♾️ The symbol for infinity "∞" was introduced by John Wallis in 1655. It represents an idea that goes on forever!</li>
+                <li>🎯 Zero was first used as a number by ancient Indian mathematicians around the 5th century. It **simplified** calculations and the **representation** of numbers.</li>
+            </ul>
+        </section>
+
+        <section id="quiz">
+            <div class="quiz">
+                <h3>Quiz Time: Who Introduced Superscripts for Exponents?</h3>
+                <form>
+                    <input type="radio" name="quiz" value="al-khwarizmi"> Al-Khwarizmi<br>
+                    <input type="radio" name="quiz" value="descartes"> René Descartes<br>
+                    <input type="radio" name="quiz" value="newton"> Isaac Newton<br><br>
+                    <button type="button" onclick="checkAnswer()">Submit Answer</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="key-concepts" class="key-concepts">
+            <h2>Key Concepts</h2>
+            <p>
+                Throughout history, mathematicians have worked to make math easier and more understandable. They focused on:
+            </p>
+            <ul>
+                <li><strong>Representation:</strong> Creating symbols and notations to express mathematical ideas clearly and efficiently. This helps us communicate complex concepts in a simple way.</li>
+                <li><strong>Simplification:</strong> Finding ways to make mathematical expressions and calculations easier to work with. Simplification allows us to solve problems faster and with less confusion.</li>
+            </ul>
+        </section>
+
+        <section class="atl-skills">
+            <h2>ATL Skills</h2>
+            <p>
+                In exploring the evolution of mathematical notation, we used:
+            </p>
+            <ul>
+                <li><strong>Communication:</strong> Presenting our research and ideas effectively, both in writing and visually.</li>
+                <li><strong>Creative Thinking:</strong> Connecting historical events to mathematical concepts and understanding how they impact us today.</li>
+            </ul>
+        </section>
+
+        <!-- Prompts for Research -->
+        <section class="research-prompts">
+            <h2>Research Prompts</h2>
+            <ul>
+                <li>What was the most important contribution of Al-Khwarizmi to mathematics beyond algebra?</li>
+                <li>How did the introduction of zero revolutionize mathematical calculations?</li>
+                <li>What are some modern developments in mathematical notation that have made solving complex problems easier?</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Created cliffpackman@gmail.com 13/10/24</p>
+    </footer>
+
+</body>
+</html>
