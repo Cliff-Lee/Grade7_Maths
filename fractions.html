@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MYP Mathematics Practice Assessment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #2E8B57;
+        }
+        p, li {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        ol {
+            margin-left: 20px;
+        }
+        #hint {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffe0;
+            border: 1px solid #cccc99;
+            text-align: center;
+        }
+        #hintButton {
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #circleContainer {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+        }
+        #circle {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-origin: center;
+            transition: transform 0.5s;
+        }
+        .number {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            left: 50%;
+            top: 50%;
+            transform-origin: center;
+            transform: translate(-50%, -50%) rotate(0deg) translate(0px, -120px);
+        }
+        #rotateButtons {
+            margin-top: 20px;
+        }
+        #rotateButtons button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        let rotation = 0;
+        function showHint() {
+            document.getElementById("hint").style.display = "block";
+            document.getElementById("hintButton").style.display = "none";
+        }
+        function rotateCircle(direction) {
+            if (direction === 'left') {
+                rotation -= 60;
+            } else {
+                rotation += 60;
+            }
+            document.getElementById("circle").style.transform = "rotate(" + rotation + "deg)";
+        }
+    </script>
+</head>
+<body>
+    <h1>MYP Mathematics: Investigating Patterns</h1>
+
+    <h2>Practice Assessment: Exploring Patterns in Fractions</h2>
+
+    <p>Consider the following sequence of fractions:</p>
+
+    <p><strong>1/7, 2/7, 3/7, ...</strong></p>
+
+    <h3>Task Instructions</h3>
+
+    <p>You are to investigate the patterns within the given sequence of fractions. Complete the following tasks:</p>
+
+    <ol>
+        <li><strong>Identify and describe</strong> any patterns you observe in the sequence of fractions.</li>
+        <li><strong>Convert</strong> each fraction to its decimal equivalent. Analyze any patterns you notice in these decimal forms.</li>
+        <li><strong>Explain</strong> why <strong>4/7</strong> is included in the sequence and how it fits into the observed pattern.</li>
+        <li><strong>Predict</strong> the next two fractions in the sequence. Justify your predictions based on the patterns you've identified.</li>
+        <li><strong>Generalize</strong> the pattern by formulating a rule or expression that represents the sequence. Use mathematical notation to express your generalization.</li>
+    </ol>
+
+    <button id="hintButton" onclick="showHint()">Get a Hint</button>
+
+    <div id="hint">
+        <p><strong>Hint:</strong> Rotate the circle to observe the pattern of repeating decimals.</p>
+        <div id="circleContainer">
+            <div id="circle">
+                <div class="number" style="transform: translate(-50%, -50%) rotate(0deg) translate(0px, -120px);">1</div>
+                <div class="number" style="transform: translate(-50%, -50%) rotate(60deg) translate(0px, -120px);">4</div>
+                <div class="number" style="transform: translate(-50%, -50%) rotate(120deg) translate(0px, -120px);">2</div>
+                <div class="number" style="transform: translate(-50%, -50%) rotate(180deg) translate(0px, -120px);">8</div>
+                <div class="number" style="transform: translate(-50%, -50%) rotate(240deg) translate(0px, -120px);">5</div>
+                <div class="number" style="transform: translate(-50%, -50%) rotate(300deg) translate(0px, -120px);">7</div>
+            </div>
+        </div>
+        <div id="rotateButtons">
+            <button onclick="rotateCircle('left')">Rotate Left</button>
+            <button onclick="rotateCircle('right')">Rotate Right</button>
+        </div>
+    </div>
+</body>
+</html>
