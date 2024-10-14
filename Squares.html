@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criterion B - Formative Patterns in Squares</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Comic+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Comic Neue', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 20px;
+        }
+        h1 {
+            color: #2e8b57;
+            text-align: center;
+            font-size: 2em;
+        }
+        p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+        table {
+            margin: 0 auto 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        th {
+            background-color: #b0c4de;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 5px;
+            font-size: 1em;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            background-color: #2e8b57;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3cb371;
+        }
+        ol {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1em;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .correct {
+            background-color: #c8e6c9 !important;
+        }
+        .incorrect {
+            background-color: #ffcdd2 !important;
+        }
+        #hint {
+            display: none;
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 15px;
+            background-color: #ffeb3b;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+    </style>
+    <script>
+        function checkAnswers() {
+            var numbers = [15, 25, 35, 45, 55, 65, 75, 85, 95];
+            for (var i = 0; i < numbers.length; i++) {
+                var input = document.getElementById('result' + i);
+                if (input) {
+                    var userAnswer = parseInt(input.value);
+                    var correctAnswer = numbers[i] * numbers[i];
+                    if (userAnswer === correctAnswer) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                    }
+                }
+            }
+        }
+        function showHint() {
+            document.getElementById('hint').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>Criterion B - Formative Patterns in Squares</h1>
+    <p><strong>Objective:</strong> Explore and analyze patterns in the squares of numbers ending with 5, and develop a general rule for calculating these squares.</p>
+    <p><strong>Instructions:</strong> Complete the first part of the table by calculating the squares of the given numbers. Type your answers in the "Result" column. After you have filled in the answers, click the "Check Answers" button to verify your results.</p>
+
+    <!-- First Part of the Table -->
+    <table>
+        <tr>
+            <th>Number (n)</th>
+            <th>n × n</th>
+            <th>Result</th>
+        </tr>
+        <tr>
+            <td>15</td>
+            <td>15 × 15</td>
+            <td><input type="text" id="result0"></td>
+        </tr>
+        <tr>
+            <td>25</td>
+            <td>25 × 25</td>
+            <td><input type="text" id="result1"></td>
+        </tr>
+        <tr>
+            <td>35</td>
+            <td>35 × 35</td>
+            <td><input type="text" id="result2"></td>
+        </tr>
+        <tr>
+            <td>45</td>
+            <td>45 × 45</td>
+            <td><input type="text" id="result3"></td>
+        </tr>
+        <tr>
+            <td>55</td>
+            <td>55 × 55</td>
+            <td><input type="text" id="result4"></td>
+        </tr>
+        <tr>
+            <td>65</td>
+            <td>65 × 65</td>
+            <td><input type="text" id="result5"></td>
+        </tr>
+    </table>
+    <button onclick="checkAnswers()">Check Answers</button>
+
+    <!-- Prompting Questions -->
+    <h2>Reflection Questions:</h2>
+    <ol>
+        <li>Do you notice any patterns in the results you've calculated so far? Describe any patterns or relationships you observe.</li>
+        <li>Based on the pattern, predict the result of 75 × 75 without directly calculating it.</li>
+        <li>What do you think will be the results for 85 × 85 and 95 × 95?</li>
+    </ol>
+
+    <!-- Hint Button -->
+    <button onclick="showHint()">Show Hint</button>
+    <div id="hint">
+        <strong>Hint:</strong> Observe the digits before the 5 in each number. How does multiplying that number by the next higher number relate to the result?
+    </div>
+
+    <!-- Second Part of the Table -->
+    <h2>Continue the Table:</h2>
+    <p>Now, complete the rest of the table and check your predictions.</p>
+    <table>
+        <tr>
+            <th>Number (n)</th>
+            <th>n × n</th>
+            <th>Result</th>
+        </tr>
+        <tr>
+            <td>75</td>
+            <td>75 × 75</td>
+            <td><input type="text" id="result6"></td>
+        </tr>
+        <tr>
+            <td>85</td>
+            <td>85 × 85</td>
+            <td><input type="text" id="result7"></td>
+        </tr>
+        <tr>
+            <td>95</td>
+            <td>95 × 95</td>
+            <td><input type="text" id="result8"></td>
+        </tr>
+    </table>
+    <button onclick="checkAnswers()">Check Answers</button>
+
+    <!-- Final Questions -->
+    <h2>Final Questions:</h2>
+    <ol start="4">
+        <li>Verify your predictions by calculating the actual results. Were your predictions correct?</li>
+        <li>Develop a general rule or formula for finding the square of any number ending with 5.</li>
+        <li>Justify or prove your general rule mathematically.</li>
+    </ol>
+</body>
+</html>
