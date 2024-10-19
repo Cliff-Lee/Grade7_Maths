@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rewriting Exponents with the Same Base</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- Include MathJax -->
+    <script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eef2f3;
+        }
+
+        header, section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            background-image: linear-gradient(to right, #6a11cb , #2575fc);
+            color: white;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            cursor: pointer;
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #6a11cb;
+        }
+
+        #feedback, .practiceFeedback {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #feedback.correct, .practiceFeedback.correct {
+            color: #006400;
+        }
+
+        #feedback.incorrect, .practiceFeedback.incorrect {
+            color: #B22222;
+        }
+
+        .hint {
+            display: none;
+            margin-top: 10px;
+            background-color: #e7f3fe;
+            padding: 10px;
+            border-left: 6px solid #2196F3;
+        }
+
+        .practice-question {
+            margin-bottom: 20px;
+        }
+
+        .options-container {
+            margin-top: 10px;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Interactive Example Styling */
+        #example-steps {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #2575fc;
+        }
+
+        #example-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Rewriting Powers to Have the Same Base</h1>
+        <p><strong>Key Concept:</strong> Form | <strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+        <p><strong>Global Context:</strong> Scientific and technical innovation - Inventions in Mathematics</p>
+        <p><strong>Statement of Inquiry:</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+    </header>
+
+    <section id="learn">
+        <h2>Learn</h2>
+        <p>Understanding how to rewrite powers with the same base is essential in simplifying complex exponential expressions. When the bases are the same, you can easily apply the Laws of Exponents to simplify or solve equations. This is an important aspect of <strong>representation</strong> and <strong>simplification</strong> in mathematics.</p>
+        <p>Below are some examples demonstrating how to rewrite and simplify expressions using the Laws of Exponents:</p>
+        <ul>
+            <li><em>Example 1:</em> <strong>Product of Powers Property</strong><br>
+            When multiplying with the same base, you add the exponents.<br>
+            \( 4^3 \times 4^5 = 4^{3+5} = 4^8 \)</li>
+            <li><em>Example 2:</em> <strong>Quotient of Powers Property</strong><br>
+            When dividing with the same base, you subtract the exponents.<br>
+            \( \dfrac{5^6}{5^2} = 5^{6-2} = 5^4 \)</li>
+            <li><em>Example 3:</em> <strong>Power of a Power Property</strong><br>
+            When raising a power to another power, you multiply the exponents.<br>
+            \( (6^3)^4 = 6^{3 \times 4} = 6^{12} \)</li>
+        </ul>
+        <p>Sometimes, you may need to rewrite expressions so that they have the same base before you can apply these properties. This involves recognizing that a number can be expressed as a power of another number, emphasizing the <strong>form</strong> and <strong>representation</strong> of mathematical expressions.</p>
+    </section>
+
+    <section id="interactive-example">
+        <h2>Step-by-Step Worked Example</h2>
+        <p>Explore how to simplify an expression by rewriting the base. Click "Regenerate Example" to see a new problem.</p>
+        <div id="example-container">
+            <p id="example-problem"><strong>Problem:</strong> Simplify \( 2^3 \times 8^2 \)</p>
+            <div id="example-steps">
+                <!-- Steps will be displayed here -->
+            </div>
+            <button onclick="showSteps()">Show Steps</button>
+            <button onclick="generateExample()">Regenerate Example</button>
+        </div>
+    </section>
+
+    <section id="practice">
+        <h2>Practice Exercises</h2>
+        <p>Practice simplifying the following expressions by rewriting them with a common base. This will help reinforce your understanding of mathematical <strong>representation</strong> and <strong>simplification</strong>.</p>
+        <div id="practice-questions">
+            <!-- Practice questions will be generated here -->
+        </div>
+        <button onclick="checkAllAnswers()">Submit All</button>
+        <button onclick="generateQuestions()">Generate New Questions</button>
+    </section>
+
+    <footer>
+        <p>Created 19/10/2024 cliffpackman@gmail.com</p>
+    </footer>
+
+    <script>
+        // Function to generate random examples for the interactive example
+        function generateRandomExample() {
+            let problem = '';
+            let steps = [];
+            let base, exponent1, compositeBase, compositeExponent, exponent2, operation, finalExponent;
+
+            // Randomly select a base between 2 and 5
+            base = Math.floor(Math.random() * 4) + 2;
+            // Random exponents between 1 and 5
+            exponent1 = Math.floor(Math.random() * 5) + 1;
+            compositeExponent = Math.floor(Math.random() * 3) + 2;
+            compositeBase = Math.pow(base, compositeExponent);
+            exponent2 = Math.floor(Math.random() * 5) + 1;
+
+            // Randomly choose operation: multiplication or division
+            operation = Math.random() < 0.5 ? 'multiply' : 'divide';
+
+            if (operation === 'multiply') {
+                problem = `\\( ${base}^{${exponent1}} \\times ${compositeBase}^{${exponent2}} \\)`;
+                steps.push(`Recognize that ${compositeBase} can be written as ${base}^{${compositeExponent}}.`);
+                steps.push(`Rewrite ${compositeBase}^{${exponent2}} as \\( (${base}^{${compositeExponent}})^{${exponent2}} = ${base}^{${compositeExponent * exponent2}} \\).`);
+                steps.push(`Now, the expression is \\( ${base}^{${exponent1}} \\times ${base}^{${compositeExponent * exponent2}} \\).`);
+                finalExponent = exponent1 + compositeExponent * exponent2;
+                steps.push(`Use the Product of Powers Property: \\( ${base}^{${exponent1}} \\times ${base}^{${compositeExponent * exponent2}} = ${base}^{${finalExponent}} \\).`);
+            } else {
+                problem = `\\( \\dfrac{${base}^{${exponent1}}}{${compositeBase}^{${exponent2}}} \\)`;
+                steps.push(`Recognize that ${compositeBase} can be written as ${base}^{${compositeExponent}}.`);
+                steps.push(`Rewrite ${compositeBase}^{${exponent2}} as \\( (${base}^{${compositeExponent}})^{${exponent2}} = ${base}^{${compositeExponent * exponent2}} \\).`);
+                steps.push(`Now, the expression is \\( \\dfrac{${base}^{${exponent1}}}{${base}^{${compositeExponent * exponent2}}} \\).`);
+                finalExponent = exponent1 - compositeExponent * exponent2;
+                steps.push(`Use the Quotient of Powers Property: \\( \\dfrac{${base}^{${exponent1}}}{${base}^{${compositeExponent * exponent2}}} = ${base}^{${finalExponent}} \\).`);
+            }
+
+            steps.push(`<strong>Final Answer:</strong> \\( ${base}^{${finalExponent}} \\)`);
+
+            return {
+                problem: problem,
+                steps: steps
+            };
+        }
+
+        let currentExample = {};
+
+        function generateExample() {
+            const example = generateRandomExample();
+            currentExample = example;
+            document.getElementById('example-problem').innerHTML = '<strong>Problem:</strong> Simplify ' + example.problem;
+            document.getElementById('example-steps').innerHTML = '';
+            // Refresh MathJax
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function showSteps() {
+            const stepsDiv = document.getElementById('example-steps');
+            stepsDiv.innerHTML = currentExample.steps.map(step => '<p>' + step + '</p>').join('');
+            // Refresh MathJax
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Initialize the first example
+        generateExample();
+
+        // Function to generate random practice questions
+        function generateRandomQuestion() {
+            let question = '';
+            let correctAnswer = '';
+            let options = [];
+            let hint = '';
+            let correctExponent;
+            let base, exponent1, exponent2, compositeExponent, compositeBase, exponent3, operation;
+
+            do {
+                // Randomly select a base between 2 and 5
+                base = Math.floor(Math.random() * 4) + 2;
+                // Random exponents between 1 and 5
+                exponent1 = Math.floor(Math.random() * 5) + 1;
+                exponent2 = Math.floor(Math.random() * 5) + 1;
+                // Choose an operation: multiply or divide
+                operation = Math.random() < 0.5 ? 'multiply' : 'divide';
+
+                if (operation === 'multiply') {
+                    // Generate a composite base that is a power of the original base
+                    compositeExponent = Math.floor(Math.random() * 3) + 2;
+                    compositeBase = Math.pow(base, compositeExponent);
+                    exponent3 = Math.floor(Math.random() * 5) + 1;
+                    question = `\\( ${base}^{${exponent1}} \\times ${compositeBase}^{${exponent3}} \\)`;
+                    // Correct answer exponent
+                    correctExponent = exponent1 + compositeExponent * exponent3;
+                    correctAnswer = `\\( ${base}^{${correctExponent}} \\)`;
+                    // Options: create as objects with text and isCorrect
+                    options = [
+                        {text: `\\( ${base}^{${correctExponent}} \\)`, isCorrect: true},
+                        {text: `\\( ${base}^{${correctExponent - 1}} \\)`, isCorrect: false},
+                        {text: `\\( ${base}^{${correctExponent + 1}} \\)`, isCorrect: false},
+                        {text: `\\( ${compositeBase}^{${exponent3}} \\)`, isCorrect: false}
+                    ];
+                    hint = `Rewrite ${compositeBase} as ${base}^{${compositeExponent}}, then use the Product of Powers Property.`;
+                } else {
+                    // Generate a composite base that is a power of the original base
+                    compositeExponent = Math.floor(Math.random() * 3) + 2;
+                    compositeBase = Math.pow(base, compositeExponent);
+                    exponent3 = Math.floor(Math.random() * 5) + 1;
+                    question = `\\( \\dfrac{${base}^{${exponent1}}}{${compositeBase}^{${exponent3}}} \\)`;
+                    // Correct answer exponent
+                    correctExponent = exponent1 - compositeExponent * exponent3;
+                    correctAnswer = `\\( ${base}^{${correctExponent}} \\)`;
+                    // Options
+                    options = [
+                        {text: `\\( ${base}^{${correctExponent}} \\)`, isCorrect: true},
+                        {text: `\\( ${base}^{${correctExponent + 1}} \\)`, isCorrect: false},
+                        {text: `\\( ${base}^{${correctExponent - 1}} \\)`, isCorrect: false},
+                        {text: `\\( ${compositeBase}^{${exponent3}} \\)`, isCorrect: false}
+                    ];
+                    hint = `Rewrite ${compositeBase} as ${base}^{${compositeExponent}}, then use the Quotient of Powers Property.`;
+                }
+            } while (correctExponent <= 0 || correctExponent > 20); // Avoid negative, zero, or excessively large exponents
+
+            // Shuffle options
+            options = options.sort(() => 0.5 - Math.random());
+
+            return {
+                question: question,
+                correctAnswer: correctAnswer,
+                options: options,
+                hint: hint
+            };
+        }
+
+        let currentQuestions = [];
+
+        function generateQuestions() {
+            const practiceDiv = document.getElementById('practice-questions');
+            practiceDiv.innerHTML = '';
+            currentQuestions = [];
+            for (let i = 0; i < 5; i++) {
+                const q = generateRandomQuestion();
+                currentQuestions.push(q);
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('practice-question');
+                questionDiv.innerHTML = `
+                    <p><strong>Problem ${i + 1}:</strong> Simplify ${q.question}</p>
+                    <div class="options-container">
+                        ${q.options.map((opt, j) => `
+                            <label class="option-label">
+                                <input type="radio" name="question${i}" value="${j}">
+                                <span>${opt.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <button type="button" onclick="showPracticeHint(${i})">Show Hint</button>
+                    <div id="practiceHint${i}" class="hint">
+                        <p><strong>Hint:</strong> ${q.hint}</p>
+                    </div>
+                    <p id="practiceFeedback${i}" class="practiceFeedback"></p>
+                `;
+                practiceDiv.appendChild(questionDiv);
+            }
+            // Refresh MathJax to render new content
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function checkAllAnswers() {
+            currentQuestions.forEach((q, index) => {
+                const options = document.getElementsByName(`question${index}`);
+                let userAnswer = null;
+                options.forEach(option => {
+                    if (option.checked) {
+                        userAnswer = parseInt(option.value);
+                    }
+                });
+                const feedback = document.getElementById(`practiceFeedback${index}`);
+                if (userAnswer === null) {
+                    feedback.textContent = 'Please select an answer.';
+                    feedback.classList.remove('correct', 'incorrect');
+                } else if (q.options[userAnswer].isCorrect) {
+                    feedback.textContent = 'Correct!';
+                    feedback.classList.remove('incorrect');
+                    feedback.classList.add('correct');
+                } else {
+                    // Find the correct answer's text
+                    const correctOption = q.options.find(opt => opt.isCorrect);
+                    feedback.innerHTML = 'Incorrect. The correct answer is ' + correctOption.text + '.';
+                    feedback.classList.remove('correct');
+                    feedback.classList.add('incorrect');
+                }
+            });
+            // Refresh MathJax to render any new content in feedback
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function showPracticeHint(index) {
+            document.getElementById(`practiceHint${index}`).style.display = 'block';
+            // Refresh MathJax to render new content
+            if (typeof MathJax !== 'undefined') {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Generate initial set of questions on page load
+        generateQuestions();
+    </script>
+</body>
+</html>
