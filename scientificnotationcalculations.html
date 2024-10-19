@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Notation Power Applet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .step, .practice, .realworld, .research {
+            margin-bottom: 20px;
+        }
+        .hint {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100px;
+            padding: 5px;
+        }
+        .myp-section {
+            background-color: #fffae6;
+            padding: 10px;
+            border: 1px solid #ffeb99;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scientific Notation Operations and Applications</h1>
+        <div class="myp-section">
+            <h2>Further enrichment with scientific notation</h2>
+            <p><strong>Key Concept:</strong> Form</p>
+            <p><strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+            <p><strong>Global Context:</strong> Scientific and Technical Innovation - Inventions in Mathematics</p>
+            <p><strong>Statement of Inquiry (SOI):</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+            <p><strong>ATL Skills:</strong> i. Communication, ix. Creative Thinking</p>
+        </div>
+        
+        <p>Learn and practice scientific notation with real-world examples involving addition, subtraction, multiplication, division, and powers. These activities connect with the MYP framework, demonstrating how mathematical forms and concepts help us simplify and communicate complex information.</p>
+        
+        <!-- Example Problems -->
+        <div class="step">
+            <h3>Example: Simplify (5 × 10<sup>3</sup>)<sup>2</sup></h3>
+            <ol>
+                <li>Raise the first factor to the power: 5<sup>2</sup> = 
+                    <input type="number" id="step1" placeholder="Enter value">
+                    <button class="btn" onclick="checkStep1()">Check Answer</button>
+                </li>
+                <div class="hint" id="hint1">Hint: 5 squared is 25.</div>
+
+                <li>Apply the power of a power rule to 10: (10<sup>3</sup>)<sup>2</sup> = 
+                    <input type="number" id="step2" placeholder="Enter value">
+                    <button class="btn" onclick="checkStep2()">Check Answer</button>
+                </li>
+                <div class="hint" id="hint2">Hint: Apply the rule (a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup>.</div>
+
+                <li>Rewrite the expression: 25 × 10<sup>6</sup> = 
+                    <input type="number" id="step3" placeholder="Enter coefficient"> × 10<sup>
+                    <input type="number" id="step3b" placeholder="Enter exponent">
+                    </sup>
+                    <button class="btn" onclick="checkStep3()">Check Answer</button>
+                </li>
+                <div class="hint" id="hint3">Hint: Make sure the coefficient is between 1 and 10.</div>
+            </ol>
+        </div>
+
+        <!-- Practice Problems -->
+        <h3>Practice Problems</h3>
+        <div class="practice">
+            <p>Simplify (2 × 10<sup>4</sup>)<sup>6</sup> = 
+                <input type="text" id="practice1" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice1()">Check Answer</button>
+            </p>
+        </div>
+
+        <!-- Real-World Examples -->
+        <h3>Real-World Examples</h3>
+        <div class="realworld">
+            <h4>Addition Example: Total Mass of Two Stars</h4>
+            <p>The mass of star A is 2.5 × 10<sup>30</sup> kg and the mass of star B is 3.8 × 10<sup>30</sup> kg. Calculate the total mass of the two stars.</p>
+            <p>
+                Total Mass = 
+                <input type="number" id="addition1" placeholder="Enter coefficient"> × 10<sup>
+                <input type="number" id="addition1b" placeholder="Enter exponent">
+                </sup>
+                <button class="btn" onclick="checkAddition1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintAddition1">Hint: Combine the coefficients since the exponents are the same.</div>
+        </div>
+
+        <div class="realworld">
+            <h4>Subtraction Example: Difference in Energy</h4>
+            <p>The energy output of a reactor is 4.6 × 10<sup>12</sup> J and another produces 1.8 × 10<sup>12</sup> J. Find the difference in energy output.</p>
+            <p>
+                Difference = 
+                <input type="number" id="subtraction1" placeholder="Enter coefficient"> × 10<sup>
+                <input type="number" id="subtraction1b" placeholder="Enter exponent">
+                </sup>
+                <button class="btn" onclick="checkSubtraction1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintSubtraction1">Hint: Subtract the coefficients while keeping the exponent the same.</div>
+        </div>
+
+        <div class="realworld">
+            <h4>Multiplication Example: Area of a Planet</h4>
+            <p>The radius of a planet is approximately 6.4 × 10<sup>6</sup> meters. Using the formula for the area of a circle (A = πr<sup>2</sup>), calculate the area.</p>
+            <p>
+                Area ≈ 3.14 × (6.4 × 10<sup>6</sup>)<sup>2</sup> = 
+                <input type="number" id="multiplication1" placeholder="Enter coefficient"> × 10<sup>
+                <input type="number" id="multiplication1b" placeholder="Enter exponent">
+                </sup>
+                <button class="btn" onclick="checkMultiplication1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintMultiplication1">Hint: Square the coefficient and multiply the exponent by 2.</div>
+        </div>
+
+        <div class="realworld">
+            <h4>Division Example: Density Calculation</h4>
+            <p>A mass of 9 × 10<sup>5</sup> kg is contained within a volume of 3 × 10<sup>2</sup> m<sup>3</sup>. Calculate the density.</p>
+            <p>
+                Density = 
+                <input type="number" id="division1" placeholder="Enter coefficient"> × 10<sup>
+                <input type="number" id="division1b" placeholder="Enter exponent">
+                </sup>
+                <button class="btn" onclick="checkDivision1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintDivision1">Hint: Divide the coefficients and subtract the exponents.</div>
+        </div>
+
+        <div class="realworld">
+            <h4>Power Example: Energy Calculation</h4>
+            <p>The formula for kinetic energy is E = 0.5 × mv<sup>2</sup>. If m = 2 × 10<sup>3</sup> kg and v = 3 × 10<sup>2</sup> m/s, calculate the energy.</p>
+            <p>
+                Energy = 0.5 × (2 × 10<sup>3</sup>) × (3 × 10<sup>2</sup>)<sup>2</sup> = 
+                <input type="number" id="power1" placeholder="Enter coefficient"> × 10<sup>
+                <input type="number" id="power1b" placeholder="Enter exponent">
+                </sup>
+                <button class="btn" onclick="checkPower1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPower1">Hint: Apply the power rule and multiply all terms together.</div>
+        </div>
+
+        <!-- Research Section -->
+        <div class="research">
+            <h3>Research and Explore</h3>
+            <p>Now that you have learned about using scientific notation, it's your turn to apply it! Research a real-world situation where scientific notation is used and create your own calculation. Here are some ideas to get you started:</p>
+            <ul>
+                <li><strong>Astronomy:</strong> Calculate the distance between planets or stars, or the time it takes for light to travel from the sun to Earth.</li>
+                <li><strong>Physics:</strong> Find out how much energy a certain object has (e.g., energy released during an explosion) and express it in standard form.</li>
+                <li><strong>Population Studies:</strong> Research the population of different countries or the growth rate of a city and calculate projections using scientific notation.</li>
+                <li><strong>Environmental Science:</strong> Investigate the amount of CO<sub>2</sub> emissions produced by different industries and express these figures in scientific notation.</li>
+            </ul>
+            <p>Write down your calculation and explain how you used scientific notation to represent the quantities. Be ready to share your findings with the class and discuss why scientific notation is useful in this context.</p>
+        </div>
+    </div>
+
+    <script>
+        function checkStep1() {
+            const answer = document.getElementById('step1').value;
+            if (answer == 25) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hint1').style.display = 'block';
+            }
+        }
+
+        function checkStep2() {
+            const answer = document.getElementById('step2').value;
+            if (answer == 6) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hint2').style.display = 'block';
+            }
+        }
+
+        function checkStep3() {
+            const coefficient = document.getElementById('step3').value;
+            const exponent = document.getElementById('step3b').value;
+            if (coefficient == 2.5 && exponent == 7) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hint3').style.display = 'block';
+            }
+        }
+
+        function checkPractice1() {
+            const answer = document.getElementById('practice1').value;
+            if (answer == "3.2 × 10^24") {
+                alert('Correct!');
+            } else {
+                alert('Try again! Remember to raise both the coefficient and the base.');
+            }
+        }
+
+        function checkAddition1() {
+            const coefficient = document.getElementById('addition1').value;
+            const exponent = document.getElementById('addition1b').value;
+            if (coefficient == 6.3 && exponent == 30) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintAddition1').style.display = 'block';
+            }
+        }
+
+        function checkSubtraction1() {
+            const coefficient = document.getElementById('subtraction1').value;
+            const exponent = document.getElementById('subtraction1b').value;
+            if (coefficient == 2.8 && exponent == 12) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintSubtraction1').style.display = 'block';
+            }
+        }
+
+        function checkMultiplication1() {
+            const coefficient = document.getElementById('multiplication1').value;
+            const exponent = document.getElementById('multiplication1b').value;
+            if (coefficient == 1.29 && exponent == 14) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintMultiplication1').style.display = 'block';
+            }
+        }
+
+        function checkDivision1() {
+            const coefficient = document.getElementById('division1').value;
+            const exponent = document.getElementById('division1b').value;
+            if (coefficient == 3 && exponent == 3) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintDivision1').style.display = 'block';
+            }
+        }
+
+        function checkPower1() {
+            const coefficient = document.getElementById('power1').value;
+            const exponent = document.getElementById('power1b').value;
+            if (coefficient == 9 && exponent == 7) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPower1').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
+     <footer> <p>Created by cliffpackman@gmail.com 19/10/2024</p> </footer>
