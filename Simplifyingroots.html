@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplify Radicals Interactive App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .section, .practice {
+            margin-bottom: 20px;
+        }
+        .hint {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .myp-section {
+            background-color: #fffae6;
+            padding: 10px;
+            border: 1px solid #ffeb99;
+            margin-bottom: 20px;
+        }
+        .multiple-choice {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simplify Radicals: Explore and Apply</h1>
+        <div class="myp-section">
+            <h2>MYP Integration</h2>
+            <p><strong>Key Concept:</strong> Form</p>
+            <p><strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+            <p><strong>Global Context:</strong> Scientific and Technical Innovation - Inventions in Mathematics</p>
+            <p><strong>Statement of Inquiry (SOI):</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+            <p><strong>ATL Skills:</strong> i. Communication, ix. Creative Thinking</p>
+        </div>
+        
+        <p>Learn and practice simplifying radicals using the Product Property of Square Roots. These demonstrate how mathematical forms and concepts help us simplify and communicate complex information.</p>
+        
+        <!-- Example Section -->
+        <div class="section">
+            <h3>Example: Simplify √54</h3>
+            <p>First, find the prime factorization of 54:</p>
+            <p>54 = 2 × 3 × 3 × 3</p>
+            <p>The largest perfect square factor is 9. So:</p>
+            <p>√54 = √(9 × 6) = 3√6</p>
+        </div>
+
+        <!-- Practice Section -->
+        <h3>Practice Problems</h3>
+        <div class="practice" id="practiceSection">
+            <!-- Practice questions will be dynamically inserted here -->
+        </div>
+        <button class="btn" onclick="generatePracticeQuestions()">Generate More Practice Questions</button>
+    </div>
+
+    <script>
+        function generatePracticeQuestions() {
+            const practiceContainer = document.getElementById('practiceSection');
+            practiceContainer.innerHTML = '';
+
+            const questions = [
+                { value: "24", options: ["3√2", "2√6", "4√3"], answer: "2√6", primeFactors: "2 × 2 × 2 × 3" },
+                { value: "72", options: ["6√2", "4√3", "2√18"], answer: "6√2", primeFactors: "2 × 2 × 2 × 3 × 3" },
+                { value: "75", options: ["5√3", "3√5", "4√5"], answer: "5√3", primeFactors: "3 × 5 × 5" },
+                { value: "108", options: ["6√3", "4√27", "3√12"], answer: "6√3", primeFactors: "2 × 2 × 3 × 3 × 3" },
+                { value: "50", options: ["5√2", "2√25", "10√5"], answer: "5√2", primeFactors: "2 × 5 × 5" }
+            ];
+
+            // Randomly select 4 questions from the set
+            const selectedQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            selectedQuestions.forEach((question, index) => {
+                const div = document.createElement('div');
+                div.classList.add('multiple-choice');
+                div.innerHTML = `
+                    <p>Practice ${index + 1}: Simplify √${question.value}. Select the correct answer.</p>
+                    ${question.options.map((option, i) => `
+                        <input type="radio" name="practice${index}" value="${option}" id="p${index}${i}">
+                        <label for="p${index}${i}">${option}</label><br>
+                    `).join('')}
+                    <button class="btn" onclick="checkAnswer(${index}, '${question.answer}')">Check Answer</button>
+                    <button class="btn" onclick="showHint(${index}, '${question.primeFactors}', '${getPerfectSquareFactor(question.value)}')">Show Hint</button>
+                    <div class="hint" id="hintPractice${index}">Hint: The prime factorization of ${question.value} is hidden. Click 'Show Hint' to reveal it.</div>
+                `;
+                practiceContainer.appendChild(div);
+            });
+        }
+
+        function checkAnswer(index, correctAnswer) {
+            const selected = document.querySelector(`input[name="practice${index}"]:checked`);
+            if (selected && selected.value === correctAnswer) {
+                alert('Correct!');
+            } else {
+                document.getElementById(`hintPractice${index}`).style.display = 'block';
+                document.getElementById(`hintPractice${index}`).innerText = "Incorrect! Think about the largest perfect square factor.";
+            }
+        }
+
+        function showHint(index, primeFactors, perfectSquare) {
+            const hintElement = document.getElementById(`hintPractice${index}`);
+            hintElement.style.display = 'block';
+            hintElement.innerText = `The prime factorization of the number is: ${primeFactors}. The largest perfect square factor is ${perfectSquare}.`;
+        }
+
+        function getPerfectSquareFactor(value) {
+            const factors = {
+                "24": "4",
+                "72": "36",
+                "75": "25",
+                "108": "36",
+                "50": "25"
+            };
+            return factors[value];
+        }
+
+        // Generate initial practice questions when the page loads
+        window.onload = generatePracticeQuestions;
+    </script>
+</body>
+</html>
