@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nth Roots Interactive App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .section, .practice, .research {
+            margin-bottom: 20px;
+        }
+        .hint {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+        }
+        .myp-section {
+            background-color: #fffae6;
+            padding: 10px;
+            border: 1px solid #ffeb99;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nth Roots: Explore and Apply</h1>
+        <div class="myp-section">
+            <h2>MYP Integration</h2>
+            <p><strong>Key Concept:</strong> Form</p>
+            <p><strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+            <p><strong>Global Context:</strong> Scientific and Technical Innovation - Inventions in Mathematics</p>
+            <p><strong>Statement of Inquiry (SOI):</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+            <p><strong>ATL Skills:</strong> i. Communication, ix. Creative Thinking</p>
+        </div>
+        
+        <p>Learn and practice finding nth roots using mental math and other strategies. These activities connect with the MYP framework, demonstrating how mathematical forms and concepts help us simplify and communicate complex information.</p>
+        
+        <!-- Example Section -->
+        <div class="section">
+            <h3>Example: Find the 4th Root of 625</h3>
+            <p>The expression <sup>4</sup>√625 indicates the fourth root of 625. You need to find what number multiplied by itself four times equals 625.</p>
+            <p>So, <sup>4</sup>√625 = 
+                <input type="number" id="example1" placeholder="Enter value">
+                <button class="btn" onclick="checkExample1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintExample1">Hint: Remember that 5<sup>4</sup> equals 625.</div>
+        </div>
+
+        <!-- Practice Section -->
+        <h3>Practice Problems</h3>
+        <div class="practice">
+            <p><sup>6</sup>√729 = 
+                <input type="number" id="practice1" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice1()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPractice1">Hint: 3<sup>6</sup> equals 729.</div>
+
+            <p><sup>4</sup>√1,296 = 
+                <input type="number" id="practice2" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice2()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPractice2">Hint: Try using numbers like 6 or 4.</div>
+
+            <p><sup>5</sup>√1,024 = 
+                <input type="number" id="practice3" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice3()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPractice3">Hint: 4<sup>5</sup> equals 1,024.</div>
+
+            <p><sup>3</sup>√243 = 
+                <input type="number" id="practice4" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice4()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPractice4">Hint: 3<sup>3</sup> equals 27.</div>
+
+            <p><sup>3</sup>√64 = 
+                <input type="number" id="practice5" placeholder="Enter value">
+                <button class="btn" onclick="checkPractice5()">Check Answer</button>
+            </p>
+            <div class="hint" id="hintPractice5">Hint: 4<sup>3</sup> equals 64.</div>
+        </div>
+
+        <!-- Research Section -->
+        <div class="research">
+            <h3>Research and Explore</h3>
+            <p>Now that you have learned about nth roots, research a real-world situation where roots are applied. Here are some ideas:</p>
+            <ul>
+                <li><strong>Physics:</strong> Investigate how nth roots are used to calculate physical properties like volume or energy.</li>
+                <li><strong>Mathematics:</strong> Explore how roots are used in solving equations involving polynomials.</li>
+                <li><strong>Finance:</strong> Understand how roots are used in calculating compound interest rates.</li>
+            </ul>
+            <p>Write down your calculation and explain how you used nth roots. Be ready to share your findings with the class and discuss why these calculations are useful.</p>
+        </div>
+    </div>
+
+    <script>
+        function checkExample1() {
+            const answer = document.getElementById('example1').value;
+            if (answer == 5) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintExample1').style.display = 'block';
+            }
+        }
+
+        function checkPractice1() {
+            const answer = document.getElementById('practice1').value;
+            if (answer == 3) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPractice1').style.display = 'block';
+            }
+        }
+
+        function checkPractice2() {
+            const answer = document.getElementById('practice2').value;
+            if (answer == 6) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPractice2').style.display = 'block';
+            }
+        }
+
+        function checkPractice3() {
+            const answer = document.getElementById('practice3').value;
+            if (answer == 4) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPractice3').style.display = 'block';
+            }
+        }
+
+        function checkPractice4() {
+            const answer = document.getElementById('practice4').value;
+            if (answer == 3) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPractice4').style.display = 'block';
+            }
+        }
+
+        function checkPractice5() {
+            const answer = document.getElementById('practice5').value;
+            if (answer == 4) {
+                alert('Correct!');
+            } else {
+                document.getElementById('hintPractice5').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
