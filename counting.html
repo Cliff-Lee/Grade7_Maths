@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exploring the Fundamental Counting Principle through Suzhou's Daily Life</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .hint {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+        }
+        /* Container Styles */
+        #main-container, #snack-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        .option-container, #meal-tray, #snack-tray {
+            width: 30%;
+            min-height: 200px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            position: relative;
+        }
+        .option-container h3, #meal-tray h3, #snack-tray h3 {
+            text-align: center;
+        }
+        /* Item Styles */
+        .item {
+            margin: 5px;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border: 1px solid #00838f;
+            border-radius: 3px;
+            cursor: grab;
+            text-align: center;
+        }
+        .item:active {
+            cursor: grabbing;
+        }
+        /* Counter and List Styles */
+        #combination-counter, #snack-combination-counter {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #reset-button, #snack-reset-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 15px;
+            background-color: #00838f;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #reset-button:hover, #snack-reset-button:hover {
+            background-color: #005662;
+        }
+        #saved-combinations, #saved-snack-combinations {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #saved-combinations ul, #saved-snack-combinations ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #saved-combinations li, #saved-snack-combinations li {
+            background-color: #fff9c4;
+            margin: 5px auto;
+            padding: 5px 10px;
+            width: 50%;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Exploring the Fundamental Counting Principle through Suzhou's Daily Life</h1>
+    <h2>Example 1: Choosing a Meal</h2>
+    <p style="text-align:center;">Drag one main dish and one drink into the meal tray to create a meal.</p>
+    <p class="hint">Hint: Try combining different main dishes with drinks to find all possible meals.</p>
+
+    <div id="main-container">
+        <!-- Main Dishes -->
+        <div class="option-container" id="main-dishes">
+            <h3>Main Dishes</h3>
+            <div class="item" draggable="true" data-type="main" data-name="Dumplings" id="dumplings">Dumplings</div>
+            <div class="item" draggable="true" data-type="main" data-name="Noodles" id="noodles">Noodles</div>
+            <div class="item" draggable="true" data-type="main" data-name="Fried Rice" id="fried-rice">Fried Rice</div>
+        </div>
+
+        <!-- Meal Tray -->
+        <div class="option-container" id="meal-tray">
+            <h3>Meal Tray</h3>
+            <!-- Dropped items will appear here -->
+        </div>
+
+        <!-- Drinks -->
+        <div class="option-container" id="drinks">
+            <h3>Drinks</h3>
+            <div class="item" draggable="true" data-type="drink" data-name="Tea" id="tea">Tea</div>
+            <div class="item" draggable="true" data-type="drink" data-name="Juice" id="juice">Juice</div>
+            <div class="item" draggable="true" data-type="drink" data-name="Water" id="water">Water</div>
+        </div>
+    </div>
+
+    <div id="combination-counter">
+        Total possible combinations: <span id="total-combinations">9</span><br>
+        Unique combinations you've found: <span id="found-combinations">0</span>
+    </div>
+
+    <div id="saved-combinations">
+        <h3>Your Meal Combinations:</h3>
+        <ul id="combination-list">
+            <!-- Saved combinations will appear here -->
+        </ul>
+    </div>
+
+    <button id="reset-button">Reset Meal Tray</button>
+
+    <!-- MYP Concepts and ATL Skills -->
+    <div style="margin-top:50px;">
+        <h2>MYP Integration</h2>
+        <p><strong>Concepts:</strong> Logic, Representation</p>
+        <p><strong>ATL Skills:</strong> Critical Thinking, Organization</p>
+    </div>
+
+    <!-- Second Example -->
+    <hr>
+    <h2>Example 2: Crafting Suzhou-Style Snacks</h2>
+    <p style="text-align:center;">Drag one base and one filling into the snack tray to create a snack.</p>
+    <p class="hint">Hint: Experiment with different bases and fillings to discover all unique snacks.</p>
+
+    <div id="snack-container">
+        <!-- Bases -->
+        <div class="option-container" id="bases">
+            <h3>Bases</h3>
+            <div class="item" draggable="true" data-type="base" data-name="Mooncake Shell" id="mooncake-shell">Mooncake Shell</div>
+            <div class="item" draggable="true" data-type="base" data-name="Zongzi Wrap" id="zongzi-wrap">Zongzi Wrap</div>
+        </div>
+
+        <!-- Snack Tray -->
+        <div class="option-container" id="snack-tray">
+            <h3>Snack Tray</h3>
+            <!-- Dropped items will appear here -->
+        </div>
+
+        <!-- Fillings -->
+        <div class="option-container" id="fillings">
+            <h3>Fillings</h3>
+            <div class="item" draggable="true" data-type="filling" data-name="Red Bean Paste" id="red-bean-paste">Red Bean Paste</div>
+            <div class="item" draggable="true" data-type="filling" data-name="Lotus Seed Paste" id="lotus-seed-paste">Lotus Seed Paste</div>
+            <div class="item" draggable="true" data-type="filling" data-name="Mixed Nuts" id="mixed-nuts">Mixed Nuts</div>
+        </div>
+    </div>
+
+    <div id="snack-combination-counter">
+        Total possible combinations: <span id="total-snack-combinations">6</span><br>
+        Unique combinations you've found: <span id="found-snack-combinations">0</span>
+    </div>
+
+    <div id="saved-snack-combinations">
+        <h3>Your Snack Combinations:</h3>
+        <ul id="snack-combination-list">
+            <!-- Saved snack combinations will appear here -->
+        </ul>
+    </div>
+
+    <button id="snack-reset-button">Reset Snack Tray</button>
+
+    <!-- MYP Concepts and ATL Skills for Second Example -->
+    <div style="margin-top:50px;">
+        <h2>MYP Integration</h2>
+        <p><strong>Concepts:</strong> Relationships, Systems</p>
+        <p><strong>ATL Skills:</strong> Critical Thinking, Organization</p>
+    </div>
+
+    <!-- Reflection Questions -->
+    <hr>
+    <div id="reflection-questions" style="margin-top:50px;">
+        <h2>Reflection Questions</h2>
+        <ol>
+            <li>How did you figure out the total number of different meals you could make?</li>
+            <li>Can you think of other times when you have to choose between different options, like picking clothes or ice cream flavors?</li>
+            <li>If we added one more main dish to the menu, how many meal combinations would there be then?</li>
+            <li>Why is it helpful to write down or keep track of the combinations you've already made?</li>
+            <li>How can knowing about counting combinations help you in real life?</li>
+        </ol>
+    </div>
+
+    <!-- Further Study and Exploration -->
+    <div id="further-study" style="margin-top:50px;">
+        <h2>Further Study and Exploration</h2>
+        <p>Here are some fun ideas to continue learning about counting and combinations:</p>
+        <ul>
+            <li><strong>Create Your Own Scenarios:</strong> Think of a new situation where you have choices to make, like choosing outfits or planning a party menu, and figure out how many combinations there are.</li>
+            <li><strong>Games and Puzzles:</strong> Play games that involve making choices, like mix-and-match puzzles or board games, and see how many different ways you can play.</li>
+            <li><strong>Explore Cultural Traditions:</strong> Look into different festivals or traditions in Suzhou and see how combinations play a role, such as arranging lanterns or decorations.</li>
+            <li><strong>Share with Family and Friends:</strong> Teach someone else how to use counting to find combinations, and create a fun activity together.</li>
+            <li><strong>Real-Life Applications:</strong> Think about how shops use combinations to display products or how schedules are made with different classes and activities.</li>
+        </ul>
+    </div>
+
+    <!-- JavaScript Code -->
+    <script>
+        // JavaScript code for drag-and-drop functionality and saving combinations
+
+        // Example 1: Choosing a Meal
+        (() => {
+            // Elements
+            const mealItems = document.querySelectorAll('#main-dishes .item, #drinks .item');
+            const mealTray = document.getElementById('meal-tray');
+            const mealResetButton = document.getElementById('reset-button');
+            const mealCombinationList = document.getElementById('combination-list');
+            const foundCombinationsDisplay = document.getElementById('found-combinations');
+            const totalCombinationsDisplay = document.getElementById('total-combinations');
+
+            // Variables to keep track
+            let selectedMain = null;
+            let selectedDrink = null;
+            const totalMainDishes = document.querySelectorAll('#main-dishes .item').length;
+            const totalDrinks = document.querySelectorAll('#drinks .item').length;
+            const totalCombinations = totalMainDishes * totalDrinks;
+            let foundCombinations = [];
+            totalCombinationsDisplay.textContent = totalCombinations;
+
+            // Drag Start Event
+            mealItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+            });
+
+            function dragStart(e) {
+                e.dataTransfer.setData('text/plain', e.target.id);
+            }
+
+            // Drag Over and Drop Events for Meal Tray
+            mealTray.addEventListener('dragover', dragOver);
+            mealTray.addEventListener('drop', dropItem);
+
+            function dragOver(e) {
+                e.preventDefault();
+            }
+
+            function dropItem(e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                const itemType = draggableElement.getAttribute('data-type');
+                const itemName = draggableElement.getAttribute('data-name');
+
+                // Check if item of the same type is already in the meal tray
+                if (mealTray.querySelector(`[data-type="${itemType}"]`)) {
+                    alert(`You have already selected a ${itemType}.`);
+                    return;
+                }
+
+                // Clone the node and make it non-draggable in the meal tray
+                const nodeCopy = draggableElement.cloneNode(true);
+                nodeCopy.setAttribute('draggable', false);
+                mealTray.appendChild(nodeCopy);
+
+                // Update selections
+                if (itemType === 'main') {
+                    selectedMain = itemName;
+                } else if (itemType === 'drink') {
+                    selectedDrink = itemName;
+                }
+
+                // Check if both selections are made
+                if (selectedMain && selectedDrink) {
+                    const combination = `${selectedMain} and ${selectedDrink}`;
+                    if (!foundCombinations.includes(combination)) {
+                        foundCombinations.push(combination);
+                        const li = document.createElement('li');
+                        li.textContent = combination;
+                        mealCombinationList.appendChild(li);
+                        foundCombinationsDisplay.textContent = foundCombinations.length;
+                    } else {
+                        alert('You have already created this combination.');
+                    }
+                }
+            }
+
+            // Reset Button Functionality
+            mealResetButton.addEventListener('click', () => {
+                // Clear meal tray
+                while (mealTray.firstChild) {
+                    mealTray.removeChild(mealTray.firstChild);
+                }
+                selectedMain = null;
+                selectedDrink = null;
+            });
+        })();
+
+        // Example 2: Crafting Suzhou-Style Snacks
+        (() => {
+            // Elements
+            const snackItems = document.querySelectorAll('#bases .item, #fillings .item');
+            const snackTray = document.getElementById('snack-tray');
+            const snackResetButton = document.getElementById('snack-reset-button');
+            const snackCombinationList = document.getElementById('snack-combination-list');
+            const foundSnackCombinationsDisplay = document.getElementById('found-snack-combinations');
+            const totalSnackCombinationsDisplay = document.getElementById('total-snack-combinations');
+
+            // Variables to keep track
+            let selectedBase = null;
+            let selectedFilling = null;
+            const totalBases = document.querySelectorAll('#bases .item').length;
+            const totalFillings = document.querySelectorAll('#fillings .item').length;
+            const totalSnackCombinations = totalBases * totalFillings;
+            let foundSnackCombinations = [];
+            totalSnackCombinationsDisplay.textContent = totalSnackCombinations;
+
+            // Drag Start Event
+            snackItems.forEach(item => {
+                item.addEventListener('dragstart', dragStart);
+            });
+
+            function dragStart(e) {
+                e.dataTransfer.setData('text/plain', e.target.id);
+            }
+
+            // Drag Over and Drop Events for Snack Tray
+            snackTray.addEventListener('dragover', dragOver);
+            snackTray.addEventListener('drop', dropItem);
+
+            function dragOver(e) {
+                e.preventDefault();
+            }
+
+            function dropItem(e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(id);
+                const itemType = draggableElement.getAttribute('data-type');
+                const itemName = draggableElement.getAttribute('data-name');
+
+                // Check if item of the same type is already in the snack tray
+                if (snackTray.querySelector(`[data-type="${itemType}"]`)) {
+                    alert(`You have already selected a ${itemType}.`);
+                    return;
+                }
+
+                // Clone the node and make it non-draggable in the snack tray
+                const nodeCopy = draggableElement.cloneNode(true);
+                nodeCopy.setAttribute('draggable', false);
+                snackTray.appendChild(nodeCopy);
+
+                // Update selections
+                if (itemType === 'base') {
+                    selectedBase = itemName;
+                } else if (itemType === 'filling') {
+                    selectedFilling = itemName;
+                }
+
+                // Check if both selections are made
+                if (selectedBase && selectedFilling) {
+                    const combination = `${selectedBase} with ${selectedFilling}`;
+                    if (!foundSnackCombinations.includes(combination)) {
+                        foundSnackCombinations.push(combination);
+                        const li = document.createElement('li');
+                        li.textContent = combination;
+                        snackCombinationList.appendChild(li);
+                        foundSnackCombinationsDisplay.textContent = foundSnackCombinations.length;
+                    } else {
+                        alert('You have already created this combination.');
+                    }
+                }
+            }
+
+            // Reset Button Functionality
+            snackResetButton.addEventListener('click', () => {
+                // Clear snack tray
+                while (snackTray.firstChild) {
+                    snackTray.removeChild(snackTray.firstChild);
+                }
+                selectedBase = null;
+                selectedFilling = null;
+            });
+        })();
+    </script>
+</body>
+</html>
