@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Metric Prefix Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+    }
+    .sidebar {
+      width: 35%;
+      padding: 20px;
+      overflow-y: auto;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background-color: #f9f9f9;
+    }
+    .content {
+      width: 65%;
+      padding: 20px;
+      position: relative;
+    }
+    #instructions {
+      margin-bottom: 20px;
+      background-color: #e0f7fa;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    #image-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4x4 grid layout */
+      gap: 2px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .tile {
+      background-color: black;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding-top: 100%; /* Maintain square aspect ratio */
+    }
+    .tile img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      visibility: hidden; /* Hide image initially */
+    }
+    .tile.revealed img {
+      visibility: visible; /* Reveal image when tile is correct */
+    }
+    .tile.incorrect {
+      background-color: red;
+    }
+    #questions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .question-container {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background: #ffffff;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #hint-section {
+      display: none;
+      background-color: #fff3e0;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    #hint-button, #refresh-button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+    .feedback {
+      color: green;
+      margin-top: 5px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+    }
+    /* Ensure the image stays visible on smaller screens */
+    @media screen and (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .sidebar, .content {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="instructions">
+    <h2>Metric Prefix Challenge</h2>
+    <p><strong>Key Concept:</strong> Form</p>
+    <p><strong>Related Concepts:</strong> Representation, Quantity, Simplification</p>
+    <p><strong>Global Context:</strong> Scientific and technical innovation - inventions in mathematics</p>
+    <p><strong>Statement of Inquiry (SOI):</strong> We have mathematical inventions to help us represent quantities in simplified forms.</p>
+    <p>Answer the questions to reveal parts of the image. Try to guess what the image is!</p>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <button id="hint-button" onclick="toggleHints()">Show Common Metric Prefixes</button>
+      <button id="refresh-button" onclick="location.reload()">Start Over</button>
+
+      <div id="hint-section">
+        <h3>Common Metric Prefixes and Uses</h3>
+        <ul>
+          <li><strong>Kilo-</strong>: 1,000 (10³) – e.g., kilometer (km), kilogram (kg)</li>
+          <li><strong>Hecto-</strong>: 100 (10²) – e.g., hectare (ha)</li>
+          <li><strong>Deka-</strong>: 10 (10¹) – e.g., dekaliter (daL)</li>
+          <li><strong>Deci-</strong>: 0.1 (10⁻¹) – e.g., deciliter (dL)</li>
+          <li><strong>Centi-</strong>: 0.01 (10⁻²) – e.g., centimeter (cm)</li>
+          <li><strong>Milli-</strong>: 0.001 (10⁻³) – e.g., millimeter (mm), milliliter (mL)</li>
+          <li><strong>Micro-</strong>: 0.000001 (10⁻⁶) – e.g., micrometer (µm)</li>
+          <li><strong>Nano-</strong>: 0.000000001 (10⁻⁹) – e.g., nanometer (nm)</li>
+          <li><strong>Mega-</strong>: 1,000,000 (10⁶) – e.g., megabyte (MB)</li>
+          <li><strong>Giga-</strong>: 1,000,000,000 (10⁹) – e.g., gigabyte (GB)</li>
+        </ul>
+      </div>
+
+      <!-- Questions Container -->
+      <div id="questions">
+        <!-- Questions will populate here -->
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Image Grid -->
+      <div id="image-grid">
+        <!-- Tiles will be dynamically generated here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "How many millimeters are in a centimeter?", options: ["10", "100", "1000"], correctAnswer: "10" },
+      { question: "How many grams are in a kilogram?", options: ["100", "1000", "10000"], correctAnswer: "1000" },
+      { question: "What is the approximate weight of a smartphone in grams?", options: ["50", "200", "500"], correctAnswer: "200" },
+      { question: "The length of a standard pencil is about 19 ___", options: ["cm", "mm", "m"], correctAnswer: "cm" },
+      { question: "The width of a human hair is around 100 ___", options: ["μm", "mm", "cm"], correctAnswer: "μm" },
+      { question: "How many milliliters are in a standard 500 ml water bottle?", options: ["250", "500", "1000"], correctAnswer: "500" },
+      { question: "A paperclip has a mass of about 1 ___", options: ["mg", "g", "kg"], correctAnswer: "g" },
+      { question: "A liter is how many times larger than a milliliter?", options: ["100", "1000", "10000"], correctAnswer: "1000" },
+      { question: "A nanometer is how many times smaller than a micrometer?", options: ["10", "100", "1000"], correctAnswer: "1000" },
+      { question: "What prefix would you use for 1,000,000 grams?", options: ["kilo", "mega", "giga"], correctAnswer: "mega" },
+      { question: "How many bytes are in a kilobyte?", options: ["100", "1000", "1024"], correctAnswer: "1024" },
+      { question: "What prefix represents one billion?", options: ["Mega", "Giga", "Tera"], correctAnswer: "Giga" },
+      { question: "Which is larger, a micrometer or a nanometer?", options: ["Micrometer", "Nanometer"], correctAnswer: "Micrometer" },
+      { question: "How many meters are in a kilometer?", options: ["100", "1000", "10000"], correctAnswer: "1000" },
+      { question: "What prefix would you use for 0.001 grams?", options: ["Milli", "Centi", "Micro"], correctAnswer: "Milli" },
+      { question: "The diameter of a human hair is approximately 70 ___", options: ["μm", "cm", "mm"], correctAnswer: "μm" }
+    ];
+
+    const gridColumns = 4;
+    const gridRows = 4;
+
+    // HTML Elements
+    const imageGrid = document.getElementById("image-grid");
+    const questionsContainer = document.getElementById("questions");
+
+    // Create a randomized order of tiles to be revealed
+    let availableTiles = Array.from(Array(16).keys()).sort(() => Math.random() - 0.5);
+
+    // Generate image grid tiles
+    function createImageGrid() {
+      let tileNumber = 1;
+      for (let row = 1; row <= gridRows; row++) {
+        for (let col = 1; col <= gridColumns; col++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.id = `tile-${tileNumber}`;
+
+          // Set individual image segment as background
+          const img = document.createElement("img");
+          img.src = `row-${row}-column-${col}.png`; // Use appropriate path
+          img.style.visibility = "hidden"; // Initially hidden
+          tile.appendChild(img);
+
+          imageGrid.appendChild(tile);
+          tileNumber++;
+        }
+      }
+    }
+
+    // Display questions with multiple choice options
+    function displayQuestions() {
+      questions.forEach((item, index) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "question-container";
+        questionDiv.innerHTML = `<p>${item.question}</p>`;
+
+        // Create multiple choice options
+        item.options.forEach(option => {
+          const optionButton = document.createElement("button");
+          optionButton.innerText = option;
+          optionButton.onclick = () => checkAnswer(option, item.correctAnswer, index, optionButton);
+          questionDiv.appendChild(optionButton);
+        });
+
+        // Add feedback placeholder
+        const feedback = document.createElement("p");
+        feedback.className = "feedback";
+        feedback.id = `feedback-${index}`;
+        questionDiv.appendChild(feedback);
+
+        questionsContainer.appendChild(questionDiv);
+      });
+    }
+
+    // Check answer function
+    function checkAnswer(selectedOption, correctAnswer, index, button) {
+      const feedback = document.getElementById(`feedback-${index}`);
+      const tileIndex = availableTiles.pop(); // Get a random tile index to reveal
+      const tile = document.getElementById(`tile-${tileIndex + 1}`); // Adjust for 0-based indexing
+
+      if (selectedOption === correctAnswer) {
+        feedback.innerText = "Correct!";
+        tile.classList.add("revealed");
+        tile.querySelector("img").style.visibility = "visible"; // Reveal the image
+        disableOptions(index);
+      } else {
+        feedback.innerText = "Incorrect!";
+        tile.classList.add("incorrect");
+        disableOption(button);
+      }
+    }
+
+    // Disable options after correct answer
+    function disableOptions(index) {
+      const questionDiv = questionsContainer.children[index];
+      const buttons = questionDiv.getElementsByTagName('button');
+      for (let btn of buttons) {
+        btn.disabled = true;
+      }
+    }
+
+    // Disable the incorrect option
+    function disableOption(button) {
+      button.disabled = true;
+    }
+
+    // Toggle Hints Visibility
+    function toggleHints() {
+      const hintSection = document.getElementById("hint-section");
+      hintSection.style.display = hintSection.style.display === "none" ? "block" : "none";
+    }
+
+    // Initialize the app
+    createImageGrid();
+    displayQuestions();
+  </script>
+</body>
+ <footer> <p>Created by cliffpackman@gmail.com 31/10/2024 </p> </footer>
+
+</html>
