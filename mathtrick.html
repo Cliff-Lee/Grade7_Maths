@@ -5,14 +5,13 @@
     <!-- Use a fun Google Font -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-
     <style>
         /* Global Styles */
         body {
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #ff9f1c, #ffbf69);
-            font-family: 'Fredoka One', cursive;
+            font-family: 'Fredoka+One', cursive;
             color: #333;
         }
         h1, p, label, select, input, button {
@@ -137,14 +136,13 @@
             background-color: #fff;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             min-width: 140px;
-            /* Ensures all text in the card is black */
-            color: #000;
+            color: #000; /* Ensures text in the card is black */
         }
         .card p {
             color: #000; /* Extra clarity for paragraph text inside cards */
         }
         .card label {
-            color: #000; /* Checkbox label inside card is also black */
+            color: #000; /* Checkbox label inside the card in black */
         }
     </style>
 </head>
@@ -177,7 +175,7 @@
     </div>
 
     <footer>
-        <p>Created by cliffpackman@gmail.com on 7/2/2025</p>
+        <p>Created by cliffpackman@gmail.com on 2/10/2024</p>
     </footer>
 
     <script>
@@ -237,6 +235,7 @@
             container.innerHTML = '';
             if (trickNumber === '') return;
 
+            // Call the function matching the chosen trick
             switch (trickNumber) {
                 case '1': trick1(); break;
                 case '2': trick2(); break;
@@ -257,9 +256,660 @@
         });
 
         /***********************************************
-         *   EXAMPLE: TRICK #1, #2, ETC. (omitted here)
-         *   For brevity, we show only #15 below.
+         *                 TRICK #1                   *
          ***********************************************/
+        function trick1() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Choose a number between 1 and 10:</label>
+                    <input type="number" id="num1" min="1" max="10">
+                </div>
+                <button id="startTrick1">Start Trick</button>
+            `;
+
+            document.getElementById('startTrick1').addEventListener('click', function() {
+                let originalNumber = parseFloat(document.getElementById('num1').value);
+                if (isNaN(originalNumber) || originalNumber < 1 || originalNumber > 10) {
+                    alert('Please enter a number between 1 and 10.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let temp = originalNumber;
+                temp += 2;
+                steps.push(`Step 1: Add 2 → ${temp}`);
+
+                temp *= 2;
+                steps.push(`Step 2: Multiply by 2 → ${temp}`);
+
+                temp -= 2;
+                steps.push(`Step 3: Subtract 2 → ${temp}`);
+
+                temp /= 2;
+                steps.push(`Step 4: Divide by 2 → ${temp}`);
+
+                temp -= originalNumber;
+                steps.push(`Step 5: Subtract your original number (${originalNumber}) → ${temp}`);
+
+                steps.push(`
+                    <strong>Final result is ${temp}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    What do you notice about the final number?
+                    Can you write each step using an algebraic variable <code>x</code>
+                    and prove the result will always be the same?
+                `);
+
+                showSteps(steps, container, trick1);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #2                   *
+         ***********************************************/
+        function trick2() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of any number:</label>
+                    <input type="number" id="num2">
+                </div>
+                <button id="startTrick2">Start Trick</button>
+            `;
+            document.getElementById('startTrick2').addEventListener('click', function() {
+                let originalNumber = parseFloat(document.getElementById('num2').value);
+                if (isNaN(originalNumber)) {
+                    alert('Please enter a valid number.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let temp = originalNumber;
+                temp *= 3;
+                steps.push(`Step 1: Multiply by 3 → ${temp}`);
+
+                temp += 6;
+                steps.push(`Step 2: Add 6 → ${temp}`);
+
+                temp /= 3;
+                steps.push(`Step 3: Divide by 3 → ${temp}`);
+
+                temp -= originalNumber;
+                steps.push(`Step 4: Subtract your original number (${originalNumber}) → ${temp}`);
+
+                steps.push(`
+                    <strong>Final result is ${temp}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Can you represent your original number as <code>x</code>
+                    and show why this trick consistently works?
+                `);
+
+                showSteps(steps, container, trick2);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #3                   *
+         ***********************************************/
+        function trick3() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Choose a number between 1 and 20:</label>
+                    <input type="number" id="num3" min="1" max="20">
+                </div>
+                <button id="startTrick3">Start Trick</button>
+            `;
+            document.getElementById('startTrick3').addEventListener('click', function() {
+                let originalNumber = parseFloat(document.getElementById('num3').value);
+                if (isNaN(originalNumber) || originalNumber < 1 || originalNumber > 20) {
+                    alert('Please enter a number between 1 and 20.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let temp = originalNumber;
+                temp += 1;
+                steps.push(`Step 1: Add 1 → ${temp}`);
+
+                temp *= 2;
+                steps.push(`Step 2: Double it → ${temp}`);
+
+                temp += 4;
+                steps.push(`Step 3: Add 4 → ${temp}`);
+
+                temp /= 2;
+                steps.push(`Step 4: Divide by 2 → ${temp}`);
+
+                temp -= originalNumber;
+                steps.push(`Step 5: Subtract your original number → ${temp}`);
+
+                steps.push(`
+                    <strong>Final result is ${temp}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Could you do these same steps with a variable <code>x</code>
+                    to see what the final expression looks like?
+                `);
+
+                showSteps(steps, container, trick3);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #4                   *
+         ***********************************************/
+        function trick4() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of any number:</label>
+                    <input type="number" id="num4">
+                </div>
+                <button id="startTrick4">Start Trick</button>
+            `;
+            document.getElementById('startTrick4').addEventListener('click', function() {
+                let originalNumber = parseFloat(document.getElementById('num4').value);
+                if (isNaN(originalNumber)) {
+                    alert('Please enter a valid number.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let nextNumber = originalNumber + 1;
+                let sum = originalNumber + nextNumber;
+                steps.push(`Step 1: Add your number and the next-highest integer → ${sum}`);
+
+                sum += 9;
+                steps.push(`Step 2: Add 9 → ${sum}`);
+
+                sum /= 2;
+                steps.push(`Step 3: Divide by 2 → ${sum}`);
+
+                sum -= originalNumber;
+                steps.push(`Step 4: Subtract your original number (${originalNumber}) → ${sum}`);
+
+                steps.push(`
+                    <strong>Final result is ${sum}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    How might you explain that the final answer doesn't depend on your initial number?
+                `);
+
+                showSteps(steps, container, trick4);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #5                   *
+         ***********************************************/
+        function trick5() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a number between 20 and 100:</label>
+                    <input type="number" id="num5" min="20" max="100">
+                </div>
+                <button id="startTrick5">Start Trick</button>
+            `;
+            document.getElementById('startTrick5').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num5').value);
+                if (isNaN(originalNumber) || originalNumber < 20 || originalNumber > 100) {
+                    alert('Please enter a number between 20 and 100.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let sumOfDigits = originalNumber
+                    .toString()
+                    .split('')
+                    .reduce((a, b) => parseInt(a) + parseInt(b), 0);
+                steps.push(`Step 1: Add the digits together → ${sumOfDigits}`);
+
+                let difference = originalNumber - sumOfDigits;
+                steps.push(`Step 2: Subtract the sum of digits from your original number → ${difference}`);
+
+                let finalResult = difference
+                    .toString()
+                    .split('')
+                    .reduce((a, b) => parseInt(a) + parseInt(b), 0);
+                steps.push(`Step 3: Add the digits of the difference → ${finalResult}`);
+
+                steps.push(`
+                    <strong>Final result is ${finalResult}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    What pattern do you suspect regarding “digit sums”?
+                `);
+
+                showSteps(steps, container, trick5);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #6                   *
+         ***********************************************/
+        function trick6() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of any number:</label>
+                    <input type="number" id="num6">
+                </div>
+                <button id="startTrick6">Start Trick</button>
+            `;
+            document.getElementById('startTrick6').addEventListener('click', function() {
+                let originalNumber = parseFloat(document.getElementById('num6').value);
+                if (isNaN(originalNumber) || originalNumber === 0) {
+                    alert('Please enter a valid non-zero number.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let tempResult = (originalNumber + 5) * 3 - 15;
+                steps.push(`Step 1: Add 5, multiply by 3, then subtract 15 → ${tempResult}`);
+
+                let afterDivision = tempResult / originalNumber;
+                steps.push(`Step 2: Divide by your original number (${originalNumber}) → ${afterDivision}`);
+
+                let final = afterDivision + 7;
+                steps.push(`Step 3: Add 7 → ${final}`);
+
+                steps.push(`
+                    <strong>Final result is ${final}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    If the original number is <code>x</code>,
+                    can you replicate each step to see why it ends up at the same result?
+                `);
+
+                showSteps(steps, container, trick6);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #7                   *
+         ***********************************************/
+        function trick7() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a 3-digit number with three unique digits:</label>
+                    <input type="number" id="num7" min="100" max="999">
+                </div>
+                <button id="startTrick7">Start Trick</button>
+            `;
+            document.getElementById('startTrick7').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num7').value);
+                if (isNaN(originalNumber) || originalNumber < 100 || originalNumber > 999) {
+                    alert('Please enter a 3-digit number with three unique digits.');
+                    return;
+                }
+                let digits = originalNumber.toString().split('');
+                if (new Set(digits).size !== 3) {
+                    alert('Please ensure all digits are unique.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let reversedNumber = parseInt(digits.slice().reverse().join(''));
+                steps.push(`Step 1: Reverse the digits → ${reversedNumber}`);
+
+                let largerNumber = Math.max(originalNumber, reversedNumber);
+                let smallerNumber = Math.min(originalNumber, reversedNumber);
+                let difference = largerNumber - smallerNumber;
+                steps.push(`Step 2: Subtract the smaller from the larger → ${difference}`);
+
+                let sumOfDiffDigits = difference
+                    .toString()
+                    .split('')
+                    .reduce((a, b) => parseInt(a) + parseInt(b), 0);
+                steps.push(`Step 3: Sum the digits of the difference → ${sumOfDiffDigits}`);
+
+                steps.push(`
+                    <strong>Final result is ${sumOfDiffDigits}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Why does reversing and subtracting highlight a special property of digits?
+                `);
+
+                showSteps(steps, container, trick7);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #8                   *
+         ***********************************************/
+        function trick8() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a 3-digit number with three unique digits:</label>
+                    <input type="number" id="num8" min="100" max="999">
+                </div>
+                <button id="startTrick8">Start Trick</button>
+            `;
+            document.getElementById('startTrick8').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num8').value);
+                if (isNaN(originalNumber) || originalNumber < 100 || originalNumber > 999) {
+                    alert('Please enter a 3-digit number with three unique digits.');
+                    return;
+                }
+                let digits = originalNumber.toString().split('');
+                if (new Set(digits).size !== 3) {
+                    alert('Please ensure all digits are unique.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let reversedNumber = parseInt(digits.slice().reverse().join(''));
+                steps.push(`Step 1: Reverse the digits → ${reversedNumber}`);
+
+                let largerNumber = Math.max(originalNumber, reversedNumber);
+                let smallerNumber = Math.min(originalNumber, reversedNumber);
+                let difference = largerNumber - smallerNumber;
+                steps.push(`Step 2: Subtract the smaller from the larger → ${difference}`);
+
+                let reversedDifference = parseInt(
+                    difference.toString().split('').reverse().join('')
+                );
+                steps.push(`Step 3: Reverse the digits of the difference → ${reversedDifference}`);
+
+                let finalResult = difference + reversedDifference;
+                steps.push(`Step 4: Add the difference and its reverse → ${finalResult}`);
+
+                steps.push(`
+                    <strong>Final result is ${finalResult}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    What do you notice about reversing and then adding numbers?
+                    Does it remind you of any known properties or patterns?
+                `);
+
+                showSteps(steps, container, trick8);
+            });
+        }
+
+        /***********************************************
+         *                 TRICK #9                   *
+         ***********************************************/
+        function trick9() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a number between 1 and 8:</label>
+                    <input type="number" id="num9" min="1" max="8">
+                </div>
+                <button id="startTrick9">Start Trick</button>
+            `;
+            document.getElementById('startTrick9').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num9').value);
+                if (isNaN(originalNumber) || originalNumber < 1 || originalNumber > 8) {
+                    alert('Please enter a number between 1 and 8.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let step1 = originalNumber * 2;
+                steps.push(`Step 1: Multiply by 2 → ${step1}`);
+
+                let step2 = step1 * 5;
+                steps.push(`Step 2: Multiply by 5 → ${step2}`);
+
+                let step3 = step2 - 5;
+                steps.push(`Step 3: Subtract 5 → ${step3}`);
+
+                let step4 = step3 + 7;
+                steps.push(`Step 4: Add 7 → ${step4}`);
+
+                steps.push(`
+                    <strong>Final result is ${step4}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Can you see how your original number remains embedded in the final result?
+                `);
+
+                showSteps(steps, container, trick9);
+            });
+        }
+
+        /***********************************************
+         *                TRICK #10                   *
+         ***********************************************/
+        function trick10() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a number between 1 and 6:</label>
+                    <input type="number" id="num10" min="1" max="6">
+                </div>
+                <button id="startTrick10">Start Trick</button>
+            `;
+            document.getElementById('startTrick10').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num10').value);
+                if (isNaN(originalNumber) || originalNumber < 1 || originalNumber > 6) {
+                    alert('Please enter a number between 1 and 6.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let step1 = originalNumber * 9;
+                steps.push(`Step 1: Multiply by 9 → ${step1}`);
+
+                let step2 = step1 * 111;
+                steps.push(`Step 2: Multiply by 111 → ${step2}`);
+
+                let step3 = step2 * 1001;
+                steps.push(`Step 3: Multiply by 1001 → ${step3}`);
+
+                let finalResult = step3 / 7;
+                steps.push(`Step 4: Divide by 7 → ${finalResult}`);
+
+                steps.push(`
+                    <strong>Final result is ${finalResult}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Notice the pattern: multiply by 9, then 111, then 1001, then divide by 7.
+                    Why might these specific numbers appear?
+                `);
+
+                showSteps(steps, container, trick10);
+            });
+        }
+
+        /***********************************************
+         *                TRICK #11                   *
+         ***********************************************/
+        function trick11() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of any even number:</label>
+                    <input type="number" id="num11">
+                </div>
+                <button id="startTrick11">Start Trick</button>
+            `;
+            document.getElementById('startTrick11').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num11').value);
+                if (isNaN(originalNumber) || originalNumber % 2 !== 0) {
+                    alert('Please enter an even number.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let multiplied = originalNumber * 6;
+                steps.push(`Step 1: Multiply by 6 → ${multiplied}`);
+
+                let lastDigit = multiplied % 10;
+                let originalLastDigit = originalNumber % 10;
+                let originalTensDigit = Math.floor((originalNumber % 100) / 10);
+                steps.push(`Step 2: The last digit is ${lastDigit}, matching the last digit of your original number (${originalLastDigit}).`);
+                steps.push(`Step 3: The tens digit of your original number (${originalTensDigit}) is half of ${originalLastDigit}.`);
+
+                steps.push(`
+                    <em>🧐 Inquiry:</em>
+                    How do these relationships hold true for any even number?
+                `);
+
+                showSteps(steps, container, trick11);
+            });
+        }
+
+        /***********************************************
+         *                TRICK #12                   *
+         ***********************************************/
+        function trick12() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a 3-digit number with the same digit repeated (e.g., 111, 222):</label>
+                    <input type="number" id="num12" min="111" max="999">
+                </div>
+                <button id="startTrick12">Start Trick</button>
+            `;
+            document.getElementById('startTrick12').addEventListener('click', function() {
+                let originalNumber = parseInt(document.getElementById('num12').value);
+                if (isNaN(originalNumber) || originalNumber < 111 || originalNumber > 999) {
+                    alert('Please enter a 3-digit number with the same digit repeated.');
+                    return;
+                }
+                let digits = originalNumber.toString().split('');
+                if (new Set(digits).size !== 1) {
+                    alert('Please ensure all digits are the same.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let sumOfDigits = digits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+                steps.push(`Step 1: Sum of its digits → ${sumOfDigits}`);
+
+                let result = originalNumber / sumOfDigits;
+                steps.push(`Step 2: Divide the original number by this sum → ${result}`);
+
+                steps.push(`
+                    <strong>Final result is ${result}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Why does this division always give the same result?
+                    Does it depend on which digit is repeated (111 vs 222 vs 333, etc.)?
+                `);
+
+                showSteps(steps, container, trick12);
+            });
+        }
+
+        /***********************************************
+         *                TRICK #13                   *
+         ***********************************************/
+        function trick13() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Think of a 6-digit number with two repeating 3-digit numbers (e.g., 123123):</label>
+                    <input type="number" id="num13" min="100100" max="999999">
+                </div>
+                <button id="startTrick13">Start Trick</button>
+            `;
+            document.getElementById('startTrick13').addEventListener('click', function() {
+                let originalNumber = document.getElementById('num13').value;
+                if (originalNumber.length !== 6 || isNaN(originalNumber)) {
+                    alert('Please enter a 6-digit number.');
+                    return;
+                }
+
+                let firstHalf = originalNumber.substring(0, 3);
+                let secondHalf = originalNumber.substring(3, 6);
+                if (firstHalf !== secondHalf) {
+                    alert('Please ensure the first three digits are the same as the last three digits.');
+                    return;
+                }
+
+                let steps = [];
+                steps.push(`Your original number is ${originalNumber}.`);
+
+                let step1 = originalNumber / 7;
+                steps.push(`Step 1: Divide by 7 → ${step1}`);
+
+                let step2 = step1 / 11;
+                steps.push(`Step 2: Divide by 11 → ${step2}`);
+
+                let step3 = step2 / 13;
+                steps.push(`Step 3: Divide by 13 → ${step3}`);
+
+                steps.push(`
+                    <strong>Final result is ${step3}.</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    Notice how 7, 11, and 13 multiply to 1001.
+                    Why does this trick specifically exploit that 1001 factorization?
+                `);
+
+                showSteps(steps, container, trick13);
+            });
+        }
+
+        /***********************************************
+         *                TRICK #14                   *
+         ***********************************************/
+        function trick14() {
+            const container = document.getElementById('trickContainer');
+            container.innerHTML = `
+                <div class="step">
+                    <label>Enter your age (between 10 and 99):</label>
+                    <input type="number" id="num14" min="10" max="99">
+                </div>
+                <button id="startTrick14">Start Trick</button>
+            `;
+            document.getElementById('startTrick14').addEventListener('click', function() {
+                let age = parseInt(document.getElementById('num14').value);
+                if (isNaN(age) || age < 10 || age > 99) {
+                    alert('Please enter an age between 10 and 99.');
+                    return;
+                }
+
+                let firstDigit = Math.floor(age / 10);
+                let secondDigit = age % 10;
+                let steps = [];
+                steps.push(`Your age is ${age}, so the digits are ${firstDigit} and ${secondDigit}.`);
+
+                let step1 = firstDigit * 5;
+                steps.push(`Step 1: Multiply the first digit by 5 → ${step1}`);
+
+                let step2 = step1 + 4;
+                steps.push(`Step 2: Add 4 → ${step2}`);
+
+                let step3 = step2 * 2;
+                steps.push(`Step 3: Double it → ${step3}`);
+
+                let step4 = step3 + secondDigit;
+                steps.push(`Step 4: Add the second digit of your age → ${step4}`);
+
+                let final = step4 - 8;
+                steps.push(`Step 5: Subtract 8 → ${final}`);
+
+                steps.push(`
+                    <strong>Your age is ${final}!</strong><br>
+                    <em>🧐 Inquiry:</em>
+                    How does the arithmetic guarantee it recovers the original two-digit number?
+                `);
+
+                showSteps(steps, container, trick14);
+            });
+        }
 
         /***********************************************
          *               TRICK #15 (Cards)            *
@@ -269,7 +919,7 @@
             container.innerHTML = `
                 <div class="step">
                     <label>Think of a number between 1 and 14.</label>
-                    <p><strong>Check each card that contains your chosen number!</strong></p>
+                    <p><strong>Check each card that has your chosen number!</strong></p>
                     <div id="cards"></div>
                 </div>
                 <button id="startTrick15">Reveal Number</button>
@@ -289,8 +939,9 @@
             cardsDiv.innerHTML = '';
             let checkboxes = [];
 
+            // Build each card
             cardsData.forEach(function(card, index) {
-                // Combine the "key" with the existing numbers in random order
+                // Combine the key with the existing numbers in random order
                 const allNumbers = card.numbers.slice();
                 allNumbers.push(card.key);
                 shuffle(allNumbers);
@@ -304,6 +955,8 @@
                 let checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = 'card' + index;
+
+                // Label for the checkbox
                 let label = document.createElement('label');
                 label.htmlFor = 'card' + index;
                 label.textContent = 'My number is here!';
@@ -313,7 +966,7 @@
                 cardDiv.appendChild(label);
                 cardsDiv.appendChild(cardDiv);
 
-                // Keep track of the "key"
+                // Keep track of the key
                 checkboxes.push({ checkbox: checkbox, keyValue: card.key });
             });
 
