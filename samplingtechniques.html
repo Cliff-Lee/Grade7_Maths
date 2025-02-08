@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sampling Methods Explorer with Summary Statistics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    #controls {
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select, button {
+      font-size: 14px;
+      margin: 5px;
+      padding: 5px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      background-color: #fff;
+      margin-bottom: 15px;
+    }
+    #storyText, #results, #strataExplanation {
+      margin: 15px auto;
+      padding: 10px;
+      max-width: 600px;
+      border-radius: 5px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    #storyText {
+      background-color: #e6f7ff;
+      border: 1px solid #99d6ff;
+    }
+    #results {
+      background-color: #fefbd8;
+      border: 1px solid #f1c40f;
+    }
+    #strataExplanation {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sampling Methods Explorer with Summary Statistics</h1>
+  
+  <!-- Controls Section -->
+  <div id="controls">
+    <!-- Scenario Selector -->
+    <label for="scenario">Choose Scenario: </label>
+    <select id="scenario">
+      <option value="candy">Candy Land</option>
+      <option value="zoo">Zoo Safari</option>
+      <option value="galaxy">Galaxy Quest</option>
+    </select>
+    <br>
+    <!-- Sampling Method Selector -->
+    <label for="method">Select Sampling Method: </label>
+    <select id="method">
+      <option value="random">Random Sampling</option>
+      <option value="systematic">Systematic Sampling</option>
+      <option value="stratified">Stratified Sampling</option>
+    </select>
+    <!-- Common Sample Size Control -->
+    <span id="sampleSizeControl">
+      <label for="sampleSize">Overall Sample Size: </label>
+      <input type="number" id="sampleSize" min="1" max="300" value="20">
+    </span>
+    <!-- Controls for stratified sampling -->
+    <span id="strataControls" style="display: none;">
+      <label for="numStrata">Number of Strata: </label>
+      <input type="number" id="numStrata" min="1" max="10" value="4">
+      <em>(Irregular horizontal bands)</em>
+    </span>
+    <br>
+    <!-- Show Population Checkbox -->
+    <input type="checkbox" id="showPopulationCheckbox">
+    <label for="showPopulationCheckbox">Show Population</label>
+    <br>
+    <button id="sampleButton">Take Sample</button>
+    <button id="resetButton">Reset</button>
+  </div>
+  
+  <!-- Explanation for Stratified Sampling (context-specific) -->
+  <div id="strataExplanation"></div>
+  
+  <!-- Story Narrative -->
+  <div id="storyText"></div>
+  
+  <!-- Canvas for the Display -->
+  <canvas id="canvas" width="600" height="400"></canvas>
+  
+  <!-- Results Display (showing sample values and summary statistics) -->
+  <div id="results"></div>
+  
+  <script>
+    // Global variables to store the current sample and method.
+    let currentSample = null;
+    let currentStrata = null;
+    let currentMethod = null;
+    
+    // Get canvas and context.
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Create our "population" as a grid of points.
+    // Each point has x,y coordinates, a color, and a numeric value.
+    const population = [];
+    const rows = 20;
+    const cols = 30;
+    const spacingX = canvas.width / (cols + 1);
+    const spacingY = canvas.height / (rows + 1);
+    
+    // Build the population.
+    for (let i = 1; i <= rows; i++) {
+      for (let j = 1; j <= cols; j++) {
+        population.push({ x: j * spacingX, y: i * spacingY, color: "#ccc", value: 0 });
+      }
+    }
+    
+    // Draw the full population as small dots.
+    function drawPopulation() {
+      for (let i = 0; i < population.length; i++) {
+        const p = population[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.color || "#ccc";
+        ctx.fill();
+      }
+    }
+    
+    // Draw sample points as larger, highlighted circles.
+    function drawSample(sample, color) {
+      for (let i = 0; i < sample.length; i++) {
+        const p = sample[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = "#000";
+        ctx.stroke();
+      }
+    }
+    
+    // Compute summary statistics (mean and standard deviation) for an array of points.
+    function computeStats(points) {
+      let sum = 0;
+      points.forEach(p => { sum += p.value; });
+      let mean = sum / points.length;
+      let sumSq = 0;
+      points.forEach(p => { sumSq += Math.pow(p.value - mean, 2); });
+      let variance = sumSq / points.length;
+      let stdDev = Math.sqrt(variance);
+      return { mean, stdDev };
+    }
+    
+    // Update the results panel with summary statistics and sample values.
+    function updateResults(sample) {
+      const popStats = computeStats(population);
+      let html = `<h2>Statistics</h2>`;
+      html += `<p><strong>Population</strong> (n=${population.length}): Mean = ${popStats.mean.toFixed(2)}, Std Dev = ${popStats.stdDev.toFixed(2)}</p>`;
+      if (sample) {
+        const sampleStats = computeStats(sample);
+        let sampleValues = sample.map(p => p.value.toFixed(2)).join(', ');
+        html += `<p><strong>Sample</strong> (n=${sample.length}): Mean = ${sampleStats.mean.toFixed(2)}, Std Dev = ${sampleStats.stdDev.toFixed(2)}</p>`;
+        html += `<p><strong>Sample Values:</strong> [${sampleValues}]</p>`;
+      } else {
+        html += `<p>No sample taken yet.</p>`;
+      }
+      document.getElementById("results").innerHTML = html;
+    }
+    
+    // Update population point colors based on the selected scenario.
+    function updatePopulationColors(scenario) {
+      let colors;
+      if (scenario === "candy") {
+        colors = ["#FF6F61", "#FFB347", "#FFD700", "#FF69B4", "#BA55D3", "#87CEEB"];
+      } else if (scenario === "zoo") {
+        colors = ["#8B4513", "#A0522D", "#CD853F", "#D2B48C", "#556B2F"];
+      } else if (scenario === "galaxy") {
+        colors = ["#FFFFFF", "#ADD8E6", "#F0F8FF", "#B0E0E6"];
+      } else {
+        colors = ["#ccc"];
+      }
+      population.forEach(p => {
+        p.color = colors[Math.floor(Math.random() * colors.length)];
+      });
+    }
+    
+    // Assign a random numeric value to each population point based on scenario.
+    function updatePopulationValues(scenario) {
+      if (scenario === "candy") {
+        // Candy sweetness between 50 and 100.
+        population.forEach(p => { p.value = Math.random() * 50 + 50; });
+      } else if (scenario === "zoo") {
+        // Animal weight between 80 and 180.
+        population.forEach(p => { p.value = Math.random() * 100 + 80; });
+      } else if (scenario === "galaxy") {
+        // Star brightness between 0 and 10.
+        population.forEach(p => { p.value = Math.random() * 10; });
+      }
+    }
+    
+    // Create irregular horizontal strata.
+    // Divides the canvas height into a number of bands with random heights (each at least minHeight).
+    function createStrata(numStrata) {
+      let strata = [];
+      const totalHeight = canvas.height;
+      const minHeight = 30;
+      
+      // Generate random weights for each stratum.
+      let weights = [];
+      for (let i = 0; i < numStrata; i++) {
+        weights.push(Math.random() * 9 + 1);
+      }
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+      
+      // Compute heights ensuring each stratum gets at least minHeight.
+      let remainingHeight = totalHeight - (minHeight * numStrata);
+      let heights = weights.map(w => minHeight + (w / totalWeight) * remainingHeight);
+      
+      // Create strata with cumulative y positions.
+      let currentY = 0;
+      const palette = [
+        "rgba(255, 0, 0, 0.2)",
+        "rgba(0, 255, 0, 0.2)",
+        "rgba(0, 0, 255, 0.2)",
+        "rgba(255, 165, 0, 0.2)",
+        "rgba(128, 0, 128, 0.2)",
+        "rgba(0, 255, 255, 0.2)"
+      ];
+      for (let i = 0; i < numStrata; i++) {
+        let h = heights[i];
+        strata.push({
+          x: 0,
+          y: currentY,
+          width: canvas.width,
+          height: h,
+          color: palette[i % palette.length]
+        });
+        currentY += h;
+      }
+      return strata;
+    }
+    
+    // Draw the irregular strata as horizontal bands with color coding and labels.
+    function drawStrataRectangles(strata) {
+      ctx.save();
+      ctx.lineWidth = 2;
+      strata.forEach((s, index) => {
+        ctx.fillStyle = s.color;
+        ctx.fillRect(s.x, s.y, s.width, s.height);
+        ctx.strokeStyle = "black";
+        ctx.strokeRect(s.x, s.y, s.width, s.height);
+        ctx.fillStyle = "black";
+        ctx.font = "16px Arial";
+        let label = "Stratum " + (index + 1);
+        let textWidth = ctx.measureText(label).width;
+        ctx.fillText(label, s.x + (s.width - textWidth) / 2, s.y + s.height / 2);
+      });
+      ctx.restore();
+    }
+    
+    // Stratified Sampling using proportional allocation.
+    // The number of samples from each stratum is proportional to the number of population points in that stratum.
+    function stratifiedSampling() {
+      const overallSampleSize = parseInt(document.getElementById('sampleSize').value);
+      const numStrata = parseInt(document.getElementById('numStrata').value);
+      const strata = createStrata(numStrata);
+      let sample = [];
+      
+      let allocations = [];
+      const totalPoints = population.length;
+      let allocated = 0;
+      
+      // Compute allocation for each stratum.
+      strata.forEach((s, i) => {
+        const stratumPoints = population.filter(p => p.y >= s.y && p.y < s.y + s.height);
+        const count = stratumPoints.length;
+        const rawAllocation = (count / totalPoints) * overallSampleSize;
+        const floorAllocation = Math.floor(rawAllocation);
+        allocations.push({
+          index: i,
+          points: stratumPoints,
+          floor: floorAllocation,
+          remainder: rawAllocation - floorAllocation
+        });
+        allocated += floorAllocation;
+      });
+      
+      // Distribute any remaining samples based on highest remainders.
+      let remainingSamples = overallSampleSize - allocated;
+      allocations.sort((a, b) => b.remainder - a.remainder);
+      for (let i = 0; i < remainingSamples; i++) {
+        allocations[i].floor += 1;
+      }
+      
+      // Randomly select sample points from each stratum.
+      allocations.forEach(alloc => {
+        let numSamples = alloc.floor;
+        let stratumPoints = alloc.points;
+        if (numSamples > stratumPoints.length) {
+          numSamples = stratumPoints.length;
+        }
+        let indices = Array.from(Array(stratumPoints.length).keys());
+        for (let j = indices.length - 1; j > 0; j--) {
+          let k = Math.floor(Math.random() * (j + 1));
+          [indices[j], indices[k]] = [indices[k], indices[j]];
+        }
+        for (let j = 0; j < numSamples; j++) {
+          sample.push(stratumPoints[indices[j]]);
+        }
+      });
+      return { sample, strata };
+    }
+    
+    // Redraw the canvas based on the current method, sample, and the "Show Population" checkbox.
+    function redrawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (currentMethod === "stratified") {
+        if (currentStrata) {
+          drawStrataRectangles(currentStrata);
+        }
+        if (document.getElementById('showPopulationCheckbox').checked) {
+          drawPopulation();
+        }
+        if (currentSample) {
+          drawSample(currentSample, "green");
+        }
+      } else {
+        if (document.getElementById('showPopulationCheckbox').checked) {
+          drawPopulation();
+        }
+        if (currentSample) {
+          if (currentMethod === "random") {
+            drawSample(currentSample, "red");
+          } else if (currentMethod === "systematic") {
+            drawSample(currentSample, "blue");
+          }
+        }
+      }
+    }
+    
+    // Update the contextual story narrative.
+    function updateScenario() {
+      const scenario = document.getElementById("scenario").value;
+      const storyDiv = document.getElementById("storyText");
+      let text = "";
+      if (scenario === "candy") {
+        text = "Welcome to Candy Land! Imagine you're at a magical candy factory where each candy has its own sweetness level. As the quality inspector, you need to sample candies to check whether the overall sweetness meets your high standards.";
+      } else if (scenario === "zoo") {
+        text = "Welcome to Zoo Safari! In this vast zoo, animals of varying weights roam freely. Ecologists use sampling to estimate the average weight and health of the animals. Your task is to collect data and compare it with the entire zoo.";
+      } else if (scenario === "galaxy") {
+        text = "Welcome to Galaxy Quest! You're an interstellar explorer studying stars with different brightness levels. Astronomers rely on sampling to understand stellar populations. Collect your stellar data and see how your sample compares to the whole galaxy.";
+      }
+      storyDiv.innerHTML = text;
+      
+      updatePopulationColors(scenario);
+      updatePopulationValues(scenario);
+      currentSample = null;
+      currentStrata = null;
+      redrawCanvas();
+      updateResults(null);
+      
+      // Also update the stratified explanation if needed.
+      if (document.getElementById("method").value === "stratified") {
+        updateStrataExplanation();
+      }
+    }
+    
+    // Provide contextual explanation for the irregular strata.
+    function updateStrataExplanation() {
+      const scenario = document.getElementById('scenario').value;
+      let explanation = "";
+      if (scenario === "candy") {
+        explanation = "In Candy Land, each irregular horizontal band represents a production batch of candies. Larger bands represent batches with higher production volumes (and more candies), so more samples are drawn from those batches.";
+      } else if (scenario === "zoo") {
+        explanation = "In Zoo Safari, each band represents a distinct habitat—such as a savannah, tropical house, or aviary. Habitats with larger areas (and more animals) contribute a greater share of the overall sample.";
+      } else if (scenario === "galaxy") {
+        explanation = "In Galaxy Quest, each band represents a different region of the galaxy. Regions with higher star density (i.e. larger or more populated bands) will contribute more stars to your sample.";
+      }
+      const strataDiv = document.getElementById('strataExplanation');
+      strataDiv.innerHTML = explanation;
+      strataDiv.style.display = "block";
+    }
+    
+    // Event listener: Update controls when the sampling method is changed.
+    document.getElementById('method').addEventListener('change', function() {
+      const method = this.value;
+      if (method === "stratified") {
+        document.getElementById('strataControls').style.display = 'inline';
+        updateStrataExplanation();
+      } else {
+        document.getElementById('strataControls').style.display = 'none';
+        document.getElementById('strataExplanation').style.display = 'none';
+      }
+    });
+    
+    // Event listener for scenario changes.
+    document.getElementById("scenario").addEventListener("change", updateScenario);
+    
+    // When the "Show Population" checkbox is toggled, redraw the canvas.
+    document.getElementById('showPopulationCheckbox').addEventListener('change', redrawCanvas);
+    
+    // Handle the "Take Sample" button click.
+    document.getElementById('sampleButton').addEventListener('click', function() {
+      const method = document.getElementById('method').value;
+      currentMethod = method;
+      currentSample = null;
+      currentStrata = null;
+      if (method === "random") {
+        const size = parseInt(document.getElementById('sampleSize').value);
+        currentSample = randomSampling(size);
+      } else if (method === "systematic") {
+        const size = parseInt(document.getElementById('sampleSize').value);
+        currentSample = systematicSampling(size);
+      } else if (method === "stratified") {
+        const result = stratifiedSampling();
+        currentSample = result.sample;
+        currentStrata = result.strata;
+      }
+      redrawCanvas();
+      updateResults(currentSample);
+    });
+    
+    // Random Sampling: choose sampleSize points uniformly at random.
+    function randomSampling(sampleSize) {
+      const sample = [];
+      const indices = Array.from(Array(population.length).keys());
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      for (let k = 0; k < sampleSize && k < indices.length; k++) {
+        sample.push(population[indices[k]]);
+      }
+      return sample;
+    }
+    
+    // Systematic Sampling: choose every kth element from the ordered population.
+    function systematicSampling(sampleSize) {
+      const sample = [];
+      const n = population.length;
+      if (sampleSize >= n) return population.slice();
+      const interval = Math.floor(n / sampleSize);
+      const start = Math.floor(Math.random() * interval);
+      for (let i = start; i < n && sample.length < sampleSize; i += interval) {
+        sample.push(population[i]);
+      }
+      return sample;
+    }
+    
+    // Reset button: clear the sample and redraw the canvas.
+    document.getElementById('resetButton').addEventListener('click', function() {
+      currentSample = null;
+      currentStrata = null;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      updateResults(null);
+      redrawCanvas();
+    });
+    
+    // Initialize with the default scenario.
+    updateScenario();
+  </script>
+</body>
+</html>
