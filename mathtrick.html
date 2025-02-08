@@ -161,14 +161,14 @@
                 <option value="5">Trick #5: Think of any number between 20 and 100</option>
                 <option value="6">Trick #6: Think of any number and add 5 to it</option>
                 <option value="7">Trick #7: Think of a 3-digit number that has 3 different digits</option>
-                <option value="8">Trick #8: Think of a 3-digit number where every digit is different</option>
+                <option value="8">Trick #8: Think of a 3-digit number (unique digits, first and last differ by at least 2)</option>
                 <option value="9">Trick #9: Think of a number between 1 and 8</option>
                 <option value="10">Trick #10: Think of a number between 1 and 6</option>
-                <option value="11">Trick #11: Think of any even number and multiply it by 6</option>
+                <!-- Trick #11 removed -->
                 <option value="12">Trick #12: Think of a 3-digit number that repeats the same digit</option>
                 <option value="13">Trick #13: Think of a 6-digit number with two repeating 3-digit numbers</option>
                 <option value="14">Trick #14: Multiply the first digit in your age by 5</option>
-                <option value="15">Trick #15: Paper Cards Trick</option>
+                <option value="15">Trick #15: Paper Cards Trick (choose a number between 6 and 14)</option>
             </select>
         </div>
         <div id="trickContainer"></div>
@@ -247,7 +247,6 @@
                 case '8': trick8(); break;
                 case '9': trick9(); break;
                 case '10': trick10(); break;
-                case '11': trick11(); break;
                 case '12': trick12(); break;
                 case '13': trick13(); break;
                 case '14': trick14(); break;
@@ -609,6 +608,11 @@
                     alert('Please ensure all digits are unique.');
                     return;
                 }
+                // Ensure the first and last digit differ by at least 2
+                if (Math.abs(parseInt(digits[0]) - parseInt(digits[2])) < 2) {
+                    alert('Please ensure the difference between the first and last digit is at least 2 for the trick to work.');
+                    return;
+                }
 
                 let steps = [];
                 steps.push(`Your original number is ${originalNumber}.`);
@@ -641,7 +645,7 @@
         }
 
         /***********************************************
-         *                 TRICK #9                   *
+         *                TRICK #9                   *
          ***********************************************/
         function trick9() {
             const container = document.getElementById('trickContainer');
@@ -726,46 +730,6 @@
                 `);
 
                 showSteps(steps, container, trick10);
-            });
-        }
-
-        /***********************************************
-         *                TRICK #11                   *
-         ***********************************************/
-        function trick11() {
-            const container = document.getElementById('trickContainer');
-            container.innerHTML = `
-                <div class="step">
-                    <label>Think of any even number:</label>
-                    <input type="number" id="num11">
-                </div>
-                <button id="startTrick11">Start Trick</button>
-            `;
-            document.getElementById('startTrick11').addEventListener('click', function() {
-                let originalNumber = parseInt(document.getElementById('num11').value);
-                if (isNaN(originalNumber) || originalNumber % 2 !== 0) {
-                    alert('Please enter an even number.');
-                    return;
-                }
-
-                let steps = [];
-                steps.push(`Your original number is ${originalNumber}.`);
-
-                let multiplied = originalNumber * 6;
-                steps.push(`Step 1: Multiply by 6 → ${multiplied}`);
-
-                let lastDigit = multiplied % 10;
-                let originalLastDigit = originalNumber % 10;
-                let originalTensDigit = Math.floor((originalNumber % 100) / 10);
-                steps.push(`Step 2: The last digit is ${lastDigit}, matching the last digit of your original number (${originalLastDigit}).`);
-                steps.push(`Step 3: The tens digit of your original number (${originalTensDigit}) is half of ${originalLastDigit}.`);
-
-                steps.push(`
-                    <em>🧐 Inquiry:</em>
-                    How do these relationships hold true for any even number?
-                `);
-
-                showSteps(steps, container, trick11);
             });
         }
 
@@ -918,7 +882,7 @@
             const container = document.getElementById('trickContainer');
             container.innerHTML = `
                 <div class="step">
-                    <label>Think of a number between 1 and 14.</label>
+                    <label>Think of a number between 6 and 14.</label>
                     <p><strong>Check each card that has your chosen number!</strong></p>
                     <div id="cards"></div>
                 </div>
