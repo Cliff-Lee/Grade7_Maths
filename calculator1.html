@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Magic Number Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    input, button {
+      padding: 5px;
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Magic Number Converter</h1>
+  <!-- Use text input to preserve any entered zeros -->
+  <label for="magicNumber">Enter Magic Number:</label>
+  <input type="text" id="magicNumber" />
+  <button onclick="processNumber()">Convert</button>
+  
+  <div class="result">
+    <p id="subtracted"></p>
+    <p id="ternary"></p>
+    <p id="reversed"></p>
+  </div>
+  
+  <script>
+    function processNumber() {
+      // Get the input as a string (preserving any entered zeros)
+      var magicInput = document.getElementById("magicNumber").value.trim();
+      
+      // Ensure the input contains only digits.
+      if (!/^\d+$/.test(magicInput)) {
+        alert("Please enter a valid number (digits only).");
+        return;
+      }
+      
+      // Define a fixed output length for the ternary representation.
+      var fixedLength = 3;
+      
+      // Convert the input to a number (leading zeros are ignored in arithmetic)
+      var magicNumber = parseInt(magicInput, 10);
+      
+      // If the number is 0, avoid subtracting 1; otherwise, subtract 1.
+      var subtracted = (magicNumber === 0 ? 0 : magicNumber - 1);
+      
+      // Convert the (possibly subtracted) number to a ternary (base 3) string.
+      var ternary = subtracted.toString(3);
+      
+      // Pad the ternary representation to the fixed length (adding leading zeros).
+      ternary = ternary.padStart(fixedLength, '0');
+      
+      // Reverse the ternary string.
+      var reversed = ternary.split('').reverse().join('');
+      
+      // Map each digit in the reversed string to its corresponding word.
+      // '0' maps to "top", '1' maps to "middle", '2' maps to "bottom"
+      var mapping = { '0': 'top', '1': 'middle', '2': 'bottom' };
+      var mappedWords = [];
+      for (var i = 0; i < reversed.length; i++) {
+        mappedWords.push(mapping[reversed[i]]);
+      }
+      var mappingStr = mappedWords.join(", ");
+      
+      // Display the results.
+      document.getElementById("subtracted").textContent = "Magic Number - 1: " + subtracted;
+      document.getElementById("ternary").textContent = "Ternary Representation: " + ternary;
+      document.getElementById("reversed").textContent = "Reversed Ternary: " + reversed + " which maps to: " + mappingStr;
+    }
+  </script>
+</body>
+</html>
