@@ -73,7 +73,6 @@
   <div>
     <label for="topicSelect">Choose a topic:</label>
     <select id="topicSelect">
-      <option value="recogniseLinear">Recognise Linear Expressions</option>
       <option value="addInteger">Add Linear Expressions (Integer Coefficients)</option>
       <option value="findInverse">Find Additive Inverse</option>
       <option value="subtractInteger">Subtract Linear Expressions (Integer Coefficients)</option>
@@ -121,9 +120,6 @@
       document.getElementById('optionsContainer').innerHTML = ''; // Clear previous options
 
       switch (currentTopic) {
-        case 'recogniseLinear':
-          generateRecogniseLinearProblem();
-          break;
         case 'addInteger':
           generateAddIntegerProblem();
           break;
@@ -182,101 +178,8 @@
       MathJax.typeset();
     }
 
-    // ---------------------
-    // Parsing helper for linear expressions.
-    // This function uses a regex that allows an optional coefficient (implying 1 or -1)
-    // and captures an optional constant part.
-    function parseLinearExpression(expr) {
-      let result = { coeff: 0, constant: 0 };
-      if(expr.includes('x')) {
-        // Regex: optional coefficient (digits may be missing, meaning 1), then "x", then an optional constant.
-        let regex = /^\s*([-+]?\d*)\s*x(?:\s*([+-])\s*(\d+))?\s*$/;
-        let match = expr.match(regex);
-        if(match) {
-          let coeffStr = match[1];
-          if(coeffStr === '' || coeffStr === '+') {
-            result.coeff = 1;
-          } else if(coeffStr === '-') {
-            result.coeff = -1;
-          } else {
-            result.coeff = parseInt(coeffStr);
-          }
-          if(match[2] && match[3]) {
-            let constant = parseInt(match[3]);
-            result.constant = (match[2] === '-' ? -constant : constant);
-          } else {
-            result.constant = 0;
-          }
-        } else {
-          // Fallback: split by "x"
-          let parts = expr.split('x');
-          result.coeff = parseInt(parts[0].trim()) || 1;
-          if(parts.length > 1) {
-            let constantPart = parts[1].trim();
-            if(constantPart.startsWith('+')) {
-              result.constant = parseInt(constantPart.substring(1).trim());
-            } else if(constantPart.startsWith('-')) {
-              result.constant = -parseInt(constantPart.substring(1).trim());
-            } else {
-              result.constant = parseInt(constantPart);
-            }
-          }
-        }
-      } else {
-        result.coeff = 0;
-        result.constant = parseInt(expr.trim());
-      }
-      return result;
-    }
-    // ---------------------
-
-    // Function to generate Recognise Linear Expressions problem
-    function generateRecogniseLinearProblem() {
-      // Ensure that the linear expression has a nonzero coefficient for the variable
-      let linearCoeffX;
-      do {
-        linearCoeffX = getRandomInt(-10, 10);
-      } while (linearCoeffX === 0);
-
-      const linearCoeffConst = getRandomInt(-10, 10);
-      const linearExpr = formatExpression(linearCoeffX, linearCoeffConst);
-
-      // Generate a quadratic expression
-      let quadraticCoeffX2;
-      do {
-        quadraticCoeffX2 = getRandomInt(-10, 10);
-      } while (quadraticCoeffX2 === 0);
-      const quadraticConst = getRandomInt(-10, 10);
-      const quadraticExpr = formatExpression(quadraticCoeffX2, quadraticConst, false, 2);
-
-      // Generate a cubic expression
-      let cubicCoeffX3;
-      do {
-        cubicCoeffX3 = getRandomInt(-10, 10);
-      } while (cubicCoeffX3 === 0);
-      const cubicExpr = formatExpression(cubicCoeffX3, 0, false, 3);
-
-      // Generate a linear expression with a different variable (e.g., y)
-      let linearYCoeffY;
-      do {
-        linearYCoeffY = getRandomInt(-10, 10);
-      } while (linearYCoeffY === 0);
-      const linearYConst = getRandomInt(-10, 10);
-      const linearYExpr = formatExpression(linearYCoeffY, linearYConst, false, 1, 'y');
-
-      const expressions = [quadraticExpr, linearExpr, cubicExpr, linearYExpr];
-      correctAnswer = linearExpr;
-
-      // Generate three distractors (unique and not equal to the correct answer)
-      let distractors = expressions.filter(expr => expr !== correctAnswer);
-      distractors = shuffleArray(distractors).slice(0, 3);
-      options = shuffleArray([correctAnswer, ...distractors]);
-      currentProblem = 'Which one is a linear expression?';
-    }
-
     // Function to generate Add Integer Coefficients problem
     function generateAddIntegerProblem() {
-      // Generate two linear expressions with integer coefficients (nonzero coefficients for x)
       let a1, a2;
       do { a1 = getRandomInt(-10, 10); } while (a1 === 0);
       do { a2 = getRandomInt(-10, 10); } while (a2 === 0);
@@ -288,7 +191,6 @@
       const expr2 = formatExpression(a2, b2);
       currentProblem = `Solve: \\(${expr1}\\) + \\(${expr2}\\)`;
 
-      // Create properly formatted strings for Algebra.js (handling the sign of b)
       const exprStr1 = `${a1}x${b1 !== 0 ? (b1 > 0 ? ' + ' + b1 : ' - ' + Math.abs(b1)) : ''}`;
       const exprStr2 = `${a2}x${b2 !== 0 ? (b2 > 0 ? ' + ' + b2 : ' - ' + Math.abs(b2)) : ''}`;
       
@@ -298,17 +200,21 @@
         let sum = expression1.add(expression2);
         correctAnswer = formatAlgebraExpression(sum);
       } catch (error) {
-        // Fallback in case of parsing error
         correctAnswer = `${a1 + a2}x${(b1 + b2) !== 0 ? (b1 + b2 > 0 ? ' + ' + (b1 + b2) : ' - ' + Math.abs(b1 + b2)) : ''}`;
       }
 
-      // Generate distractors using the generic generator
-      options = generateOptions(correctAnswer, 'integer');
+      // Generate plausible but incorrect distractors
+      let distractors = [
+        formatExpression(a1 + 1, b1 + b2),  // Incorrect coefficient for x
+        formatExpression(a2 - 1, b2 - b1),  // Incorrect subtraction
+        formatExpression(a1 - 1, b1 + b2 + 1) // Another plausible distractor with small change
+      ];
+
+      options = shuffleArray([correctAnswer, ...distractors]);
     }
 
     // Function to generate Find Additive Inverse problem
     function generateFindInverseProblem() {
-      // Generate one linear expression (nonzero coefficient for x)
       let a1;
       do { a1 = getRandomInt(-10, 10); } while (a1 === 0);
       const b1 = getRandomInt(-10, 10);
@@ -325,14 +231,18 @@
         correctAnswer = `${-a1}x${b1 !== 0 ? (-b1 > 0 ? ' + ' + (-b1) : ' - ' + Math.abs(-b1)) : ''}`;
       }
 
-      // Generate distractors using the generic generator
-      options = generateOptions(correctAnswer, 'integer');
+      // Generate plausible but incorrect inverse distractors
+      let distractors = [
+        formatExpression(-a1 + 1, -b1 - 1), // Slight mistake in signs
+        formatExpression(a1 - 1, b1 + 1),   // Incorrect inverse with sign errors
+        formatExpression(-a1 - 1, -b1 + 1)  // Another plausible wrong sign for inverse
+      ];
+
+      options = shuffleArray([correctAnswer, ...distractors]);
     }
 
-    // Function to generate Subtract Integer Coefficients problem with plausible distractors.
-    // Now both expressions are enclosed in brackets.
+    // Function to generate Subtract Integer Coefficients problem
     function generateSubtractIntegerProblem() {
-      // Generate two linear expressions with integer coefficients (nonzero for x)
       let a1, a2;
       do { a1 = getRandomInt(-10, 10); } while (a1 === 0);
       do { a2 = getRandomInt(-10, 10); } while (a2 === 0);
@@ -342,37 +252,27 @@
 
       const expr1 = formatExpression(a1, b1);
       const expr2 = formatExpression(a2, b2);
-      // Enclose both expressions in parentheses for clarity.
       currentProblem = `Solve: (\\(${expr1}\\)) - (\\(${expr2}\\))`;
 
-      // Compute correct answer: (a1 - a2)x + (b1 - b2)
       let correctCoeff = a1 - a2;
       let correctConst = b1 - b2;
       correctAnswer = formatExpression(correctCoeff, correctConst);
 
-      // Generate plausible distractors:
-      // Distractor 1: Use the correct coefficient but add the constants instead: (a1 - a2)x + (b1 + b2)
-      let distractor1 = formatExpression(a1 - a2, b1 + b2);
-      // Distractor 2: Add the coefficients but subtract the constants: (a1 + a2)x + (b1 - b2)
-      let distractor2 = formatExpression(a1 + a2, b1 - b2);
-      // Distractor 3: Add both coefficients and constants: (a1 + a2)x + (b1 + b2)
-      let distractor3 = formatExpression(a1 + a2, b1 + b2);
+      // Generate plausible but incorrect distractors
+      let distractor1 = formatExpression(a1 + 1 - a2, b1 + b2);   // Mistake with coefficient
+      let distractor2 = formatExpression(a1 - a2 + 1, b1 - b2 + 1); // Slight error in both
+      let distractor3 = formatExpression(a1 + a2, b1 - b2); // Another plausible incorrect option
 
-      // Ensure the distractors are distinct and not equal to the correct answer.
       let distractors = [distractor1, distractor2, distractor3].filter(d => d !== correctAnswer);
-      // If there are fewer than 3 unique distractors, add a fallback distractor.
       while (distractors.length < 3) {
          distractors.push(formatExpression(correctCoeff, correctConst + getRandomInt(1, 3)));
       }
       options = shuffleArray([correctAnswer, ...distractors]);
     }
 
-    // Function to format expressions for display.
-    // This version properly handles negative constant terms.
+    // Function to format expressions for display
     function formatExpression(a, b, isRational = false, power = 1, variable = 'x') {
       let expr = '';
-
-      // Format the variable part (if a ≠ 0)
       if (a !== 0) {
         expr += `${a}${variable}`;
         if (power === 2) {
@@ -381,8 +281,6 @@
           expr += '^3';
         }
       }
-
-      // Format the constant part
       if (b !== 0) {
         if (expr !== '') {
           expr += (b > 0 ? ' + ' : ' - ');
@@ -391,122 +289,23 @@
         }
         expr += `${Math.abs(b)}`;
       }
-
       if (expr === '') {
         expr = '0';
       }
-
       return expr;
     }
 
-    // Function to format Algebra.js expressions into LaTeX-friendly strings
     function formatAlgebraExpression(expr) {
       let exprStr = expr.toString();
-      // Remove multiplication symbols and extra spaces
       exprStr = exprStr.replace(/\*/g, '');
       exprStr = exprStr.replace(/- /g, '-');
       exprStr = exprStr.replace(/\s+/g, ' ');
       return exprStr;
     }
-
-    // ---------------------
-    // Updated integer distractor generator using the parser.
-    function generateIntegerDistractor(correct) {
-      let parsed = parseLinearExpression(correct);
-      // Randomly decide whether to modify the coefficient or the constant.
-      if (Math.random() > 0.5 && parsed.coeff !== 0) {
-        let newCoeff = parsed.coeff + getRandomInt(-3, 3);
-        if (newCoeff === parsed.coeff || newCoeff === 0) {
-          newCoeff = parsed.coeff + (parsed.coeff > 0 ? 1 : -1);
-        }
-        parsed.coeff = newCoeff;
-      } else {
-        let newConstant = parsed.constant + getRandomInt(-5, 5);
-        if (newConstant === parsed.constant) {
-          newConstant = parsed.constant + 1;
-        }
-        parsed.constant = newConstant;
-      }
-      // Rebuild the expression string in the same format.
-      let expr = '';
-      if (parsed.coeff !== 0) {
-        expr += parsed.coeff + 'x';
-      }
-      if (parsed.constant !== 0) {
-        if (expr !== '') {
-          expr += parsed.constant > 0 ? ' + ' : ' - ';
-          expr += Math.abs(parsed.constant);
-        } else {
-          expr += parsed.constant;
-        }
-      }
-      if (expr === '') {
-        expr = '0';
-      }
-      return expr;
-    }
-    // ---------------------
-
-    // Function to generate options with one correct answer and three distractors
-    function generateOptions(correct, type) {
-      let generatedOptions = [correct];
-      const attemptsLimit = 20; // To prevent infinite loops
-      let attempts = 0;
-
-      while (generatedOptions.length < 4 && attempts < attemptsLimit) {
-        let distractor;
-        if (type === 'integer') {
-          distractor = generateIntegerDistractor(correct);
-        } else if (type === 'rational') {
-          distractor = generateRationalDistractor(correct);
-        }
-        // Validate distractor (ensure it's not NaN or already included)
-        if (distractor && !generatedOptions.includes(distractor) && distractor !== correct && !isNaN(distractor)) {
-          generatedOptions.push(distractor);
-        }
-        attempts++;
-      }
-      while (generatedOptions.length < 4) {
-        generatedOptions.push('0');
-      }
-      return shuffleArray(generatedOptions);
-    }
-
-    // Function to generate rational distractors by modifying the correct answer
-    function generateRationalDistractor(correct) {
-      let parts = correct.split('x');
-      let coeffX = parts[0].trim();
-      let constant = parts[1] ? parts[1].trim().replace('+ ', '').trim() : '0';
-
-      if (Math.random() > 0.5 && coeffX !== '0') {
-        let newNumerator = getRandomInt(1, 10);
-        let newDenominator = getRandomInt(2, 10);
-        coeffX = `\\frac{${newNumerator}}{${newDenominator}}`;
-      } else if (constant !== '0') {
-        let newNumerator = getRandomInt(1, 10);
-        let newDenominator = getRandomInt(2, 10);
-        constant = `\\frac{${newNumerator}}{${newDenominator}}`;
-      }
-
-      if (coeffX === '0' && constant === '0') {
-        return '0';
-      } else if (coeffX === '0') {
-        return `${constant}`;
-      } else if (constant === '0') {
-        return `${coeffX}x`;
-      } else {
-        return `${coeffX}x + ${constant}`;
-      }
-    }
-
-    // Optional: Generate a problem automatically when the page loads
-    window.onload = function() {
-      // Waiting for the user to select a topic and click "Start"
-    }
   </script>
 
   <footer>
-    <p>Created by cliffpackman@gmail.com 7/2/2025</p>
+    <p>Created by cliffpackman@gmail.com 20/2/2025</p>
   </footer>
 </body>
 </html>
