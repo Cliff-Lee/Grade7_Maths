@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subitizing Game – Two Versions</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #controls {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    #status, #feedback {
+      font-size: 18px;
+      margin: 10px;
+    }
+    #stimulus {
+      position: relative;
+      margin: 20px auto;
+      width: 200px;
+      height: 200px;
+      border: 2px solid #ccc;
+      font-size: 48px;
+      line-height: 200px;
+      color: #555;
+    }
+    .dot {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #333;
+      border-radius: 50%;
+    }
+    #choices {
+      margin: 20px;
+    }
+    .choice-btn, #nextBtn, #resetBtn {
+      margin: 4px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+    #nextBtn, #resetBtn {
+      margin-top: 10px;
+    }
+    #resultsTable {
+      width: 90%;
+      margin: 30px auto;
+      border-collapse: collapse;
+    }
+    #resultsTable th, #resultsTable td {
+      border: 1px solid #aaa;
+      padding: 6px 12px;
+    }
+    #resultsTable th {
+      background: #eee;
+    }
+    #finalScore {
+      font-size: 22px;
+      margin-top: 30px;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <h1>Subitizing Game</h1>
+  <div id="controls">
+    <label>
+      <input type="radio" name="version" value="dice" checked>
+      Version 1: Dice pips (1–6)
+    </label>
+    &nbsp;&nbsp;
+    <label>
+      <input type="radio" name="version" value="random">
+      Version 2: Random dots (1–10)
+    </label>
+  </div>
+  <p id="instructions">Click “Start Trial” when you’re ready. A 3-2-1 countdown will flash, then the dots appear briefly. Guess how many you saw. There are 10 trials.</p>
+
+  <div id="status"></div>
+  <div id="feedback"></div>
+  <button id="nextBtn">Start Trial</button>
+  <button id="resetBtn" style="display:none;">Repeat Experiment</button>
+  <div id="stimulus"></div>
+  <div id="choices"></div>
+
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Trial</th>
+        <th>Your Guess</th>
+        <th>Actual</th>
+        <th>Error</th>
+        <th>RT (s)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div id="finalScore"></div>
+
+  <script>
+    const flashDuration = 500; // ms
+    const maxTrials     = 10;
+    // pip positions for a 3×3 grid
+    const grid = [
+      {x:50,  y:50},   {x:100, y:50},  {x:150, y:50},
+      {x:50,  y:100},  {x:100, y:100}, {x:150, y:100},
+      {x:50,  y:150},  {x:100, y:150}, {x:150, y:150}
+    ];
+    // pip layouts for 1–6
+    const pipMap = {
+      1: [4],
+      2: [0,8],
+      3: [0,4,8],
+      4: [0,2,6,8],
+      5: [0,2,4,6,8],
+      6: [0,2,3,5,6,8]
+    };
+
+    let trial=0, correctCount=0, totalError=0;
+    let startTime, currentCount;
+
+    const status    = document.getElementById('status');
+    const feedback  = document.getElementById('feedback');
+    const nextBtn   = document.getElementById('nextBtn');
+    const resetBtn  = document.getElementById('resetBtn');
+    const stim      = document.getElementById('stimulus');
+    const choicesEl = document.getElementById('choices');
+    const tableBody = document.querySelector('#resultsTable tbody');
+    const finalDiv  = document.getElementById('finalScore');
+
+    nextBtn.addEventListener('click', () => {
+      nextBtn.style.display = 'none';
+      resetBtn.style.display = 'none';
+      feedback.textContent = '';
+      beginTrial();
+    });
+    resetBtn.addEventListener('click', resetExperiment);
+
+    function getVersion() {
+      return document.querySelector('input[name="version"]:checked').value;
+    }
+
+    function beginTrial() {
+      if (trial >= maxTrials) return showFinalScore();
+      trial++;
+      status.textContent = `Trial ${trial} of ${maxTrials}`;
+      feedback.textContent = '';
+      const ver = getVersion();
+      const maxNum = ver==='dice' ? 6 : 10;
+      currentCount = Math.floor(Math.random()*maxNum)+1;
+      runCountdown();
+    }
+
+    function runCountdown() {
+      let count=3;
+      stim.textContent=count;
+      const cd = setInterval(()=>{
+        count--;
+        if (count>0) stim.textContent=count;
+        else {
+          clearInterval(cd);
+          stim.textContent='';
+          flashDots();
+        }
+      },1000);
+    }
+
+    function flashDots() {
+      const ver = getVersion();
+      stim.innerHTML='';
+      if (ver==='dice' && pipMap[currentCount]) {
+        // pip arrangement
+        pipMap[currentCount].forEach(idx=>{
+          const pos=grid[idx];
+          const d=document.createElement('div');
+          d.className='dot';
+          d.style.left=(pos.x-10)+'px';
+          d.style.top=(pos.y-10)+'px';
+          stim.appendChild(d);
+        });
+      } else {
+        // random
+        const maxNum = 10;
+        for (let i=0;i<currentCount;i++){
+          const d=document.createElement('div');
+          d.className='dot';
+          d.style.left=Math.random()*180+'px';
+          d.style.top=Math.random()*180+'px';
+          stim.appendChild(d);
+        }
+      }
+      setTimeout(()=>{
+        stim.innerHTML='';
+        showChoices();
+        startTime = performance.now();
+      }, flashDuration);
+    }
+
+    function showChoices() {
+      choicesEl.innerHTML='';
+      const ver = getVersion();
+      const maxNum = ver==='dice'?6:10;
+      for (let i=1;i<=maxNum;i++){
+        const btn=document.createElement('button');
+        btn.className='choice-btn';
+        btn.textContent=i;
+        btn.onclick=()=>handleChoice(i);
+        choicesEl.appendChild(btn);
+      }
+    }
+
+    function handleChoice(guess) {
+      const rt = ((performance.now()-startTime)/1000).toFixed(3);
+      const err = Math.abs(guess-currentCount);
+      totalError += err;
+      if (guess===currentCount) correctCount++;
+
+      feedback.innerHTML = 
+        `<strong>Your guess:</strong> ${guess} &nbsp;|&nbsp; ` +
+        `<strong>Actual:</strong> ${currentCount}`;
+
+      const row=document.createElement('tr');
+      row.innerHTML=`
+        <td>${trial}</td>
+        <td>${guess}</td>
+        <td>${currentCount}</td>
+        <td>${err}</td>
+        <td>${rt}</td>
+      `;
+      tableBody.appendChild(row);
+
+      choicesEl.innerHTML='';
+      if (trial<maxTrials) {
+        nextBtn.textContent = 'Next Trial';
+        nextBtn.style.display = 'inline-block';
+      } else {
+        showFinalScore();
+      }
+    }
+
+    function showFinalScore() {
+      status.textContent='';
+      stim.style.display='none';
+      choicesEl.style.display='none';
+      nextBtn.style.display='none';
+      const avgErr=(totalError/maxTrials).toFixed(2);
+      finalDiv.innerHTML=`
+        You got <strong>${correctCount}</strong> of <strong>${maxTrials}</strong> correct.<br>
+        Average absolute error: <strong>${avgErr}</strong>
+      `;
+      resetBtn.style.display='inline-block';
+    }
+
+    function resetExperiment() {
+      trial=0; correctCount=0; totalError=0;
+      tableBody.innerHTML=''; feedback.textContent='';
+      finalDiv.textContent=''; stim.innerHTML=''; stim.style.display='';
+      choicesEl.style.display=''; status.textContent='';
+      nextBtn.textContent='Start Trial'; nextBtn.style.display='inline-block';
+      resetBtn.style.display='none';
+    }
+  </script>
+</body>
+</html>
